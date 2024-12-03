@@ -10,12 +10,12 @@ Public Cible: Amateur de Shoot'em up Difficile
 Résumé: voyage entre dimensions 
 
 2.Concept de base
-Gameplay Principal: Le joueur contrôle un Dirigeable de guerre, détruit des vagues d'ennemis et évite des projectiles pour progresser dans des niveaux générés aléatoirement, au nombre de 4, et peuvent recevoir des bonus passif aléatoire au cours du jeu.
+Gameplay Principal: Le joueur contrôle un Dirigeable de guerre, détruit des vagues d'ennemis et évite des projectiles pour progresser dans des niveaux générés aléatoirement, au nombre de 4, et peuvent recevoir des bonus passif aléatoire au cours du jeu. 
 Objectifs: 
-Court: terme : Avoir le meilleur score en survivant le plus longtemps et tué le plus d'ennemis
+Court: terme : Avoir le meilleur score en survivant le plus longtemps et en tuant le plus d'ennemis
 Long Terme:  Compléter les niveaux, vaincre tout les boss
 Déroulement:  Le jeu est divisé en plusieurs niveaux, généré aléatoirement avec une difficulté croissante, chacun se terminant par un combat de boss unique.
-Style de progression : Défilement vertical automatique, avec des moment d'arret ou l'on recupere des bonus aléatoire donnant des armes ou des passifs.
+Style de progression : Défilement horizontal automatique, avec des moments d'arret ou l'on recupère des bonus aléatoire donnant des armes ou des passifs.
 
 3.Mechaniques de Jeu
 
@@ -23,26 +23,26 @@ Style de progression : Défilement vertical automatique, avec des moment d'arret
 
 Déplacement: Mouvement en 8 direction à l'aide de 4 touches différentes modulable, (Z, Q, S, D) par défaut
 
-Tir principal: Tir automatique en maintenant une touche enfoncé, degat faible
-Mecanique de coup critique
+Tir principal: Tir automatique en maintenant une touche modulable enfoncé, degat faible
+Mecanique de coup critique, quand une tir touche une cible chance de faire des degats supplementaire, defini selon un pourcentage, clique gauche de souris par défaut
 
-Tir secondaire: Tir non automatique, en appuyant sur une touche, degat moyen - élevé en fonction du powerup
-possibilité de changer de powerup avec la molette
+Tir secondaire: Tir non automatique, en appuyant sur une touche modulable, degat moyen - élevé en fonction du powerup
+possibilité de changer de powerup une touche modulable, alt par défaut
 nombre limité a 10 missiles, recuperables sur les ennemis, les obstacles ou les colis
+clique droit de souris par défaut
 
 3.2. Système de Scoring
 
 Ennemi tué : +100
 Gros ennemi tué: +250
-Mini boss tué : +1000
 Boss tué : +2500
 Salle complété : +1500
 Niveau complété : +10000
 
 Multiplicateurs : 
-Ennemi tué : +100 -> +250
-Gros ennemi tué: +250 -> +500
-Mini boss tué : +1000 -> +1500
+Au cours des niveaux, plus le joueur avance entre les niveux et plus le score donné par les ennemis tué est élevé
+Ennemi tué : Niveau 1: +100 Niveau 2: +150 Niveau 3: +250 Niveau 4: +500;
+Gros ennemi tué: Niveau 1: +250 Niveau 2: +300 Niveau 3: +400 Niveau 4: +650;
 Boss tué : +2500 -> +5000
 Salle complété : +1500 -> +4500
 Niveau complété : +10000 -> +50000
@@ -98,15 +98,33 @@ Conception des Ennemis
 3.Avancé
 
 
-5. Progression et Sttructure
+5. Progression et Structure
 5.1 Niveaux
-1. Niveau:
-2. Niveau 
-3. Niveau 
-4. Niveau
+1. Niveau 1:
+Ville de Windercove
+Ville Steampunk avec Tour d'horloge et Toiture Victorienne
+Ennemis: Dirigeable, Avions a helice, Gargouille de Métal 
+Boss: Grand Dragon de Metal
+
+2. Niveau 2:
+Faille de la derniere Chance
+Ennemis: Bateau Pirate volant, Sirene Volante, Jet Volant
+Boss: Monstre Tentaculaire
+
+
+3. Niveau 3:
+Temple de Smokeria
+Ennemis: Statue De Pierre Augmenté, Homme-Dragon de vapeur, Scarabé mutant
+
+
+
+4. Niveau 4:
+Limite de l'ancien Monde
+Ennemis: Vaisseau Spatial
+
 
 5.2 Rythme
-Les niveaux 
+Les niveaux alternent entre moment de combats et moment de pause ou le joueur choisis les Power Up. A chaque fin de boss le score est affiché au joueur et il passe au niveau suivant.
 
 
 6.Direction artistique:
