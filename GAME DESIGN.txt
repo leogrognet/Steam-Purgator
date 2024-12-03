@@ -135,11 +135,10 @@ Les niveaux alternent entre moment de combats et moment de pause ou le joueur ch
 8.Systemes et Outils
 8.1 Moteur de Jeu
 -SFML
-8.2 Logiciels Recommandés
 
 
 9.Monétisation
-
+Jeu vendu seul, pas de dlc prévu. 5 euros.
 
 10.Inspirations
 Hades: sur le systeme rogue like des bonus passifs aléatoire
