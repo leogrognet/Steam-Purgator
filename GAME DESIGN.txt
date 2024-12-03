@@ -112,16 +112,6 @@ Ennemis: Bateau Pirate volant, Sirene Volante, Jet Volant
 Boss: Monstre Tentaculaire
 
 
-3. Niveau 3:
-Temple de Smokeria
-Ennemis: Statue De Pierre Augmenté, Homme-Dragon de vapeur, Scarabé mutant
-
-
-
-4. Niveau 4:
-Limite de l'ancien Monde
-Ennemis: Vaisseau Spatial
-
 
 5.2 Rythme
 Les niveaux alternent entre moment de combats et moment de pause ou le joueur choisis les Power Up. A chaque fin de boss le score est affiché au joueur et il passe au niveau suivant.
