@@ -1,0 +1,161 @@
+1.Information Générales
+
+Titre: Steam Purgator
+
+Genre: Shoot'em Up / Roguelike
+Style Visuel: SteamPunk pixel art détaillé
+Plateforme: Pc
+Public Cible: Amateur de Shoot'em up Difficile
+
+Résumé: voyage entre dimensions 
+
+2.Concept de base
+Gameplay Principal: Le joueur contrôle un Dirigeable de guerre, détruit des vagues d'ennemis et évite des projectiles pour progresser dans des niveaux générés aléatoirement, au nombre de 4, et peuvent recevoir des bonus passif aléatoire au cours du jeu.
+Objectifs: 
+Court: terme : Avoir le meilleur score en survivant le plus longtemps et tué le plus d'ennemis
+Long Terme:  Compléter les niveaux, vaincre tout les boss
+Déroulement:  Le jeu est divisé en plusieurs niveaux, généré aléatoirement avec une difficulté croissante, chacun se terminant par un combat de boss unique.
+Style de progression : Défilement vertical automatique, avec des moment d'arret ou l'on recupere des bonus aléatoire donnant des armes ou des passifs.
+
+3.Mechaniques de Jeu
+
+3.1 Contrôle du joueur
+
+Déplacement: Mouvement en 8 direction à l'aide de 4 touches différentes modulable, (Z, Q, S, D) par défaut
+
+Tir principal: Tir automatique en maintenant une touche enfoncé, degat faible
+Mecanique de coup critique
+
+Tir secondaire: Tir non automatique, en appuyant sur une touche, degat moyen - élevé en fonction du powerup
+possibilité de changer de powerup avec la molette
+nombre limité a 10 missiles, recuperables sur les ennemis, les obstacles ou les colis
+
+3.2. Système de Scoring
+
+Ennemi tué : +100
+Gros ennemi tué: +250
+Mini boss tué : +1000
+Boss tué : +2500
+Salle complété : +1500
+Niveau complété : +10000
+
+Multiplicateurs : 
+Ennemi tué : +100 -> +250
+Gros ennemi tué: +250 -> +500
+Mini boss tué : +1000 -> +1500
+Boss tué : +2500 -> +5000
+Salle complété : +1500 -> +4500
+Niveau complété : +10000 -> +50000
+
+3.3. Power-ups et Armes
+
+Liste de powerup possibles :
+
+- Powerup Commun :
+  - Cadence de tir +33%
+  - Vie +25%
+  - Rechargement +25%
+
+- Powerup Rare :
+  - Explosion a l'impact
+  - Coup critique +25%
+  - 
+
+- Powerup Epic :
+  - Bouclier d'immunité 1 sec
+  - Regeneration
+  - 
+
+- Powerup Mythique :
+  - Vol de vie
+  - Vitesse a l'impact
+  - 
+
+Evolution de powerup :
+  - Cadence de tir +50%
+  - Regeneration +50%
+  - Bouclier d'immunité + 2 sec
+
+Armes : 
+
+- Missile v1 = peut detruire les obstacles simples, qui donnent forcement des balles ou de la vie comparé aux ennemis qui drop genre 25% du temps
+- Balle qui se divise en 2 3 4 6 8
+- Missile guidée
+- laser qui dure 10 secondes, degats comme la tour de l'enfer
+
+
+3.4. Difficulté
+Modes de jeu :
+Normal : Parfait pour les nouveaux joueurs.
+Difficile : Plus d’ennemis, tirs plus rapides.
+Hardcore : Tirs très complexes, erreurs non pardonnées.
+Adaptation dynamique : Les ennemis deviennent plus agressifs si le joueur joue sans prendre de dégâts pendant un certain temps.
+
+Conception des Ennemis
+4.1 Types d'ennemis
+1.Basique
+2.Intermédiaire
+3.Avancé
+
+
+5. Progression et Sttructure
+5.1 Niveaux
+1. Niveau:
+2. Niveau 
+3. Niveau 
+4. Niveau
+
+5.2 Rythme
+Les niveaux 
+
+
+6.Direction artistique:
+6.1 Style Visuel
+
+6.2 Interface utilisateur
+
+8.Systemes et Outils
+8.1 Moteur de Jeu
+-SFML
+8.2 Logiciels Recommandés
+
+
+9.Monétisation
+
+
+10.Inspirations
+Hades: sur le systeme rogue like des bonus passifs aléatoire
+
+
+
+Menu: 
+Nouvelle Partie
+Continuer
+Options:
+  - Nombre de joueurs
+  - Choix de stage
+  - Parametres de son / de luminosité
+  - Debug mode :
+    - Invincibilité F1
+    - Tuer tout les ennemis F2
+    - TP Boss F3
+    - Passe au prochain niveau F4
+Quitter
+
+
+
+PArtage de taches
+
+Maxence:
+-Design mob et map
+-Codage Affichage et animation
+
+Tom:
+-Menu 
+
+
+Leo: 
+-Gameplay et Level Design
+
+Non défini:
+-Sound design et musique
