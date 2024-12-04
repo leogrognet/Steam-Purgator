@@ -19,8 +19,8 @@ public:
 
 
 	void attack();
-	void destroyEnemy();
-
+	vector<RectangleShape> enemyList;
+	RectangleShape enemySprite;
 
 
 
@@ -32,7 +32,7 @@ private:
 	bool alive;
 	int health;
 	int maxHealth;
-	RectangleShape enemySprite;
+	
 };
 
 

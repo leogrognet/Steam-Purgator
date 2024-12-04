@@ -12,6 +12,4 @@ void Enemy::attack()
 {
 }
 
-void Enemy::destroyEnemy()
-{
-}
+

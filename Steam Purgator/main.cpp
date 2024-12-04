@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "Player.h"
+#include "Enemy.h"
 
 
 using namespace std;
@@ -33,6 +34,7 @@ int main() {
         window.draw(player.playerSprite);
         window.display();
     }
+
 
     return 0;
 }
