@@ -1,30 +1,37 @@
-1.Information Générales
+# **Document de Game Design : Steam Purgator**
+---
+## **1.Information Générales**
 
 Titre: Steam Purgator
 
-Genre: Shoot'em Up / Roguelike
-Style Visuel: SteamPunk pixel art détaillé
-Plateforme: Pc
-Public Cible: Amateur de Shoot'em up Difficile
+**Genre**: Shoot'em Up / Roguelike
+**Style Visuel**: SteamPunk pixel art détaillé
+**Plateforme**: Pc
+**Public Cible**: Amateur de Shoot'em up nerveux
+**Résumé**: 
+Dans un univers ou le passé s'entremele aux innovations, des fléaux apparaissent sur terre, invoqué par une organisation souhaitant le chaos pour instaurer un nouvelle ere. Le joueur incarne un vaisseau faisant parti d'une resistance et va devoir défaire ces fleaux parcourant le monde semé d'embûches.
 
-Résumé: voyage entre dimensions 
+---
 
-2.Concept de base
-Gameplay Principal: Le joueur contrôle un Dirigeable de guerre, détruit des vagues d'ennemis et évite des projectiles pour progresser dans des niveaux générés aléatoirement, au nombre de 4, et peuvent recevoir des bonus passif aléatoire au cours du jeu. 
-Objectifs: 
-Court: terme : Avoir le meilleur score en survivant le plus longtemps et en tuant le plus d'ennemis
-Long Terme:  Compléter les niveaux, vaincre tout les boss
-Déroulement:  Le jeu est divisé en plusieurs niveaux, généré aléatoirement avec une difficulté croissante, chacun se terminant par un combat de boss unique.
-Style de progression : Défilement horizontal automatique, avec des moments d'arret ou l'on recupère des bonus aléatoire donnant des armes ou des passifs.
+## **2. Concept de Base**
+- **Gameplay Principal** : Le joueur contrôle un Dirigeable de guerre, détruit des vagues d'ennemis et évite des projectiles pour progresser dans des niveaux générés aléatoirement, au nombre de 4, et peuvent recevoir des bonus passif aléatoire au cours du jeu. 
+- **Objectifs** : 
+  - Court terme : Avoir le meilleur score en survivant le plus longtemps et en tuant le plus d'ennemis
+  - Long Terme :  Compléter les niveaux, vaincre tout les boss
+- **Déroulement** :  Le jeu est divisé en plusieurs niveaux, généré aléatoirement avec une difficulté croissante, chacun se terminant par un combat de boss unique.
+- **Style de progression** : Défilement horizontal automatique, avec des moments d'arret ou l'on recupère des bonus aléatoire donnant des armes ou des passifs.
 
-3.Mechaniques de Jeu
+---
 
-3.1 Contrôle du joueur
+##**3.Mechaniques de Jeu**
 
-Déplacement: Mouvement en 8 direction à l'aide de 4 touches différentes modulable, (Z, Q, S, D) par défaut
+### **3.1. Contrôle du joueur**
 
-Tir principal: Tir automatique en maintenant une touche modulable enfoncé, degat faible
-Mecanique de coup critique, quand une tir touche une cible chance de faire des degats supplementaire, defini selon un pourcentage, clique gauche de souris par défaut
+- **Déplacement** : Mouvement en 8 direction à l'aide de 4 touches différentes modulable, (Z, Q, S, D) par défaut
+
+- **Tir principal** :
+- Tir automatique en maintenant une touche modulable enfoncé, degat faible
+- Mecanique de coup critique, quand une tir touche une cible chance de faire des degats supplementaire, defini selon un pourcentage, clique gauche de souris par défaut
 
 Tir secondaire: Tir non automatique, en appuyant sur une touche modulable, degat moyen - élevé en fonction du powerup
 possibilité de changer de powerup une touche modulable, alt par défaut
