@@ -23,7 +23,7 @@ Dans un univers ou le passé s'entremele aux innovations, des fléaux apparaisse
 
 ---
 
-##**3.Mechaniques de Jeu**
+## **3.Mechaniques de Jeu**
 
 ### **3.1. Contrôle du joueur**
 
@@ -62,7 +62,7 @@ Gros ennemi tué: Niveau 1: +250 Niveau 2: +300 Niveau 3: +400 Niveau 4: +650;
     - **Bouclier d'immunité**
 
 
-###**3.4Power Up passif** 
+### **3.4. Power-Up passif** 
 
 -**Branche Alchimie** :
   -Taille d'explosion augmenté pour les Boulets Explosifs
@@ -89,9 +89,9 @@ Gros ennemi tué: Niveau 1: +250 Niveau 2: +300 Niveau 3: +400 Niveau 4: +650;
   -Difficile : Plus d’ennemis, tirs plus rapides, vitesse tres rapide
   -Hardcore : Tirs très complexes, erreurs non pardonnées.
 
+---
 
-
-##**4. Types d'ennemis**
+## **4. Types d'ennemis**
 - **Ville de Windercove** : 
   -Dirigeable: ennemis avec beaucoup de vie, lent, avec de gros dégats a distance
   -Avions a helice: Ennemis a vitesse normale, tir rapide, dégats moyen, vie moyenne
@@ -102,56 +102,49 @@ Gros ennemi tué: Niveau 1: +250 Niveau 2: +300 Niveau 3: +400 Niveau 4: +650;
   -Jet Volant: Ennemis a vitesse rapide, peu de vie, peu de dégats, tirs tres rapide
   -Sirene Ailée: Ennemis a vitesse moyenne, attaque au corps a corps, vie moyene, degats moyen
 
-##**5. Progression et Structure**
-5.1 Niveaux
-1. Niveau 1:
-Ville de Windercove
-Ville Steampunk avec Tour d'horloge et Toiture Victorienne
-Ennemis: Dirigeable, Avions a helice, Gargouille de Métal 
-Boss: Grand Dragon de Metal
+---
 
-2. Niveau 2:
-Faille de la derniere Chance
-Ennemis: Bateau Pirate volant, Jet Volant, Sirene Ailée
-Boss: Monstre Tentaculaire
+## **5. Progression et Structure**
+### **5.1 Niveaux**
+- **1. Niveau 1** :
+  - Ville de Windercove
+  - Ville Steampunk avec Tour d'horloge et Toiture Victorienne
+  - Ennemis: Dirigeable, Avions a helice, Gargouille de Métal 
+  - Boss: Grand Dragon de Metal
+
+- **2. Niveau 2** :
+  - Faille de la derniere Chance
+  - Ennemis: Bateau Pirate volant, Jet Volant, Sirene Ailée
+  - Boss: Monstre Tentaculaire
 
 
 
-5.2 Rythme
+### **5.2 Rythme**
 Les niveaux alternent entre moment de combats et moment de pause ou le joueur choisis les Power Up. A chaque fin de boss le score est affiché au joueur et il passe au niveau suivant.
 
+---
 
-6.Direction artistique:
-6.1 Style Visuel
-Pixel Art Simple
+## **6.Direction artistique** :
+### **6.1 Style Visuel**
+  - Pixel Art Simple
 
-6.2 Interface utilisateur
-Menu De Bouton avec un theme Aerien
+### **6.2 Interface utilisateur**
+  - Menu De Bouton avec un theme Aerien
 
-8.Systemes et Outils
-8.1 Moteur de Jeu
--SFML
+---
 
+## **8.Systemes et Outils**
+### **8.1 Bibliotheque  utilisée**
+  - SFML
 
-9.Monétisation
+---
+
+## **9.Monétisation**
 Jeu vendu seul, pas de dlc prévu. 5 euros.
 
-10.Inspirations
-Hades: sur le systeme rogue like des bonus passifs aléatoire
-R-Type: sur le scrolling et le principe du shoot them up horizontal
+---
 
+## **10.Inspirations**
+  - *Hades* : sur le systeme rogue like des bonus passifs aléatoire
+  - *R-Type* : sur le scrolling et le principe du shoot them up horizontal
 
-
-Menu: 
-Nouvelle Partie
-Continuer
-Options:
-  - Choix de stage
-  - Parametres de son / de luminosité
-  - Debug mode :
-    -Activer: oui/non
-    - Invincibilité F1
-    - Tuer tout les ennemis F2
-    - TP Boss F3
-    - Passe au prochain niveau F4
-Quitter
