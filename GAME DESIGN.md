@@ -140,7 +140,7 @@ Les niveaux alternent entre moment de combats et moment de pause ou le joueur ch
 ---
 
 ## **9.Monétisation**
-Jeu vendu seul, pas de dlc prévu. 5 euros.
+Jeu vendu seul 5 euros. Pas de contenu additionel prévu.
 
 ---
 
