@@ -1,7 +1,7 @@
 #include <iostream>
 #include <map>
 #include "SFML/Graphics.hpp"
-
+#include "Weapons.h"
 
 
 using namespace std;
@@ -14,27 +14,30 @@ using namespace sf;
 
 class Player {
 public:
-	Player();
+	Player(Texture Texture, int hp, int maxHp, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed);
 	~Player();
 
 
 	void movement();
 	void attack();
 	void destroyPlayer();
+	void initBullets();
+	Sprite getPlayerSprite();
 
 
 
-
+private:
 	enum Direction{Up,Down,Left,Right};
-	int pos_x, pos_y;
+	enum Attacks{LeftAttack,RightAttack,ChangeAttack};
+	float pos_x, pos_y;
 	float size_x, size_y;
 	float speed;
-	bool test;
 	bool alive;
 	int health;
 	int maxHealth;
 	RectangleShape playerSprite;
-	map<Direction, Keyboard::Key> Keybind;
+	map<Direction, Keyboard::Key> DirectionBind;
+	map<Attacks, Keyboard::Key> AttackBind;
 };
 
 

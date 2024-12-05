@@ -14,13 +14,16 @@ using namespace sf;
 
 class Enemy {
 public:
-	Enemy();
+	Enemy(Texture Texture,int hp, int maxHp, float size_x, float size_y, bool alive, float speed);
 	~Enemy();
 
 
 	void attack();
-	vector<RectangleShape> enemyList;
-	RectangleShape enemySprite;
+	void destroyEnemy(vector<Enemy&> listEnemy, int index);
+	void setHealth(int health);
+	int getHealth();
+	vector<Sprite> enemyList;
+	Sprite enemySprite;
 
 
 
