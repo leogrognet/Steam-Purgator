@@ -35,78 +35,62 @@ clique droit de souris par défaut
 
 Ennemi tué : +100
 Gros ennemi tué: +250
-Boss tué : +2500
-Salle complété : +1500
+Boss tué : +5000
 Niveau complété : +10000
 
 Multiplicateurs : 
 Au cours des niveaux, plus le joueur avance entre les niveux et plus le score donné par les ennemis tué est élevé
 Ennemi tué : Niveau 1: +100 Niveau 2: +150 Niveau 3: +250 Niveau 4: +500;
 Gros ennemi tué: Niveau 1: +250 Niveau 2: +300 Niveau 3: +400 Niveau 4: +650;
-Boss tué : +2500 -> +5000
-Salle complété : +1500 -> +4500
-Niveau complété : +10000 -> +50000
+
 
 3.3. Power-ups et Armes
 
 Liste de powerup possibles :
 
-- Powerup Commun :
-  - Cadence de tir +33%
-  - Vie +25%
-  - Rechargement +25%
-
-- Powerup Rare :
-  - Explosion a l'impact
-  - Coup critique +25%
-  - 
-
-- Powerup Epic :
-  - Bouclier d'immunité 1 sec
-  - Regeneration
-  - 
-
-- Powerup Mythique :
-  - Vol de vie
-  - Vitesse a l'impact
-  - 
+  -Missiles Autoguidé
+  -Boulets Explosifs
+  -Tirs Magique
+  -Bouclier d'immunité
 
 
 Power Up passif:
 Branche Alchimie:
-Cadence de tir accrue pour les tirs alchimique 
-Ca
+  -Taille d'explosion augmenté pour les Boulets Explosifs
+  -Dégats sur la durée augmentée
+  -Temps de l'utilisation des Boulets Explosifs diminué
 
 Branche Mecanique
+  -Vitesse de tir augmenté
+  -Dégats sur chaque tir augmenté
+  -Chance de coup Critique accru 20%
+  -Nombre de Missiles Autoguidé augmenté
 
 Branche Magique:
+  -Soins accrus sur les tirs magique
+  -Temps pour utiliser le laser diminué
+  -Temps du Bouclier d'immunité augmenté
 
-Evolution de powerup :
-  - Cadence de tir +50%
-  - Regeneration +50%
-  - Bouclier d'immunité + 2 sec
-
-Armes : 
-
-- Missile v1 = peut detruire les obstacles simples, qui donnent forcement des balles ou de la vie comparé aux ennemis qui drop genre 25% du temps
-- Balle qui se divise en 2 3 4 6 8
-- Missile guidée
-- laser qui dure 10 secondes, degats comme la tour de l'enfer
 
 
 3.4. Difficulté
 Modes de jeu :
-Normal : Parfait pour les nouveaux joueurs.
-Difficile : Plus d’ennemis, tirs plus rapides.
+Facile: les ennemis meurt en peu de coup et font peu de dégats
+Normal : Dégats des ennemis accrus et vitesse augmenté
+Difficile : Plus d’ennemis, tirs plus rapides, vitesse tres rapide
 Hardcore : Tirs très complexes, erreurs non pardonnées.
-Adaptation dynamique : Les ennemis deviennent plus agressifs si le joueur joue sans prendre de dégâts pendant un certain temps.
 
 Conception des Ennemis
 4.1 Types d'ennemis
-1.Basique
-2.Intermédiaire
-3.Avancé
+Ville de Windercove : 
+-Dirigeable: ennemis avec beaucoup de vie, lent, avec de gros dégats a distance
+-Avions a helice: Ennemis a vitesse normale, tir rapide, dégats moyen, vie moyenne
+-Gargouille de Métal: Ennemis très rapide, peu de vie, dégats important, ne peux pas tirer
 
+Faille de la derniere Chance:
+-Bateau pirate Volant: ennemis avec beaucoup de vie, lent, avec de gros dégats a distance
+-Jet Volant: Ennemis a vitesse rapide, peu de vie, peu de dégats, tirs tres rapide
+-Sirene Ailée: Ennemis a vitesse moyenne, attaque au corps a corps, vie moyene, degats moyen
 
 5. Progression et Structure
 5.1 Niveaux
@@ -118,7 +102,7 @@ Boss: Grand Dragon de Metal
 
 2. Niveau 2:
 Faille de la derniere Chance
-Ennemis: Bateau Pirate volant, Jet Volant, Sirene Volante
+Ennemis: Bateau Pirate volant, Jet Volant, Sirene Ailée
 Boss: Monstre Tentaculaire
 
 
@@ -144,6 +128,7 @@ Jeu vendu seul, pas de dlc prévu. 5 euros.
 
 10.Inspirations
 Hades: sur le systeme rogue like des bonus passifs aléatoire
+R-Type: sur le scrolling et le principe du shoot them up horizontal
 
 
 
@@ -151,30 +136,12 @@ Menu:
 Nouvelle Partie
 Continuer
 Options:
-  - Nombre de joueurs
   - Choix de stage
   - Parametres de son / de luminosité
   - Debug mode :
+    -Activer: oui/non
     - Invincibilité F1
     - Tuer tout les ennemis F2
     - TP Boss F3
     - Passe au prochain niveau F4
 Quitter
-
-
-
-PArtage de taches
-
-Maxence:
--Design mob et map
--Codage Affichage et animation
-
-Tom:
--Menu 
-
-
-Leo: 
--Gameplay et Level Design
-
-Non défini:
--Sound design et musique
