@@ -30,57 +30,58 @@ Dans un univers ou le passé s'entremele aux innovations, des fléaux apparaisse
 - **Déplacement** : Mouvement en 8 direction à l'aide de 4 touches différentes modulable, (Z, Q, S, D) par défaut
 
 - **Tir principal** :
-- Tir automatique en maintenant une touche modulable enfoncé, degat faible
-- Mecanique de coup critique, quand une tir touche une cible chance de faire des degats supplementaire, defini selon un pourcentage, clique gauche de souris par défaut
+  - Tir automatique en maintenant une touche modulable enfoncé, degat faible
+  - Mecanique de coup critique, quand une tir touche une cible chance de faire des degats supplementaire, defini selon un pourcentage, clique gauche de souris par défaut
 
-Tir secondaire: Tir non automatique, en appuyant sur une touche modulable, degat moyen - élevé en fonction du powerup
+- **Tir secondaire** :
+  - Tir non automatique, en appuyant sur une touche modulable, degat moyen - élevé en fonction du powerup
 possibilité de changer de powerup une touche modulable, alt par défaut
 nombre limité a 10 missiles, recuperables sur les ennemis, les obstacles ou les colis
-clique droit de souris par défaut
+  - Clique droit de souris par défaut
 
-3.2. Système de Scoring
+### **3.2. Système de Scoring**
 
-Ennemi tué : +100
-Gros ennemi tué: +250
-Boss tué : +5000
-Niveau complété : +10000
+**Ennemi tué** : +100
+**Gros ennemi tué** : +250
+**Boss tué** : +5000
+**Niveau complété** : +10000
 
-Multiplicateurs : 
+- **Multiplicateurs** : 
 Au cours des niveaux, plus le joueur avance entre les niveux et plus le score donné par les ennemis tué est élevé
 Ennemi tué : Niveau 1: +100 Niveau 2: +150 Niveau 3: +250 Niveau 4: +500;
 Gros ennemi tué: Niveau 1: +250 Niveau 2: +300 Niveau 3: +400 Niveau 4: +650;
 
 
-3.3. Power-ups et Armes
+### **3.3. Power-ups**
 
-Liste de powerup possibles :
+- **Liste de powerup possibles** :
 
-  -Missiles Autoguidé
-  -Boulets Explosifs
-  -Tirs Magique
-  -Bouclier d'immunité
+    -Missiles Autoguidé
+    -Boulets Explosifs
+    -Tirs Magique
+    -Bouclier d'immunité
 
 
-Power Up passif:
-Branche Alchimie:
+###**3.4Power Up passif** :
+-**Branche Alchimie** :
   -Taille d'explosion augmenté pour les Boulets Explosifs
   -Dégats sur la durée augmentée
   -Temps de l'utilisation des Boulets Explosifs diminué
 
-Branche Mecanique
+-**Branche Mecanique** :
   -Vitesse de tir augmenté
   -Dégats sur chaque tir augmenté
   -Chance de coup Critique accru 20%
   -Nombre de Missiles Autoguidé augmenté
 
-Branche Magique:
+-**Branche Magique** :
   -Soins accrus sur les tirs magique
   -Temps pour utiliser le laser diminué
   -Temps du Bouclier d'immunité augmenté
 
 
 
-3.4. Difficulté
+3.5. Difficulté
 Modes de jeu :
 Facile: les ennemis meurt en peu de coup et font peu de dégats
 Normal : Dégats des ennemis accrus et vitesse augmenté
@@ -88,7 +89,7 @@ Difficile : Plus d’ennemis, tirs plus rapides, vitesse tres rapide
 Hardcore : Tirs très complexes, erreurs non pardonnées.
 
 Conception des Ennemis
-4.1 Types d'ennemis
+4. Types d'ennemis
 Ville de Windercove : 
 -Dirigeable: ennemis avec beaucoup de vie, lent, avec de gros dégats a distance
 -Avions a helice: Ennemis a vitesse normale, tir rapide, dégats moyen, vie moyenne
