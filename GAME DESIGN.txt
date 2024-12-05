@@ -71,6 +71,16 @@ Liste de powerup possibles :
   - Vitesse a l'impact
   - 
 
+
+Power Up passif:
+Branche Alchimie:
+Cadence de tir accrue pour les tirs alchimique 
+Ca
+
+Branche Mecanique
+
+Branche Magique:
+
 Evolution de powerup :
   - Cadence de tir +50%
   - Regeneration +50%
@@ -108,7 +118,7 @@ Boss: Grand Dragon de Metal
 
 2. Niveau 2:
 Faille de la derniere Chance
-Ennemis: Bateau Pirate volant, Sirene Volante, Jet Volant
+Ennemis: Bateau Pirate volant, Jet Volant, Sirene Volante
 Boss: Monstre Tentaculaire
 
 
@@ -119,8 +129,10 @@ Les niveaux alternent entre moment de combats et moment de pause ou le joueur ch
 
 6.Direction artistique:
 6.1 Style Visuel
+Pixel Art Simple
 
 6.2 Interface utilisateur
+Menu De Bouton avec un theme Aerien
 
 8.Systemes et Outils
 8.1 Moteur de Jeu
