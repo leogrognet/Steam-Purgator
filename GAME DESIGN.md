@@ -41,10 +41,10 @@ nombre limité a 10 missiles, recuperables sur les ennemis, les obstacles ou les
 
 ### **3.2. Système de Scoring**
 
-**Ennemi tué** : +100
-**Gros ennemi tué** : +250
-**Boss tué** : +5000
-**Niveau complété** : +10000
+- **Ennemi tué** : +100
+- **Gros ennemi tué** : +250
+- **Boss tué** : +5000
+- **Niveau complété** : +10000
 
 - **Multiplicateurs** : 
 Au cours des niveaux, plus le joueur avance entre les niveux et plus le score donné par les ennemis tué est élevé
