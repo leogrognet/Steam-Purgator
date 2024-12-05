@@ -62,7 +62,8 @@ Gros ennemi tué: Niveau 1: +250 Niveau 2: +300 Niveau 3: +400 Niveau 4: +650;
     -Bouclier d'immunité
 
 
-###**3.4Power Up passif** :
+###**3.4Power Up passif** 
+
 -**Branche Alchimie** :
   -Taille d'explosion augmenté pour les Boulets Explosifs
   -Dégats sur la durée augmentée
@@ -81,26 +82,27 @@ Gros ennemi tué: Niveau 1: +250 Niveau 2: +300 Niveau 3: +400 Niveau 4: +650;
 
 
 
-3.5. Difficulté
-Modes de jeu :
-Facile: les ennemis meurt en peu de coup et font peu de dégats
-Normal : Dégats des ennemis accrus et vitesse augmenté
-Difficile : Plus d’ennemis, tirs plus rapides, vitesse tres rapide
-Hardcore : Tirs très complexes, erreurs non pardonnées.
+### **3.5. Difficulté**
+- **Modes de jeu** :
+  -Facile: les ennemis meurt en peu de coup et font peu de dégats
+  -Normal : Dégats des ennemis accrus et vitesse augmenté
+  -Difficile : Plus d’ennemis, tirs plus rapides, vitesse tres rapide
+  -Hardcore : Tirs très complexes, erreurs non pardonnées.
 
-Conception des Ennemis
-4. Types d'ennemis
-Ville de Windercove : 
--Dirigeable: ennemis avec beaucoup de vie, lent, avec de gros dégats a distance
--Avions a helice: Ennemis a vitesse normale, tir rapide, dégats moyen, vie moyenne
--Gargouille de Métal: Ennemis très rapide, peu de vie, dégats important, ne peux pas tirer
 
-Faille de la derniere Chance:
--Bateau pirate Volant: ennemis avec beaucoup de vie, lent, avec de gros dégats a distance
--Jet Volant: Ennemis a vitesse rapide, peu de vie, peu de dégats, tirs tres rapide
--Sirene Ailée: Ennemis a vitesse moyenne, attaque au corps a corps, vie moyene, degats moyen
 
-5. Progression et Structure
+##**4. Types d'ennemis**
+- **Ville de Windercove** : 
+  -Dirigeable: ennemis avec beaucoup de vie, lent, avec de gros dégats a distance
+  -Avions a helice: Ennemis a vitesse normale, tir rapide, dégats moyen, vie moyenne
+  -Gargouille de Métal: Ennemis très rapide, peu de vie, dégats important, ne peux pas tirer
+
+- **Faille de la derniere Chance** :
+  -Bateau pirate Volant: ennemis avec beaucoup de vie, lent, avec de gros dégats a distance
+  -Jet Volant: Ennemis a vitesse rapide, peu de vie, peu de dégats, tirs tres rapide
+  -Sirene Ailée: Ennemis a vitesse moyenne, attaque au corps a corps, vie moyene, degats moyen
+
+##**5. Progression et Structure**
 5.1 Niveaux
 1. Niveau 1:
 Ville de Windercove
