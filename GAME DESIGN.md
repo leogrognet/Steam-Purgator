@@ -56,10 +56,10 @@ Gros ennemi tué: Niveau 1: +250 Niveau 2: +300 Niveau 3: +400 Niveau 4: +650;
 
 - **Liste de powerup possibles** :
 
-    -Missiles Autoguidé
-    -Boulets Explosifs
-    -Tirs Magique
-    -Bouclier d'immunité
+    - **Missiles Autoguidé**
+    - **Boulets Explosifs**
+    - **Tirs Magique**
+    - **Bouclier d'immunité**
 
 
 ###**3.4Power Up passif** 
