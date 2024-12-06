@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(Texture Texture, int hp, int maxHp, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed) : health(hp), maxHealth(maxHp), size_x(size_x), size_y(size_y), alive(alive), speed(speed), pos_x(pos_x), pos_y(pos_y)
+Player::Player(int hp, int maxHp, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed) : health(hp), maxHealth(maxHp), size_x(size_x), size_y(size_y), alive(alive), speed(speed), pos_x(pos_x), pos_y(pos_y)
 {
 }
 

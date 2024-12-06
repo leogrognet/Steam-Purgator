@@ -9,7 +9,7 @@ using namespace sf;
 
 class AllWeapons {
 public:
-	AllWeapons(Texture texture,float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed);
+	AllWeapons(float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed);
 	~AllWeapons();
 	void setCollision(bool collision);
 	void setDamage(int damage);

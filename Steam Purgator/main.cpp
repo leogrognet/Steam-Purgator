@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+/*#include <SFML/Graphics.hpp>
 #include <vector>
 #include <string>
 
@@ -167,4 +167,4 @@ int main() {
         window.display();
     }
     return 0;
-}
+}*/

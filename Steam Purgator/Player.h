@@ -14,7 +14,7 @@ using namespace sf;
 
 class Player {
 public:
-	Player(Texture Texture, int hp, int maxHp, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed);
+	Player(int hp, int maxHp, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed);
 	~Player();
 
 
@@ -22,7 +22,6 @@ public:
 	void attack();
 	void destroyPlayer();
 	void initBullets();
-	Sprite getPlayerSprite();
 
 
 
