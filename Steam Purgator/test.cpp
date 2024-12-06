@@ -1,6 +1,5 @@
 #include <SFML/Graphics.hpp>
-#include "Player.h"
-#include "Enemy.h"
+#include "Game.h"
 
 
 using namespace std;
@@ -9,17 +8,7 @@ using namespace sf;
 int main() {
     RenderWindow window(VideoMode(800, 600), "Fenêtre SFML");
     
-
-    Player player();
-    
-    player.playerSprite.setFillColor(Color::Red);
-    player.playerSprite.setPosition(0, 0);
-    player.playerSprite.setSize(Vector2f(10.0f,10.0f));
-    player.speed= 0.01;
-    player.Keybind[player.Direction::Up] = Keyboard::Z;
-    player.Keybind[player.Direction::Down] = Keyboard::S;
-    player.Keybind[player.Direction::Left] = Keyboard::Q;
-    player.Keybind[player.Direction::Right] = Keyboard::D;
+    Game game;
 
 
     while (window.isOpen()) {
@@ -30,9 +19,12 @@ int main() {
         }
 
         window.clear(Color::Black);
-        player.movement();
-        //if (Keyboard::isKeyPressed(Keyboard::Z)) { player.playerSprite.move(0, 5); }
-        window.draw(player.playerSprite);
+        game.updatePlayer(game.player, window);
+        game.updateProjectile(window);
+        window.draw(game.player.playerSprite);
+        for (auto& proj : game.allProjectiles)
+            window.draw(proj.sprite);
+     
         window.display();
     }
 

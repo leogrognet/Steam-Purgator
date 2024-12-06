@@ -1,7 +1,7 @@
 #include <iostream>
 #include <map>
 #include "SFML/Graphics.hpp"
-#include "Weapons.h"
+
 
 
 using namespace std;
@@ -19,25 +19,53 @@ public:
 
 
 	void movement();
-	void attack();
-	void destroyPlayer();
-	void initBullets();
+	int attack();
 
+
+	const int& getHp() const;
+	const int& getHpMax() const;
+
+	void setPosition(const Vector2f pos);
+	void setPosition(const float x, const float y);
+	void setHp(const int hp);
+	void loseHp(const int value);
+
+	const bool canAttack();
+
+	void updateAttack();
+	void update();
+	void render(sf::RenderTarget& target);
+
+
+
+
+
+	
+	enum Direction{Up,Down,Left,Right};
+	enum Attacks{LeftAttack,RightAttack,ChangeAttack};
+	map<Direction, Keyboard::Key> DirectionBind;
+	map<Attacks, Keyboard::Key> AttackBind;
 
 
 private:
-	enum Direction{Up,Down,Left,Right};
-	enum Attacks{LeftAttack,RightAttack,ChangeAttack};
-	float pos_x, pos_y;
-	float size_x, size_y;
+	Texture texture;
+	Sprite playerSprite;
+
 	float speed;
-	bool alive;
+
 	int health;
 	int maxHealth;
-	RectangleShape playerSprite;
-	map<Direction, Keyboard::Key> DirectionBind;
-	map<Attacks, Keyboard::Key> AttackBind;
+	
+	float attackCooldown;
+	float attackCooldownMax;
+
+
+	void initVariables();
+	void initTexture();
+	void initSprite();
+
+
+	
+
 };
-
-
 #endif
