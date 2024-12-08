@@ -107,7 +107,6 @@ int main() {
             
             if (isHoldingEscape) {
                 window.draw(quittingMessage);
-
             }
 
             break;

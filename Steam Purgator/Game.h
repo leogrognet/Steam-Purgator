@@ -1,6 +1,7 @@
 #include <memory>
 #include "Projectile.h"
 #include "Player.h"
+#include "Enemy.h"
 
 
 
@@ -14,14 +15,17 @@ using namespace sf;
 class Game {
 private :
 	Texture *texture;
+	Texture* enemyTexture;
 
 	vector<Projectile*> allProjectiles;
+	vector <Enemy*> allEnemies;
 	unique_ptr<Player> player;
 
 	bool game_on;
 	
 	void initPlayer();
 	void initProjectile();
+	void initEnemy();
 
 public:
 	
@@ -29,12 +33,11 @@ public:
 	virtual ~Game();
 
 	bool run(RenderWindow* window);
-	void updatePlayer(RenderWindow& window);
-	void updateInput();
+	void updateInput(RenderWindow* window);
 
 	void updateEnemy();
 	void updateProjectile(RenderWindow* window);
-	void updateCollision(RenderWindow* window);
+	void updatePlayer(RenderWindow* window);
 	void update(RenderWindow* window);
 
 	int count=0;

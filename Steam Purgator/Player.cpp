@@ -112,13 +112,8 @@ void Player::updateAttack()
 }
 
 
-void Player::update()
+void Player::update(RenderWindow* window)
 {
-	
-	this->movement();
-
-
-
 	this->updateAttack();
 
 }
@@ -131,12 +126,16 @@ void Player::render(sf::RenderTarget& target)
 
 
 
-void Player::movement()
+void Player::movement(RenderWindow* window)
 {
-	if (Keyboard::isKeyPressed(DirectionBind[Direction::Up])) { this->playerSprite.move(0, -speed); }
-	if (Keyboard::isKeyPressed(DirectionBind[Direction::Down])) { this->playerSprite.move(0, speed); }
-	if (Keyboard::isKeyPressed(DirectionBind[Direction::Left])) { this->playerSprite.move(-speed,0); }
-	if (Keyboard::isKeyPressed(DirectionBind[Direction::Right])) { this->playerSprite.move(speed, 0); }
+	if (Keyboard::isKeyPressed(DirectionBind[Direction::Up])) { if(this->playerSprite.getPosition().y > 0) 
+		this->playerSprite.move(0, -speed); }
+	else if (Keyboard::isKeyPressed(DirectionBind[Direction::Down])) { if (this->playerSprite.getPosition().y < (window->getSize().y-800)) 
+		this->playerSprite.move(0, speed); }
+	if (Keyboard::isKeyPressed(DirectionBind[Direction::Left])) { if (this->playerSprite.getPosition().x > 0) 
+		this->playerSprite.move(-speed,0); }
+	else if (Keyboard::isKeyPressed(DirectionBind[Direction::Right])) { if (this->playerSprite.getPosition().x < (window->getSize().x))
+		this->playerSprite.move(speed, 0); }
 }
 
 int Player::attack()

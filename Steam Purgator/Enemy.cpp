@@ -1,10 +1,10 @@
 #include "Enemy.h"
 
-
-
-Enemy::Enemy(Texture Texture, int hp, int maxHp, float size_x, float size_y, bool alive, float speed) : health(hp), maxHealth(maxHp), size_x(size_x), size_y(size_y), alive(alive), speed(speed)
+Enemy::Enemy(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed)
 {
-
+	this->sprite.setTexture(*texture);
+	this->sprite.setPosition(pos_x, pos_y);
+	this->speed = 0.05f;
 }
 
 Enemy::~Enemy()
@@ -12,30 +12,24 @@ Enemy::~Enemy()
 
 }
 
-void Enemy::attack()
-{
 
-}
-/*
-void Enemy::destroyEnemy(vector<Enemy&> listEnemy, int index)
+const Vector2f& Enemy::getPos() const
 {
-	if (!listEnemy.empty()) {
-		for (auto it : listEnemy) {
-			listEnemy.erase(listEnemy.begin() - 1 + index);
-		}
-	}
-}*/
-
-void Enemy::setHealth(int health)
-{
-	this->health = health;
+	return this->sprite.getPosition();
 }
 
-int Enemy::getHealth()
+const FloatRect Enemy::getBounds() const
 {
-	return health;
+	return this->sprite.getGlobalBounds();
 }
 
 
+void Enemy::updateSelf()
+{
+	this->sprite.move(this->speed, 0);
+}
 
-
+void Enemy::renderEnemy(RenderWindow* target)
+{
+	target->draw(this->sprite);
+}

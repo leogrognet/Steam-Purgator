@@ -18,7 +18,7 @@ public:
 	virtual ~Player();
 
 
-	void movement();
+	void movement(RenderWindow* window);
 	int attack();
 
 
@@ -37,8 +37,8 @@ public:
 	const bool canAttack();
 
 	void updateAttack();
-	void update();
-	void render(sf::RenderTarget& target);
+	void update(RenderWindow* window);
+	void render(RenderTarget& target);
 
 
 

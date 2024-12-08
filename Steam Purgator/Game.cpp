@@ -5,6 +5,7 @@ Game::Game()
 {
 	this->initPlayer();
 	this->initProjectile();
+	this->initEnemy();
 }
 
 Game::~Game()
@@ -13,7 +14,7 @@ Game::~Game()
 
 void Game::initPlayer()
 {
-	this->player = make_unique<Player>(100,100,1.0f,1.0f,500,500,false,0.01f, "asset/Perso stu.png");
+	this->player = make_unique<Player>(100,100,1.0f,1.0f,500,500,false,0.03f, "asset/Perso stu.png");
 }
 
 void Game::initProjectile()
@@ -29,6 +30,22 @@ void Game::initProjectile()
 		std::cout << "Texture loaded successfully: " << imagePath << std::endl;
 	}
 
+}
+
+void Game::initEnemy()
+{
+	this->enemyTexture = new Texture;
+	if (!this->enemyTexture->loadFromFile("asset/Dirigeable ennemie.png"))
+	{
+		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
+	}
+	this->allEnemies.push_back( new Enemy(enemyTexture,
+		20.0f,
+		20.0f,
+		300,
+		300,
+		false,
+		0.0f));
 }
 
 
@@ -56,14 +73,11 @@ bool Game::run(RenderWindow *window)
 	return this->game_on;
 }
 
-void Game::updatePlayer(RenderWindow& window)
-{
-	
-}
 
-void Game::updateInput()
+
+void Game::updateInput(RenderWindow* window)
 {
-	this->player->movement();
+	this->player->movement(window);
 
 	if (this->player->attack() == 1 && this->player->canAttack()) 
 	{
@@ -89,6 +103,25 @@ void Game::updateInput()
 
 void Game::updateEnemy()
 {
+	for (auto enemies = this->allEnemies.begin(); enemies != this->allEnemies.end();) {
+		for (auto projectiles = this->allProjectiles.begin(); projectiles != this->allProjectiles.end();) {
+
+			if ((*projectiles)->getBounds().intersects((*enemies)->getBounds())) {
+				delete* enemies;
+				enemies = this->allEnemies.erase(enemies); 
+
+				delete* projectiles;
+				projectiles = this->allProjectiles.erase(projectiles); 
+			}
+			else {
+				++projectiles; 
+			}
+		}
+
+		if (enemies != this->allEnemies.end()) {
+			++enemies;
+		}
+	}
 
 }
 
@@ -98,51 +131,35 @@ void Game::updateProjectile(RenderWindow* window)
 		(*it)->updateSelf();
 
 		if ((*it)->getBounds().top + (*it)->getBounds().height < 0.f) {
-			delete* it; // Libérer la mémoire
-			it = this->allProjectiles.erase(it); // Supprimer de la liste
+			delete* it; 
+			it = this->allProjectiles.erase(it); 
 		}
 		else {
-			++it; // Passer au suivant
+			++it; 
 		}
 	}
 }
 
-void Game::updateCollision(RenderWindow* window)
+void Game::updatePlayer(RenderWindow* window)
 {
-	if (this->player->getBounds().left < 0.f)
-	{
-		this->player->setPosition(0.f, this->player->getBounds().top);
-	}
-	//Right world collison
-	else if (this->player->getBounds().left + this->player->getBounds().width >= window->getSize().x)
-	{
-		this->player->setPosition(window->getSize().x - this->player->getBounds().width, this->player->getBounds().top);
-	}
-
-	//Top world collision
-	if (this->player->getBounds().top < 0.f)
-	{
-		this->player->setPosition(this->player->getBounds().left, 0.f);
-	}
-	//Bottom world collision
-	else if (this->player->getBounds().top + this->player->getBounds().height >= window->getSize().y)
-	{
-		this->player->setPosition(this->player->getBounds().left, window->getSize().y - this->player->getBounds().height);
-	}
+	this->player->update(window);
 }
 
 void Game::update(RenderWindow* window)
 {
+	this->updatePlayer(window);
 
-	this->player->update();
-
-	this->updateInput();
 	
-	this->updateCollision(window);
+
+	this->updateInput(window);
+	
+	
 
 	this->updateProjectile(window);
 
-	this->updatePlayer(*window);
+	this->updateEnemy();
+
+	this->updatePlayer(window);
 
 
 
@@ -161,6 +178,10 @@ void Game::render(RenderWindow* window)
 		it->renderProjectile(window);
 	}
 
+	for (auto* it : this->allEnemies)
+	{
+		it->renderEnemy(window);
+	}
 	
 	window->display();
 }
