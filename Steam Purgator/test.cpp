@@ -7,9 +7,8 @@ using namespace sf;
 
 int main() {
     RenderWindow window(VideoMode(800, 600), "Fenêtre SFML");
-    
+    srand(static_cast<unsigned>(time(0)));
     Game game;
-
 
     while (window.isOpen()) {
         Event event;
@@ -17,15 +16,9 @@ int main() {
             if (event.type == Event::Closed)
                 window.close();
         }
-
-        window.clear(Color::Black);
-        game.updatePlayer(game.player, window);
-        game.updateProjectile(window);
-        window.draw(game.player.playerSprite);
-        for (auto& proj : game.allProjectiles)
-            window.draw(proj.sprite);
-     
-        window.display();
+        game.update(&window);
+        game.render(&window);
+        
     }
 
 

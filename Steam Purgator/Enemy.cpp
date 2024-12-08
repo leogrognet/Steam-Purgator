@@ -16,7 +16,7 @@ void Enemy::attack()
 {
 
 }
-
+/*
 void Enemy::destroyEnemy(vector<Enemy&> listEnemy, int index)
 {
 	if (!listEnemy.empty()) {
@@ -24,7 +24,7 @@ void Enemy::destroyEnemy(vector<Enemy&> listEnemy, int index)
 			listEnemy.erase(listEnemy.begin() - 1 + index);
 		}
 	}
-}
+}*/
 
 void Enemy::setHealth(int health)
 {

@@ -1,9 +1,18 @@
 #include "Player.h"
 
-Player::Player(int hp, int maxHp, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed) : health(hp), maxHealth(maxHp), size_x(size_x), size_y(size_y), alive(alive), speed(speed), pos_x(pos_x), pos_y(pos_y)
+Player::Player(int hp, int maxHp, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, string image) : health(hp), maxHealth(maxHp)
 {
+	this->DirectionBind[Direction::Up] = Keyboard::Z;
+	this->DirectionBind[Direction::Down] = Keyboard::S;
+	this->DirectionBind[Direction::Left] = Keyboard::Q;
+	this->DirectionBind[Direction::Right] = Keyboard::D;
+
+	this->AttackBind[Attacks::LeftAttack] = Keyboard::Space;
+
+	this->speed = speed;
+
 	this->initVariables();
-	this->initTexture();
+	this->initTexture(image);
 	this->initSprite();
 }
 
@@ -13,18 +22,20 @@ Player::~Player()
 
 void Player::initVariables()
 {
-	this->speed = 2.f;
+	this->speed = 0.01f;
 
+	this->attackCooldownMax = 2000.0f;
+	this->attackCooldown = this->attackCooldownMax;
 
 	this->maxHealth = 100;
 	this->health = this->maxHealth;
 }
 
-void Player::initTexture()
+void Player::initTexture(string image)
 {
-	if (!this->texture.loadFromFile(""))
+	if (!this->texture.loadFromFile(image))
 	{
-		std::cout << "ERROR::PLAYER::INITTEXTURE::Could not load texture file." << "\n";
+		cerr << "ERROR::PLAYER::INITTEXTURE::Could not load texture file." << endl;
 	}
 }
 
@@ -32,7 +43,7 @@ void Player::initSprite()
 {
 	this->playerSprite.setTexture(this->texture);
 
-	this->playerSprite.scale(0.1f, 0.1f);
+	this->playerSprite.scale(1.0f, 1.0f);
 }
 
 
@@ -47,6 +58,29 @@ const int& Player::getHpMax() const
 {
 	return this->maxHealth;
 }
+
+const Vector2f& Player::getPos() const
+{
+	return this->playerSprite.getPosition();
+}
+
+const FloatRect Player::getBounds() const
+{
+	return this->playerSprite.getGlobalBounds();
+}
+
+void Player::setHp(const int hp)
+{
+	this->health = hp;
+}
+
+void Player::loseHp(const int value)
+{
+	this->health -= value;
+	if (this->health < 0)
+		this->health = 0;
+}
+
 
 
 void Player::setPosition(const Vector2f pos)
@@ -80,7 +114,13 @@ void Player::updateAttack()
 
 void Player::update()
 {
+	
+	this->movement();
+
+
+
 	this->updateAttack();
+
 }
 
 void Player::render(sf::RenderTarget& target)

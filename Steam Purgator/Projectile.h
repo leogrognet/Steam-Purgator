@@ -10,14 +10,24 @@ using namespace sf;
 
 class Projectile {
 public:
-	Sprite sprite;
-	Projectile(float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, Texture& texture);
-	~Projectile();
+	
+	Projectile(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed);
+	virtual ~Projectile();
+	
+
+	const Vector2f& getPos() const;
+	const FloatRect getBounds() const;
+	
 	void updateSelf();
-	void renderProjectile(RenderTarget* target);
+	void renderProjectile(RenderWindow* target);
+
+	
 
 private:
+	Sprite sprite;
 	float speed;
+
+
 };
 
 #endif // !WEAPONS_HPP

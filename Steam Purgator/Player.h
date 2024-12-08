@@ -14,8 +14,8 @@ using namespace sf;
 
 class Player {
 public:
-	Player(int hp, int maxHp, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed);
-	~Player();
+	Player(int hp, int maxHp, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, string image);
+	virtual ~Player();
 
 
 	void movement();
@@ -24,11 +24,15 @@ public:
 
 	const int& getHp() const;
 	const int& getHpMax() const;
+	const Vector2f& getPos() const;
+	const FloatRect getBounds() const;
+	
+	void loseHp(const int value);
 
+	void setHp(const int hp);
 	void setPosition(const Vector2f pos);
 	void setPosition(const float x, const float y);
-	void setHp(const int hp);
-	void loseHp(const int value);
+	
 
 	const bool canAttack();
 
@@ -61,7 +65,7 @@ private:
 
 
 	void initVariables();
-	void initTexture();
+	void initTexture(string image);
 	void initSprite();
 
 

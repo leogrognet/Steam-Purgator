@@ -1,9 +1,7 @@
-#include <iostream>
-#include <map>
-#include "SFML/Graphics.hpp"
+#include <memory>
 #include "Projectile.h"
 #include "Player.h"
-#include "LoadTexture.cpp"
+
 
 
 
@@ -15,16 +13,32 @@ using namespace sf;
 
 class Game {
 private :
+	Texture *texture;
+
+	vector<Projectile*> allProjectiles;
+	unique_ptr<Player> player;
+
+
+	void initPlayer();
+	void initProjectile();
+
 public:
-	vector<Projectile> allProjectiles;
+	
 	Game();
-	~Game();
-	void updatePlayer(Player& player, RenderWindow& window);
+	virtual ~Game();
+
+
+	void updatePlayer(RenderWindow& window);
+	void updateInput();
+
 	void updateEnemy();
-	void updateProjectile(RenderWindow& window);
-	void updateConfig();
-	Player player;
+	void updateProjectile(RenderWindow* window);
+	void updateCollision(RenderWindow* window);
+	void update(RenderWindow* window);
+
 	int count=0;
+
+	void render(RenderWindow* window);
 
 };
 

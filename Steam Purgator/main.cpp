@@ -1,61 +1,5 @@
-/*#include <SFML/Graphics.hpp>
-#include <vector>
-#include <string>
-
-class Menu {
-public:
-    Menu(float width, float height, const std::vector<std::string>& options)
-        : selectedIndex(0) {
-        if (!font.loadFromFile("asset/arial.ttf")) {
-        }
-        for (size_t i = 0; i < options.size(); ++i) {
-            sf::Text text;
-            text.setFont(font);
-            text.setString(options[i]);
-            text.setFillColor(i == 0 ? sf::Color::Red : sf::Color::White);
-            text.setPosition(width / 2 - text.getLocalBounds().width / 2, height / 4 + i * 50);
-            menuItems.push_back(text);
-        }
-        fleche.setFont(font);
-        fleche.setString(">");
-        fleche.setFillColor(sf::Color::Yellow);
-        updateFlechePosition();
-    }
-    void draw(sf::RenderWindow& window) {
-        for (const auto& item : menuItems) {
-            window.draw(item);
-        }
-        window.draw(fleche);
-    }
-    void moveUp() {
-        if (selectedIndex > 0) {
-            menuItems[selectedIndex].setFillColor(sf::Color::White);
-            selectedIndex--;
-            menuItems[selectedIndex].setFillColor(sf::Color::Red);
-            updateFlechePosition();
-        }
-    }
-    void moveDown() {
-        if (selectedIndex < menuItems.size() - 1) {
-            menuItems[selectedIndex].setFillColor(sf::Color::White);
-            selectedIndex++;
-            menuItems[selectedIndex].setFillColor(sf::Color::Red);
-            updateFlechePosition();
-        }
-    }
-    int getSelectedIndex() const {
-        return selectedIndex;
-    }
-private:
-    void updateFlechePosition() {
-        fleche.setPosition(menuItems[selectedIndex].getPosition().x - 40,
-            menuItems[selectedIndex].getPosition().y);
-    }
-    std::vector<sf::Text> menuItems;
-    sf::Font font;
-    size_t selectedIndex;
-    sf::Text fleche;
-};
+/*#include "Menu.h"
+#include"Game.h"
 
 enum class GameState { MainMenu, OptionsMenu, Joue, Quitte };
 
@@ -97,9 +41,11 @@ int main() {
                     else if (event.key.code == sf::Keyboard::Enter) {
                         int selectedIndex = mainMenu.getSelectedIndex();
                         if (selectedIndex == 0) {
+                            Game game;
                             gameState = GameState::Joue;
                             window.setSize(sf::Vector2u(1024, 768));
                             window.setTitle("Jeu en cours");
+                            game.render(&window);
                         }
                         else if (selectedIndex == 1) {
                             gameState = GameState::OptionsMenu;

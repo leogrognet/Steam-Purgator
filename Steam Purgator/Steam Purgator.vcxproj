@@ -142,21 +142,18 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Enemy.h" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="LoadTexture.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="test.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="UpdateGame.cpp" />
     <ClCompile Include="Projectile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="UpdateGame.h" />
     <ClInclude Include="Projectile.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="asset\BlueBird.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
