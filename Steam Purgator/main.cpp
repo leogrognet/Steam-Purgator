@@ -1,4 +1,4 @@
-/*#include "Menu.h"
+#include "Menu.h"
 #include"Game.h"
 
 enum class GameState { MainMenu, OptionsMenu, Joue, Quitte };
@@ -41,11 +41,10 @@ int main() {
                     else if (event.key.code == sf::Keyboard::Enter) {
                         int selectedIndex = mainMenu.getSelectedIndex();
                         if (selectedIndex == 0) {
-                            Game game;
                             gameState = GameState::Joue;
                             window.setSize(sf::Vector2u(1024, 768));
                             window.setTitle("Jeu en cours");
-                            game.render(&window);
+                            
                         }
                         else if (selectedIndex == 1) {
                             gameState = GameState::OptionsMenu;
@@ -101,16 +100,23 @@ int main() {
         case GameState::OptionsMenu:
             optionsMenu.draw(window);
             break;
-        case GameState::Joue:
-            window.clear(sf::Color::Blue);
+        case GameState::Joue: {
+            Game game;
+            if(game.run(&window)){}
+            else { gameState = GameState::MainMenu; break; }
+            
             if (isHoldingEscape) {
                 window.draw(quittingMessage);
+
             }
+
             break;
+        }
+            
         default:
             break;
         }
         window.display();
     }
     return 0;
-}*/
+}

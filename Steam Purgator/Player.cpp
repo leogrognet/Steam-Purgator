@@ -22,9 +22,9 @@ Player::~Player()
 
 void Player::initVariables()
 {
-	this->speed = 0.01f;
 
-	this->attackCooldownMax = 2000.0f;
+
+	this->attackCooldownMax = 1000.0f;
 	this->attackCooldown = this->attackCooldownMax;
 
 	this->maxHealth = 100;

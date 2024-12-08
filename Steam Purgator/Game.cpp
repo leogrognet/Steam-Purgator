@@ -13,7 +13,7 @@ Game::~Game()
 
 void Game::initPlayer()
 {
-	this->player = make_unique<Player>(100,100,1.0f,1.0f,500,500,false,0.0000001f, "asset/Perso stu.png");
+	this->player = make_unique<Player>(100,100,1.0f,1.0f,500,500,false,0.01f, "asset/Perso stu.png");
 }
 
 void Game::initProjectile()
@@ -32,6 +32,29 @@ void Game::initProjectile()
 }
 
 
+
+bool Game::run(RenderWindow *window)
+{	
+	this->game_on = true;
+	while (game_on) {
+
+	Event gameEvent;
+	while (window->pollEvent(gameEvent))
+	{
+		if (gameEvent.Event::type == Event::Closed) {
+			window->close();
+		}
+		if (gameEvent.Event::KeyPressed && gameEvent.Event::key.code == Keyboard::Escape) {
+			this->game_on = false;
+		}
+	}
+	
+		this->render(window);
+		this->update(window);
+		
+	}
+	return this->game_on;
+}
 
 void Game::updatePlayer(RenderWindow& window)
 {
@@ -71,20 +94,6 @@ void Game::updateEnemy()
 
 void Game::updateProjectile(RenderWindow* window)
 {
-	/*unsigned counter = 0;
-	for (auto *it : this->allProjectiles) {
-
-		it->updateSelf();
-
-		if (it->getBounds().left + it->getBounds().width > window->getSize().x)
-		{
-			//Delete bullet
-			delete this->allProjectiles.at(counter);
-			this->allProjectiles.erase(this->allProjectiles.begin() + counter);
-		}
-
-		++counter;
-	}*/
 	for (auto it = this->allProjectiles.begin(); it != this->allProjectiles.end();) {
 		(*it)->updateSelf();
 

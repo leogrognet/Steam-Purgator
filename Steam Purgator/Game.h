@@ -18,7 +18,8 @@ private :
 	vector<Projectile*> allProjectiles;
 	unique_ptr<Player> player;
 
-
+	bool game_on;
+	
 	void initPlayer();
 	void initProjectile();
 
@@ -27,7 +28,7 @@ public:
 	Game();
 	virtual ~Game();
 
-
+	bool run(RenderWindow* window);
 	void updatePlayer(RenderWindow& window);
 	void updateInput();
 

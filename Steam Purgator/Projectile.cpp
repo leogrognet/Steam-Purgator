@@ -4,7 +4,7 @@ Projectile::Projectile(Texture* texture, float size_x, float size_y, float pos_x
 {
 	this->sprite.setTexture(*texture);
 	this->sprite.setPosition(pos_x, pos_y);
-	this->speed = 0.01f;
+	this->speed = 0.05f;
 }
 
 Projectile::~Projectile()
