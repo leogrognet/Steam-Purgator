@@ -57,10 +57,12 @@ private:
 
 	float speed;
 
+	Clock shootClock;
+	Time shootTime;
+
 	int health;
 	int maxHealth;
 	
-	float attackCooldown;
 	float attackCooldownMax;
 
 

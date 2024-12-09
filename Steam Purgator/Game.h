@@ -14,27 +14,36 @@ using namespace sf;
 
 class Game {
 private :
-	Texture *texture;
+	Texture * playerProjectileTexture;
+	Texture* enemyProjectileTexture;
+
 	Texture* enemyTexture;
 
-	vector<Projectile*> allProjectiles;
+	vector<Projectile*> allPlayerProjectiles;
+
+	vector<Projectile*> allEnemyProjectiles;
+
 	vector <Enemy*> allEnemies;
 	unique_ptr<Player> player;
 
 	bool game_on;
-	
+	Clock startClock;  
+	Time startTimeElapsed;
+	Clock deltaClock;
+	Time deltaTimeElasped;
 	void initPlayer();
 	void initProjectile();
 	void initEnemy();
 
 public:
 	
-	Game();
+	Game(RenderWindow* window);
 	virtual ~Game();
 
 	bool run(RenderWindow* window);
 	void updateInput(RenderWindow* window);
 
+	void spawnEnemy(RenderWindow* window);
 	void updateEnemy();
 	void updateProjectile(RenderWindow* window);
 	void updatePlayer(RenderWindow* window);

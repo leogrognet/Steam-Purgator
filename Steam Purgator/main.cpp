@@ -42,7 +42,7 @@ int main() {
                         int selectedIndex = mainMenu.getSelectedIndex();
                         if (selectedIndex == 0) {
                             gameState = GameState::Joue;
-                            window.setSize(sf::Vector2u(1024, 768));
+                            //window.setSize(sf::Vector2u(1024, 768));
                             window.setTitle("Jeu en cours");
                             
                         }
@@ -83,7 +83,7 @@ int main() {
                 if (escapeHoldTimer.getElapsedTime().asSeconds() >= 2.0f) {
 
                     gameState = GameState::MainMenu;
-                    window.setSize(sf::Vector2u(800, 600));
+                    //window.setSize(sf::Vector2u(800, 600));
                     window.setTitle("Menu principal");
                     isHoldingEscape = false;
                 }
@@ -101,7 +101,7 @@ int main() {
             optionsMenu.draw(window);
             break;
         case GameState::Joue: {
-            Game game;
+            Game game(&window);
             if(game.run(&window)){}
             else { gameState = GameState::MainMenu; break; }
             

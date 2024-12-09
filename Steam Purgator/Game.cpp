@@ -1,8 +1,9 @@
 #include "Game.h"
 
 
-Game::Game()
+Game::Game(RenderWindow* window)
 {
+	srand(static_cast<unsigned int>(time(nullptr)));
 	this->initPlayer();
 	this->initProjectile();
 	this->initEnemy();
@@ -14,15 +15,15 @@ Game::~Game()
 
 void Game::initPlayer()
 {
-	this->player = make_unique<Player>(100,100,1.0f,1.0f,500,500,false,0.03f, "asset/Perso stu.png");
+	this->player = make_unique<Player>(100,100,1.0f,1.0f,500,500,false,0.1f, "asset/Perso stu.png");
 }
 
 void Game::initProjectile()
 {
-	this->texture = new Texture;
+	this->playerProjectileTexture = new Texture;
 	string imagePath = "asset/boulet de canon.png";
 	cout << "test";
-	if (!this->texture->loadFromFile("asset/boulet de canon.png"))
+	if (!this->playerProjectileTexture->loadFromFile("asset/boulet de canon.png"))
 	{
 		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
 	}
@@ -34,24 +35,34 @@ void Game::initProjectile()
 
 void Game::initEnemy()
 {
+	
 	this->enemyTexture = new Texture;
 	if (!this->enemyTexture->loadFromFile("asset/Dirigeable ennemie.png"))
 	{
 		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
 	}
-	this->allEnemies.push_back( new Enemy(enemyTexture,
-		20.0f,
-		20.0f,
-		300,
-		300,
-		false,
-		0.0f));
 }
 
 
+void Game::spawnEnemy(RenderWindow* window)
+{
+
+	
+	deltaTimeElasped = deltaClock.getElapsedTime();
+	cout << deltaTimeElasped.asSeconds()<< endl;
+	if (deltaTimeElasped.asSeconds() >= 3.0f) {
+		deltaClock.restart();
+		cout << "test2" << endl;
+		int enemyX = window->getSize().x - 100;
+		int enemyY = rand() % 600;
+		this->allEnemies.push_back(new Enemy(enemyTexture, 20.0f, 20.0f, enemyX, enemyY, false, -0.05f));
+	}
+}
 
 bool Game::run(RenderWindow *window)
 {	
+	startClock.restart();
+	startTimeElapsed = startClock.getElapsedTime();
 	this->game_on = true;
 	while (game_on) {
 
@@ -81,7 +92,7 @@ void Game::updateInput(RenderWindow* window)
 
 	if (this->player->attack() == 1 && this->player->canAttack()) 
 	{
-		this->allProjectiles.push_back(new Projectile(texture,
+		this->allPlayerProjectiles.push_back(new Projectile(playerProjectileTexture,
 			20.0f,
 			20.0f,
 			this->player->getBounds().left + this->player->getBounds().width,
@@ -101,17 +112,32 @@ void Game::updateInput(RenderWindow* window)
 }
 
 
+
 void Game::updateEnemy()
 {
+
 	for (auto enemies = this->allEnemies.begin(); enemies != this->allEnemies.end();) {
-		for (auto projectiles = this->allProjectiles.begin(); projectiles != this->allProjectiles.end();) {
+		(*enemies)->updateSelf();
+		if ((*enemies)->canAttack()) {
+			this->allEnemyProjectiles.push_back(new Projectile(playerProjectileTexture,
+				20.0f,
+				20.0f,
+				(*enemies)->getBounds().left + (*enemies)->getBounds().width,
+				(*enemies)->getBounds().top + ((*enemies)->getBounds().height / 2),
+				false,
+				( (*enemies)->getSpeed() - 0.05f)
+			)
+			);
+		}
+
+		for (auto projectiles = this->allPlayerProjectiles.begin(); projectiles != this->allPlayerProjectiles.end();) {
 
 			if ((*projectiles)->getBounds().intersects((*enemies)->getBounds())) {
 				delete* enemies;
 				enemies = this->allEnemies.erase(enemies); 
 
 				delete* projectiles;
-				projectiles = this->allProjectiles.erase(projectiles); 
+				projectiles = this->allPlayerProjectiles.erase(projectiles); 
 			}
 			else {
 				++projectiles; 
@@ -123,19 +149,31 @@ void Game::updateEnemy()
 		}
 	}
 
+
 }
 
 void Game::updateProjectile(RenderWindow* window)
 {
-	for (auto it = this->allProjectiles.begin(); it != this->allProjectiles.end();) {
+	for (auto it = this->allPlayerProjectiles.begin(); it != this->allPlayerProjectiles.end();) {
 		(*it)->updateSelf();
 
-		if ((*it)->getBounds().top + (*it)->getBounds().height < 0.f) {
+		if ((*it)->getBounds().left + (*it)->getBounds().width > 800) {
 			delete* it; 
-			it = this->allProjectiles.erase(it); 
+			it = this->allPlayerProjectiles.erase(it); 
 		}
 		else {
 			++it; 
+		}
+	}
+	for (auto it = this->allEnemyProjectiles.begin(); it != this->allEnemyProjectiles.end();) {
+		(*it)->updateSelf();
+
+		if ((*it)->getBounds().left + (*it)->getBounds().width < 0.f) {
+			delete* it;
+			it = this->allEnemyProjectiles.erase(it);
+		}
+		else {
+			++it;
 		}
 	}
 }
@@ -149,7 +187,7 @@ void Game::update(RenderWindow* window)
 {
 	this->updatePlayer(window);
 
-	
+	this->spawnEnemy(window);
 
 	this->updateInput(window);
 	
@@ -161,7 +199,7 @@ void Game::update(RenderWindow* window)
 
 	this->updatePlayer(window);
 
-
+	
 
 }
 
@@ -173,7 +211,11 @@ void Game::render(RenderWindow* window)
 	this->player->render(*window);
 
 	
-	for (auto* it : this->allProjectiles) 
+	for (auto* it : this->allPlayerProjectiles) 
+	{
+		it->renderProjectile(window);
+	}
+	for (auto* it : this->allEnemyProjectiles)
 	{
 		it->renderProjectile(window);
 	}
