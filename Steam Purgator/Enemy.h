@@ -8,13 +8,13 @@ using namespace sf;
 #ifndef ENEMY_H
 #define ENEMY_H
 
-class Enemy {
+class BigEnemy {
 public:
 
-	Enemy();
+	BigEnemy();
 
-	Enemy(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed);
-	virtual ~Enemy();
+	BigEnemy(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed);
+	virtual ~BigEnemy();
 
 
 	const Vector2f& getPos() const;
@@ -28,13 +28,15 @@ public:
 	float getSpeed();
 
 	
-
-	void setSpeed(float speed);
-
+	virtual void setHealth(int hp);
+	virtual void setSpeed(float speed);
+	virtual void setDamage(int dmg);
 
 protected:
 	Sprite sprite;
 	float speed;
+	int health;
+	int damage;
 	Clock shootClock;
 	Time shootTime;
 	float attackCooldownMax;
@@ -42,7 +44,7 @@ protected:
 };
 
 
-class RangedEnemy : public Enemy {
+class RangedEnemy : public BigEnemy {
 public:
 
 	RangedEnemy(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed);
@@ -50,14 +52,14 @@ public:
 
 	void updateSelf() override;
 
+	void setSpeed(float speed) override;
 
-	const bool canAttack() override;
 
 private:
 
 };
 
-class CloseRangeEnemy : public Enemy {
+class CloseRangeEnemy : public BigEnemy {
 public:
 
 	CloseRangeEnemy(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed);
@@ -65,8 +67,7 @@ public:
 
 	void updateSelf() override;
 
-
-	const bool canAttack() override;
+	void setSpeed(float speed) override;
 
 private:
 

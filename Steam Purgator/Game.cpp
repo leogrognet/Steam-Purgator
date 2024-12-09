@@ -55,7 +55,7 @@ void Game::spawnEnemy(RenderWindow* window)
 		cout << "test2" << endl;
 		int enemyX = window->getSize().x - 100;
 		int enemyY = rand() % 600;
-		this->allEnemies.push_back(new Enemy(enemyTexture, 20.0f, 20.0f, enemyX, enemyY, false, -0.05f));
+		this->allEnemies.push_back(new BigEnemy(enemyTexture, 20.0f, 20.0f, enemyX, enemyY, false, -0.05f));
 	}
 }
 

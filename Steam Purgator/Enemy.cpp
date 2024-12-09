@@ -1,10 +1,10 @@
 #include "Enemy.h"
 
-Enemy::Enemy()
+BigEnemy::BigEnemy()
 {
 }
 
-Enemy::Enemy(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed)
+BigEnemy::BigEnemy(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed)
 {
 	this->attackCooldownMax = 0.5f;
 	this->sprite.setTexture(*texture);
@@ -12,24 +12,24 @@ Enemy::Enemy(Texture* texture, float size_x, float size_y, float pos_x, float po
 	this->speed = speed;
 }
 
-Enemy::~Enemy()
+BigEnemy::~BigEnemy()
 {
 
 }
 
 
-const Vector2f& Enemy::getPos() const
+const Vector2f& BigEnemy::getPos() const
 {
 	return this->sprite.getPosition();
 }
 
-const FloatRect Enemy::getBounds() const
+const FloatRect BigEnemy::getBounds() const
 {
 	return this->sprite.getGlobalBounds();
 }
 
 
-const bool Enemy::canAttack()
+const bool BigEnemy::canAttack()
 {
 	shootTime = shootClock.getElapsedTime();
 	if (this->shootTime.asSeconds() >= this->attackCooldownMax)
@@ -41,29 +41,39 @@ const bool Enemy::canAttack()
 	return false;
 }
 
-void Enemy::updateSelf()
+void BigEnemy::updateSelf()
 {
 	this->sprite.move(this->speed, 0);
 }
 
-void Enemy::renderEnemy(RenderWindow* target)
+void BigEnemy::renderEnemy(RenderWindow* target)
 {
 	target->draw(this->sprite);
 }
 
-Sprite Enemy::getSprite()
+Sprite BigEnemy::getSprite()
 {
 	return sprite;
 }
 
-float Enemy::getSpeed()
+float BigEnemy::getSpeed()
 {
 	return speed;
 }
 
-void Enemy::setSpeed(float speed)
+void BigEnemy::setHealth(int hp)
+{
+	this->health = hp;
+}
+
+void BigEnemy::setSpeed(float speed)
 {
 	this->speed = speed;
+}
+
+void BigEnemy::setDamage(int dmg)
+{
+	this->damage = dmg;
 }
 
 
@@ -75,14 +85,18 @@ RangedEnemy::RangedEnemy(Texture* texture, float size_x, float size_y, float pos
 {
 }
 
+
+
 void RangedEnemy::updateSelf()
 {
 }
 
-const bool RangedEnemy::canAttack()
+void RangedEnemy::setSpeed(float speed)
 {
-	return false;
+	this->speed = speed;
 }
+
+
 
 
 //----------------------------------------------------------------------------------------------------------------------------------
@@ -97,7 +111,7 @@ void CloseRangeEnemy::updateSelf()
 {
 }
 
-const bool CloseRangeEnemy::canAttack()
+void CloseRangeEnemy::setSpeed(float speed)
 {
-	return false;
 }
+

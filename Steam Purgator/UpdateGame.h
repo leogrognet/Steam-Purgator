@@ -17,7 +17,7 @@ public:
 
 private:
 	Player player;
-	vector<Enemy> enemyList;
+	vector<BigEnemy> enemyList;
 
 };
 

@@ -17,13 +17,14 @@ private :
 	Texture * playerProjectileTexture;
 	Texture* enemyProjectileTexture;
 
+
 	Texture* enemyTexture;
 
 	vector<Projectile*> allPlayerProjectiles;
 
 	vector<Projectile*> allEnemyProjectiles;
 
-	vector <Enemy*> allEnemies;
+	vector <BigEnemy*> allEnemies;
 	unique_ptr<Player> player;
 
 	bool game_on;
