@@ -26,6 +26,7 @@ public:
 	const int& getHpMax() const;
 	const Vector2f& getPos() const;
 	const FloatRect getBounds() const;
+	const float getSpeed() const;
 	
 	void loseHp(const int value);
 

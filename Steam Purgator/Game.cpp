@@ -1,28 +1,40 @@
 #include "Game.h"
 
 
-Game::Game(RenderWindow* window)
+Game::Game()
 {
+	this->window = new RenderWindow(VideoMode(1920, 1080), "Steam Purgator");
+	this->window->setFramerateLimit(60);
+
 	srand(static_cast<unsigned int>(time(nullptr)));
+
 	this->initPlayer();
 	this->initProjectile();
 	this->initEnemy();
+
+	this->score = 0;
 }
 
 Game::~Game()
 {
+	delete this->window;
 }
+
+
+
+//-------------------------------------------------------------------------------------
+//Fonction Init------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------
 
 void Game::initPlayer()
 {
-	this->player = make_unique<Player>(100,100,1.0f,1.0f,500,500,false,0.1f, "asset/Perso stu.png");
+	this->player = make_unique<Player>(100,100,1.0f,1.0f,500,500,false,10.f, "asset/Perso stu.png");
 }
 
 void Game::initProjectile()
 {
 	this->playerProjectileTexture = new Texture;
 	string imagePath = "asset/boulet de canon.png";
-	cout << "test";
 	if (!this->playerProjectileTexture->loadFromFile("asset/boulet de canon.png"))
 	{
 		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
@@ -37,56 +49,72 @@ void Game::initEnemy()
 {
 	
 	this->enemyTexture = new Texture;
-	if (!this->enemyTexture->loadFromFile("asset/Dirigeable ennemie.png"))
+	if (!this->enemyTexture->loadFromFile("asset/Avion.png"))
 	{
 		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
 	}
 }
 
-
-void Game::spawnEnemy(RenderWindow* window)
+int count;
+void Game::spawnEnemy()
 {
-
-	
 	deltaTimeElasped = deltaClock.getElapsedTime();
-	cout << deltaTimeElasped.asSeconds()<< endl;
+
 	if (deltaTimeElasped.asSeconds() >= 3.0f) {
 		deltaClock.restart();
-		cout << "test2" << endl;
-		int enemyX = window->getSize().x - 100;
-		int enemyY = rand() % 600;
-		this->allEnemies.push_back(new BigEnemy(enemyTexture, 20.0f, 20.0f, enemyX, enemyY, false, -0.05f));
+		int enemyX = window->getSize().x - 300;
+		int enemyY = rand() % window->getSize().y;
+
+		// Crée un RangedEnemy en passant la position du joueur
+		Vector2f playerPos = this->player->getPos();  // Obtenez la position actuelle du joueur
+		//this->allEnemies.push_back(new CloseRangeEnemy(enemyTexture, 2.0f, 2.0f, enemyX, enemyY, false, 0.01f, playerPos));  // Passez la position du joueur à l'ennemi
+		this->allEnemies.push_back(new RangedEnemy(enemyTexture, 1.5f, 1.5f, enemyX, enemyY, false, 10.f));
+		count++;
 	}
 }
 
-bool Game::run(RenderWindow *window)
-{	
+
+
+//-------------------------------------------------------------------------------------
+//Fonction Run-------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------
+
+bool Game::run() {
 	startClock.restart();
 	startTimeElapsed = startClock.getElapsedTime();
 	this->game_on = true;
-	while (game_on) {
 
-	Event gameEvent;
-	while (window->pollEvent(gameEvent))
-	{
-		if (gameEvent.Event::type == Event::Closed) {
-			window->close();
+	while (game_on) {
+		Event gameEvent;
+		while (this->window->pollEvent(gameEvent)) {
+			if (gameEvent.type == Event::Closed) {
+				this->window->close();
+			}
+			if (gameEvent.type == Event::KeyPressed && gameEvent.key.code == Keyboard::Escape) {
+				this->game_on = false;
+			}
 		}
-		if (gameEvent.Event::KeyPressed && gameEvent.Event::key.code == Keyboard::Escape) {
-			this->game_on = false;
-		}
+
+		// Mise à jour du jeu
+		this->update();
+
+		// Rendu des objets à l'écran
+		this->render();
 	}
-	
-		this->render(window);
-		this->update(window);
-		
-	}
+
 	return this->game_on;
 }
 
 
 
-void Game::updateInput(RenderWindow* window)
+
+
+
+//-------------------------------------------------------------------------------------
+//Fonction Update----------------------------------------------------------------------
+//-------------------------------------------------------------------------------------
+
+void Game::updateInput()
 {
 	this->player->movement(window);
 
@@ -98,7 +126,7 @@ void Game::updateInput(RenderWindow* window)
 			this->player->getBounds().left + this->player->getBounds().width,
 			this->player->getBounds().top + (this->player->getBounds().height / 2),
 			false,
-			0.1f
+			1.f + this->player->getSpeed()
 		)
 		);
 	}
@@ -117,8 +145,8 @@ void Game::updateEnemy()
 {
 
 	for (auto enemies = this->allEnemies.begin(); enemies != this->allEnemies.end();) {
-		(*enemies)->updateSelf();
-		if ((*enemies)->canAttack()) {
+		(*enemies)->updateSelf(window);
+		/*if ((*enemies)->canAttack()) {
 			this->allEnemyProjectiles.push_back(new Projectile(playerProjectileTexture,
 				20.0f,
 				20.0f,
@@ -128,7 +156,7 @@ void Game::updateEnemy()
 				( (*enemies)->getSpeed() - 0.05f)
 			)
 			);
-		}
+		}*/
 
 		for (auto projectiles = this->allPlayerProjectiles.begin(); projectiles != this->allPlayerProjectiles.end();) {
 
@@ -138,6 +166,8 @@ void Game::updateEnemy()
 
 				delete* projectiles;
 				projectiles = this->allPlayerProjectiles.erase(projectiles); 
+
+				this->score += 10;
 			}
 			else {
 				++projectiles; 
@@ -152,12 +182,12 @@ void Game::updateEnemy()
 
 }
 
-void Game::updateProjectile(RenderWindow* window)
+void Game::updateProjectile()
 {
 	for (auto it = this->allPlayerProjectiles.begin(); it != this->allPlayerProjectiles.end();) {
 		(*it)->updateSelf();
 
-		if ((*it)->getBounds().left + (*it)->getBounds().width > 800) {
+		if ((*it)->getBounds().left + (*it)->getBounds().width > window->getSize().x) {
 			delete* it; 
 			it = this->allPlayerProjectiles.erase(it); 
 		}
@@ -178,32 +208,37 @@ void Game::updateProjectile(RenderWindow* window)
 	}
 }
 
-void Game::updatePlayer(RenderWindow* window)
+void Game::updatePlayer()
 {
 	this->player->update(window);
 }
 
-void Game::update(RenderWindow* window)
+void Game::update()
 {
-	this->updatePlayer(window);
+	this->updatePlayer();
 
-	this->spawnEnemy(window);
+	this->spawnEnemy();
 
-	this->updateInput(window);
+	this->updateInput();
 	
 	
 
-	this->updateProjectile(window);
+	this->updateProjectile();
 
 	this->updateEnemy();
 
-	this->updatePlayer(window);
+	this->updatePlayer();
 
 	
 
 }
 
-void Game::render(RenderWindow* window)
+
+//-------------------------------------------------------------------------------------
+//Fonction Render----------------------------------------------------------------------
+//-------------------------------------------------------------------------------------
+
+void Game::render()
 {
 	window->clear(Color::White);
 

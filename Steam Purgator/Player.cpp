@@ -68,6 +68,11 @@ const FloatRect Player::getBounds() const
 	return this->playerSprite.getGlobalBounds();
 }
 
+const float Player::getSpeed() const
+{
+	return this->speed;
+}
+
 void Player::setHp(const int hp)
 {
 	this->health = hp;
@@ -134,7 +139,6 @@ void Player::movement(RenderWindow* window)
 	else if (Keyboard::isKeyPressed(DirectionBind[Direction::Down])) { 
 		if (this->playerSprite.getPosition().y < (window->getSize().y - playerSprite.getGlobalBounds().height)) {
 			this->playerSprite.move(0, speed);
-			cout << this->playerSprite.getPosition().y << endl;
 		}
 		}
 	if (Keyboard::isKeyPressed(DirectionBind[Direction::Left])) { if (this->playerSprite.getPosition().x > 0) 

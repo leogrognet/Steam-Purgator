@@ -14,6 +14,8 @@ using namespace sf;
 
 class Game {
 private :
+	RenderWindow* window;
+
 	Texture * playerProjectileTexture;
 	Texture* enemyProjectileTexture;
 
@@ -27,6 +29,8 @@ private :
 	vector <BigEnemy*> allEnemies;
 	unique_ptr<Player> player;
 
+	int score;
+
 	bool game_on;
 	Clock startClock;  
 	Time startTimeElapsed;
@@ -38,21 +42,21 @@ private :
 
 public:
 	
-	Game(RenderWindow* window);
+	Game();
 	virtual ~Game();
 
-	bool run(RenderWindow* window);
-	void updateInput(RenderWindow* window);
+	bool run();
+	void updateInput();
 
-	void spawnEnemy(RenderWindow* window);
+	void spawnEnemy();
 	void updateEnemy();
-	void updateProjectile(RenderWindow* window);
-	void updatePlayer(RenderWindow* window);
-	void update(RenderWindow* window);
+	void updateProjectile();
+	void updatePlayer();
+	void update();
 
 	int count=0;
 
-	void render(RenderWindow* window);
+	void render();
 
 };
 

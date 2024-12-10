@@ -101,9 +101,12 @@ int main() {
             optionsMenu.draw(window);
             break;
         case GameState::Joue: {
-            Game game(&window);
-            if(game.run(&window)){}
-            else { gameState = GameState::MainMenu; break; }
+            Game game;
+            if(game.run()){
+                window.close();
+            }
+
+            else { gameState = GameState::MainMenu; window.isOpen(); break; }
             
             if (isHoldingEscape) {
                 window.draw(quittingMessage);
