@@ -5,9 +5,17 @@ enum class GameState { MainMenu, OptionsMenu, Joue, Quitte };
 
 int main() {
 
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Menu principal");
-    std::vector<std::string> mainMenuOptions = { "Lancer le jeu", "Options", "Quitter" };
-    std::vector<std::string> optionsMenuOptions = { "Option 1", "Option 2", "Option 3", "Option 4", "Retour au menu principal" };
+    Texture texture;
+    if (!texture.loadFromFile("C:/Users/tburton/Desktop/asset/bc_menu2.png")) {
+        return -1;
+    }
+
+    Sprite sprite;
+    sprite.setTexture(texture);
+
+    vector<string> mainMenuOptions = { "Lancer", "Options", "Quitter" };
+    vector<string> optionsMenuOptions = { "Choix Stage", "Son", "Debug Mode", "Retour" };
+    vector<string> sonMenuOptions = { "Son +", "Son -", "Retour","Volume Total plus tard" };
     Menu mainMenu(window.getSize().x, window.getSize().y, mainMenuOptions);
     Menu optionsMenu(window.getSize().x, window.getSize().y, optionsMenuOptions);
     GameState gameState = GameState::MainMenu;
