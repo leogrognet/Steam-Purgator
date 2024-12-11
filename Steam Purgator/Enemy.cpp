@@ -148,12 +148,12 @@ CloseRangeEnemy::CloseRangeEnemy(Texture* texture, float size_x, float size_y, f
 	this->sprite.setScale(size_x, size_y);
 	this->speed = speed;
 
-	// Calcul de la direction vers le joueur
-	direction = playerPos - sprite.getPosition();  // Vecteur direction (du ennemi vers le joueur)
+	
+	direction = playerPos - sprite.getPosition();  
 	float length = sqrt(direction.x * direction.x + direction.y * direction.y);
-	direction /= length;  // Normalisation pour une vitesse constante
+	direction /= length;  
 
-	// Vous pouvez ajouter un facteur de vitesse ici si nécessaire
+
 }
 
 void CloseRangeEnemy::updateSelf(RenderWindow* window)

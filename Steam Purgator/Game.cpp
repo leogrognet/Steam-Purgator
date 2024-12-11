@@ -146,7 +146,7 @@ void Game::updateEnemy()
 
 	for (auto enemies = this->allEnemies.begin(); enemies != this->allEnemies.end();) {
 		(*enemies)->updateSelf(window);
-		/*if ((*enemies)->canAttack()) {
+		if ((*enemies)->canAttack() &&  dynamic_cast<RangedEnemy*> (*enemies) == nullptr) {
 			this->allEnemyProjectiles.push_back(new Projectile(playerProjectileTexture,
 				20.0f,
 				20.0f,
@@ -156,7 +156,7 @@ void Game::updateEnemy()
 				( (*enemies)->getSpeed() - 0.05f)
 			)
 			);
-		}*/
+		}
 
 		for (auto projectiles = this->allPlayerProjectiles.begin(); projectiles != this->allPlayerProjectiles.end();) {
 
