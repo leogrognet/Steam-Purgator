@@ -4,9 +4,15 @@
 enum class GameState { MainMenu, OptionsMenu, Joue, Quitte };
 
 int main() {
+    int window_sizex = 1920;
+    int window_sizey = 1080;
+
+    RenderWindow window(VideoMode(window_sizex, window_sizey), "STEAM PURGATOR");
+
 
     Texture texture;
-    if (!texture.loadFromFile("C:/Users/tburton/Desktop/asset/bc_menu2.png")) {
+    if (!texture.loadFromFile("asset/bc menu.png")) {
+        
         return -1;
     }
 
@@ -31,102 +37,105 @@ int main() {
     quittingMessage.setPosition(10, 10);
     sf::Clock escapeHoldTimer;
     bool isHoldingEscape = false;
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                window.close();
-            }
-            if (event.type == sf::Event::KeyPressed) {
-                switch (gameState) {
-                case GameState::MainMenu:
-                    if (event.key.code == sf::Keyboard::Up) {
-                        mainMenu.moveUp();
-                    }
-                    else if (event.key.code == sf::Keyboard::Down) {
-                        mainMenu.moveDown();
-                    }
-                    else if (event.key.code == sf::Keyboard::Enter) {
-                        int selectedIndex = mainMenu.getSelectedIndex();
-                        if (selectedIndex == 0) {
-                            gameState = GameState::Joue;
-                            //window.setSize(sf::Vector2u(1024, 768));
-                            window.setTitle("Jeu en cours");
-                            
-                        }
-                        else if (selectedIndex == 1) {
-                            gameState = GameState::OptionsMenu;
-                        }
-                        else if (selectedIndex == 2) {
-                            gameState = GameState::Quitte;
-                            window.close();
-                        }
-                    }
-                    break;
-                case GameState::OptionsMenu:
-                    if (event.key.code == sf::Keyboard::Up) {
-                        optionsMenu.moveUp();
-                    }
-                    else if (event.key.code == sf::Keyboard::Down) {
-                        optionsMenu.moveDown();
-                    }
-                    else if (event.key.code == sf::Keyboard::Enter) {
-                        int selectedIndex = optionsMenu.getSelectedIndex();
-                        if (selectedIndex == 4) {
-                            gameState = GameState::MainMenu;
-                        }
-                    }
-                    break;
-                default:
-                    break;
+    bool menu_open = true;
+    while (menu_open == true) {
+        while (window.isOpen()) {
+            sf::Event event;
+            while (window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed) {
+                    window.close();
                 }
-            }
-        }
-        if (gameState == GameState::Joue) {
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-                if (!isHoldingEscape) {
-                    isHoldingEscape = true;
-                    escapeHoldTimer.restart();
-                }
-                if (escapeHoldTimer.getElapsedTime().asSeconds() >= 2.0f) {
+                if (event.type == sf::Event::KeyPressed) {
+                    switch (gameState) {
+                    case GameState::MainMenu:
+                        if (event.key.code == sf::Keyboard::Up) {
+                            mainMenu.moveUp();
+                        }
+                        else if (event.key.code == sf::Keyboard::Down) {
+                            mainMenu.moveDown();
+                        }
+                        else if (event.key.code == sf::Keyboard::Enter) {
+                            int selectedIndex = mainMenu.getSelectedIndex();
+                            if (selectedIndex == 0) {
+                                gameState = GameState::Joue;
+                                //window.setSize(sf::Vector2u(1024, 768));
+                                window.setTitle("Jeu en cours");
 
-                    gameState = GameState::MainMenu;
-                    //window.setSize(sf::Vector2u(800, 600));
-                    window.setTitle("Menu principal");
+                            }
+                            else if (selectedIndex == 1) {
+                                gameState = GameState::OptionsMenu;
+                            }
+                            else if (selectedIndex == 2) {
+                                gameState = GameState::Quitte;
+                                window.close();
+                            }
+                        }
+                        break;
+                    case GameState::OptionsMenu:
+                        if (event.key.code == sf::Keyboard::Up) {
+                            optionsMenu.moveUp();
+                        }
+                        else if (event.key.code == sf::Keyboard::Down) {
+                            optionsMenu.moveDown();
+                        }
+                        else if (event.key.code == sf::Keyboard::Enter) {
+                            int selectedIndex = optionsMenu.getSelectedIndex();
+                            if (selectedIndex == 4) {
+                                gameState = GameState::MainMenu;
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                    }
+                }
+            }
+            if (gameState == GameState::Joue) {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                    if (!isHoldingEscape) {
+                        isHoldingEscape = true;
+                        escapeHoldTimer.restart();
+                    }
+                    if (escapeHoldTimer.getElapsedTime().asSeconds() >= 2.0f) {
+
+                        gameState = GameState::MainMenu;
+                        //window.setSize(sf::Vector2u(800, 600));
+                        window.setTitle("Menu principal");
+                        isHoldingEscape = false;
+                    }
+                }
+                else {
                     isHoldingEscape = false;
                 }
             }
-            else {
-                isHoldingEscape = false;
-            }
-        }
-        window.clear();
-        switch (gameState) {
-        case GameState::MainMenu:
-            mainMenu.draw(window);
-            break;
-        case GameState::OptionsMenu:
-            optionsMenu.draw(window);
-            break;
-        case GameState::Joue: {
-            Game game;
-            if(game.run()){
+            window.clear();
+            switch (gameState) {
+            case GameState::MainMenu:
+                mainMenu.draw(window);
+                break;
+            case GameState::OptionsMenu:
+                optionsMenu.draw(window);
+                break;
+            case GameState::Joue: {
+                Game game;
                 window.close();
+                if (game.run()) {
+
+                }
+                else { gameState = GameState::MainMenu; window.isOpen(); break; }
+
+                if (isHoldingEscape) {
+                    window.draw(quittingMessage);
+                }
+
+                break;
             }
 
-            else { gameState = GameState::MainMenu; window.isOpen(); break; }
-            
-            if (isHoldingEscape) {
-                window.draw(quittingMessage);
+            default:
+                break;
             }
-
-            break;
+            window.display();
         }
-            
-        default:
-            break;
-        }
-        window.display();
     }
     return 0;
 }
