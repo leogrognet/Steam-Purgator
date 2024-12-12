@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="D:\shot them up\S64\S64\Souris - Copie.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Enemy.h" />
     <ClCompile Include="Game.cpp" />
