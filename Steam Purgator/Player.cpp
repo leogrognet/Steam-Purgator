@@ -147,6 +147,8 @@ void Player::movement(RenderWindow* window)
 		this->playerSprite.move(speed, 0); }
 }
 
+
+
 int Player::attack()
 {
 	if ((Keyboard::isKeyPressed(AttackBind[Attacks::LeftAttack]))) { return 1; }

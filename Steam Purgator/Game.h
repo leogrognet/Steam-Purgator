@@ -1,4 +1,6 @@
 #include <memory>
+#include <functional>
+#include <cstdlib>
 #include "Projectile.h"
 #include "Player.h"
 #include "Enemy.h"
@@ -19,15 +21,23 @@ private :
 	Texture * playerProjectileTexture;
 	Texture* enemyProjectileTexture;
 
-
+	
 	Texture* enemyTexture;
 
 	vector<Projectile*> allPlayerProjectiles;
 
 	vector<Projectile*> allEnemyProjectiles;
 
+	map<String, Texture*> enemyTextures;
+
 	vector <BigEnemy*> allEnemies;
 	unique_ptr<Player> player;
+
+
+	int currentLevel; 
+	int levelDuration; 
+	int enemySpawnInterval;
+
 
 	int score;
 
@@ -47,8 +57,11 @@ public:
 
 	bool run();
 	void updateInput();
+	void startLevel(int level);
 
 	void spawnEnemy();
+
+	void updateLevel();
 	void updateEnemy();
 	void updateProjectile();
 	void updatePlayer();

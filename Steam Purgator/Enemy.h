@@ -36,6 +36,7 @@ public:
 	virtual void setDamage(int dmg);
 
 protected:
+	bool move_count;
 	int startX;
 	int startY;
 	float amplitudeX;
@@ -51,7 +52,8 @@ protected:
 	Clock moveClock;
 	Time moveTime;
 	float attackCooldownMax;
-
+	bool isMovingLeft = true;
+	float totalTime;
 };
 
 class RangedEnemy : public BigEnemy {
@@ -68,6 +70,8 @@ private:
 	float startX;      // Position de départ horizontale (garde la position initiale en X)
 	float horizontalSpeed; // Vitesse du déplacement horizontal
 };
+
+
 
 
 class CloseRangeEnemy : public BigEnemy {
@@ -92,10 +96,7 @@ private:
 	float diagonalSpeedY;
 	float amplitudeSpeedFactor = 0.002f;
 
-	bool dir = false;
-	float frequency;
-	float angle;
-	float amplitude;
+
 };
 
 

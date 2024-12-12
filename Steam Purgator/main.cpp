@@ -1,6 +1,10 @@
 #include "Menu.h"
 #include"Game.h"
 
+
+
+
+
 enum class GameState { MainMenu, OptionsMenu, Joue, Quitte };
 
 int main() {
@@ -58,7 +62,6 @@ int main() {
                             int selectedIndex = mainMenu.getSelectedIndex();
                             if (selectedIndex == 0) {
                                 gameState = GameState::Joue;
-                                //window.setSize(sf::Vector2u(1024, 768));
                                 window.setTitle("Jeu en cours");
 
                             }

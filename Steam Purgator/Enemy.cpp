@@ -6,7 +6,7 @@ BigEnemy::BigEnemy()
 
 BigEnemy::BigEnemy(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, float mult)
 {
-
+	this->move_count = false;
 	this->attackCooldownMax = 0.5f;
 	this->sprite.setTexture(*texture);
 	this->sprite.setPosition(pos_x, pos_y);
@@ -14,8 +14,7 @@ BigEnemy::BigEnemy(Texture* texture, float size_x, float size_y, float pos_x, fl
 	this->speed = speed;
 
 
-	this->startX = pos_x;  
-	this->startY = pos_y;  
+
 	this->amplitudeX = 100.f * mult; 
 	this->amplitudeY = 50.f * mult;  
 	this->frequencyX = 1.f/mult ;   
@@ -55,14 +54,22 @@ const bool BigEnemy::canAttack()
 
 void BigEnemy::updateSelf(RenderWindow* window)
 {
+	
 	float time = moveClock.getElapsedTime().asSeconds(); // Temps écoulé
 
-	// Calcul du mouvement en "huit"
-	float newX = this->startX + this->amplitudeX * sin(this->frequencyX * time); // Mouvement horizontal
-	float newY = this->startY + this->amplitudeY * sin(this->frequencyY * time); // Mouvement vertical
-
-	// Mise à jour de la position de l'ennemi
-	this->sprite.setPosition(newX, newY);
+	if (this->sprite.getPosition().x > (window->getSize().x - 300) && move_count == false) {
+		this->sprite.move(-speed, 0);
+	}
+	if (this->sprite.getPosition().x <= (window->getSize().x -300) && this->move_count == false) {
+		this->startX = this->sprite.getPosition().x;
+		this->startY = this->sprite.getPosition().y;
+		this->move_count = true;
+	}
+	else if (this->move_count == true ) {
+		float newX = this->startX + this->amplitudeX * sin(this->frequencyX * time); 
+		float newY = this->startY + this->amplitudeY * sin(this->frequencyY * time); 
+		this->sprite.setPosition(newX, newY);
+	}
 }
 
 void BigEnemy::renderEnemy(RenderWindow* target)
@@ -107,6 +114,7 @@ RangedEnemy::RangedEnemy(Texture* texture, float size_x, float size_y, float pos
 	this->sprite.setScale(size_x, size_y);
 	this->speed = speed;
 
+	this->attackCooldownMax = 0.5f;
 	this->startX = pos_x;           // Position de départ horizontale
 	this->startY = pos_y;           // Position de départ verticale
 	this->amplitudeY = 50.f;        // Amplitude verticale (distance de haut en bas)
@@ -118,13 +126,13 @@ void RangedEnemy::updateSelf(RenderWindow* window)
 {
 	float time = moveClock.getElapsedTime().asSeconds(); // Temps écoulé depuis le dernier appel
 
-	// Calcul du mouvement vertical basé sur un sinus
+
 	float newY = this->startY + this->amplitudeY * sin(this->frequencyY * time);
 
-	// Déplacement horizontal constant
+
 	float newX = this->sprite.getPosition().x - horizontalSpeed;
 
-	// Met à jour la position de l'ennemi
+
 	this->sprite.setPosition(newX, newY);
 }
 
@@ -158,9 +166,9 @@ CloseRangeEnemy::CloseRangeEnemy(Texture* texture, float size_x, float size_y, f
 
 void CloseRangeEnemy::updateSelf(RenderWindow* window)
 {
-	// Déplacement vers la position du joueur
-	Vector2f moveVector = direction * speed;  // Mouvement dans la direction calculée
-	sprite.move(moveVector);  // Applique le mouvement
+	
+	Vector2f moveVector = direction * speed;  
+	sprite.move(moveVector);  
 }
 
 

@@ -5,12 +5,13 @@ Game::Game()
 {
 	this->window = new RenderWindow(VideoMode(1920, 1080), "Steam Purgator");
 	this->window->setFramerateLimit(60);
-
+	this->enemySpawnInterval = 4;
 	srand(static_cast<unsigned int>(time(nullptr)));
 
 	this->initPlayer();
 	this->initProjectile();
 	this->initEnemy();
+
 
 	this->score = 0;
 }
@@ -47,31 +48,166 @@ void Game::initProjectile()
 
 void Game::initEnemy()
 {
-	
-	this->enemyTexture = new Texture;
-	if (!this->enemyTexture->loadFromFile("asset/Avion.png"))
+	cout << "test";
+	enemyTextures["ranged"] = new Texture;
+	if (!enemyTextures["ranged"]->loadFromFile("asset/Avion.png"))
 	{
-		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
+		cout << "ERROR::ENEMY::INITTEXTURE::Could not load Ranged enemy texture." << endl;
+	}
+
+	enemyTextures["close"] = new Texture;
+	if (!enemyTextures["close"]->loadFromFile("asset/gargouille.png"))
+	{
+		cout << "ERROR::ENEMY::INITTEXTURE::Could not load Close Range enemy texture." << endl;
+	}
+
+	enemyTextures["big"] = new Texture;
+	if (!enemyTextures["big"]->loadFromFile("asset/Dirigeable ennemie.png"))
+	{
+		cout << "ERROR::ENEMY::INITTEXTURE::Could not load Big enemy texture." << endl;
 	}
 }
 
-int count;
+
+/*void Game::spawnEnemy() {
+	deltaTimeElasped = deltaClock.getElapsedTime();
+
+	if (deltaTimeElasped.asSeconds() >= 2.0f) { // Temps entre deux spawns
+		deltaClock.restart();
+
+		// Définir les types d'ennemis avec leurs poids
+		std::vector<std::pair<std::function<BigEnemy* ()>, int>> enemyTypes = {
+			{ [this]() { return new RangedEnemy(this->enemyTexture, 1.5f, 1.5f, window->getSize().x, rand() % window->getSize().y, false, 10.f); }, 60 },
+			{ [this]() { return new CloseRangeEnemy(this->enemyTexture, 2.0f, 2.0f, window->getSize().x, rand() % window->getSize().y, false, 0.05f, this->player->getPos()); }, 30 },
+			{ [this]() { return new BigEnemy(this->enemyTexture, 3.0f, 3.0f, window->getSize().x, rand() % window->getSize().y, false, 0.03f, 1.5f); }, 10 }
+		};
+
+		// Calculer un ennemi à partir des probabilités
+		int totalWeight = 0;
+		for (const auto& enemyType : enemyTypes) {
+			totalWeight += enemyType.second;
+		}
+
+		int randomWeight = rand() % totalWeight;
+		BigEnemy* spawnedEnemy = nullptr;
+
+		for (const auto& enemyType : enemyTypes) {
+			if (randomWeight < enemyType.second) {
+				spawnedEnemy = enemyType.first();
+				break;
+			}
+			randomWeight -= enemyType.second;
+		}
+
+		if (spawnedEnemy) {
+			this->allEnemies.push_back(spawnedEnemy);
+			count++;
+		}
+	}
+}*/
 void Game::spawnEnemy()
 {
 	deltaTimeElasped = deltaClock.getElapsedTime();
-
-	if (deltaTimeElasped.asSeconds() >= 3.0f) {
+	this->startTimeElapsed = this->startClock.getElapsedTime();
+	if (deltaTimeElasped.asSeconds() >= enemySpawnInterval) {
 		deltaClock.restart();
-		int enemyX = window->getSize().x - 300;
+
+		int enemyX = window->getSize().x ;
 		int enemyY = rand() % window->getSize().y;
 
-		// Crée un RangedEnemy en passant la position du joueur
-		Vector2f playerPos = this->player->getPos();  // Obtenez la position actuelle du joueur
-		//this->allEnemies.push_back(new CloseRangeEnemy(enemyTexture, 2.0f, 2.0f, enemyX, enemyY, false, 0.01f, playerPos));  // Passez la position du joueur à l'ennemi
-		this->allEnemies.push_back(new RangedEnemy(enemyTexture, 1.5f, 1.5f, enemyX, enemyY, false, 10.f));
-		count++;
+		int enemyType = -1;
+		int randomWeight = rand() % 100;
+
+
+
+		if (randomWeight < 90) {
+			if (this->startTimeElapsed.asSeconds() >= 5) {
+				enemyType = 0;
+			}
+		}
+
+		if (randomWeight < 60) {
+			if (this->startTimeElapsed.asSeconds() >= 15) {
+				enemyType = 1;
+			}
+		}
+		
+
+		if (randomWeight < 10) {
+			if (this->startTimeElapsed.asSeconds() >= 20) {
+				enemyType = 2;
+			}
+		}
+		
+
+
+		Texture* selectedTexture = nullptr;
+		switch (enemyType) {
+		case 0:
+			selectedTexture = enemyTextures["close"];
+			break;
+		case 1:
+			selectedTexture = enemyTextures["ranged"];
+			break;
+		case 2:
+			selectedTexture = enemyTextures["big"];
+			break;
+		default:
+			std::cerr << "Unknown enemy type!" << std::endl;
+			break;
+		}
+
+		if (selectedTexture) {
+			switch (enemyType) {
+			case 0:
+				this->allEnemies.push_back(new CloseRangeEnemy(
+					selectedTexture, 2.0f, 2.0f, enemyX, enemyY, false, 10.f, this->player->getPos()
+				));
+				break;
+			case 1:
+				this->allEnemies.push_back(new RangedEnemy(
+					selectedTexture, 1.5f, 1.5f, enemyX, enemyY, false, 10.f
+				));
+				break;
+			
+			case 2:
+				this->allEnemies.push_back(new BigEnemy(
+					selectedTexture, 3.0f, 3.0f, enemyX, enemyY, false, 10.f, 1.5f
+				));
+				break;
+			}
+		}
+
+		std::cout << "Enemy spawned successfully!" << std::endl;
 	}
 }
+
+
+
+
+
+void Game::startLevel(int level) {
+	this->currentLevel = level;
+	this->allEnemies.clear();  // Nettoyer les ennemis existants
+	this->allPlayerProjectiles.clear();
+	this->allEnemyProjectiles.clear();
+
+	// Configurer des paramètres spécifiques au niveau
+	switch (level) {
+	case 1:
+		this->levelDuration = 60; // Durée du niveau 1 (en secondes)
+		this->enemySpawnInterval = 3; // Temps entre les spawns d'ennemis
+		break;
+	case 2:
+		this->levelDuration = 90; // Durée du niveau 2 (en secondes)
+		this->enemySpawnInterval = 2; // Temps entre les spawns d'ennemis
+		break;
+	default:
+		std::cerr << "Level not implemented!" << std::endl;
+		break;
+	}
+}
+
 
 
 
@@ -140,20 +276,34 @@ void Game::updateInput()
 }
 
 
+void Game::updateLevel() {
+	startTimeElapsed = startClock.getElapsedTime();
+
+	if (startTimeElapsed.asSeconds() >= levelDuration) {
+		if (currentLevel == 1) {
+			startLevel(2); // Passer au niveau 2
+		}
+		else if (currentLevel == 2) {
+			game_on = false; // Terminer le jeu après le niveau 2
+		}
+	}
+}
+
+
 
 void Game::updateEnemy()
 {
 
 	for (auto enemies = this->allEnemies.begin(); enemies != this->allEnemies.end();) {
 		(*enemies)->updateSelf(window);
-		if ((*enemies)->canAttack() &&  dynamic_cast<RangedEnemy*> (*enemies) == nullptr) {
+		if ((*enemies)->canAttack() &&  dynamic_cast<CloseRangeEnemy*> (*enemies) == nullptr) {
 			this->allEnemyProjectiles.push_back(new Projectile(playerProjectileTexture,
 				20.0f,
 				20.0f,
 				(*enemies)->getBounds().left + (*enemies)->getBounds().width,
 				(*enemies)->getBounds().top + ((*enemies)->getBounds().height / 2),
 				false,
-				( (*enemies)->getSpeed() - 0.05f)
+				( (-(*enemies)->getSpeed() - 10.f))
 			)
 			);
 		}
@@ -213,23 +363,19 @@ void Game::updatePlayer()
 	this->player->update(window);
 }
 
-void Game::update()
-{
+void Game::update() {
+
 	this->updatePlayer();
 
 	this->spawnEnemy();
 
 	this->updateInput();
-	
-	
 
 	this->updateProjectile();
 
 	this->updateEnemy();
 
-	this->updatePlayer();
-
-	
+	this->updateLevel(); 
 
 }
 
