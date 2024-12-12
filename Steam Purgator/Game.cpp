@@ -5,13 +5,18 @@ Game::Game()
 {
 	this->window = new RenderWindow(VideoMode(1920, 1080), "Steam Purgator");
 	this->window->setFramerateLimit(60);
-	this->enemySpawnInterval = 4;
+	this->enemySpawnInterval = 1;
 	srand(static_cast<unsigned int>(time(nullptr)));
+
+	animP = Vector2f(1, 0);
+	animG = Vector2f(1, 0);
+	animB = Vector2f(1, 0);
+	animD = Vector2f(1, 0);
 
 	this->initPlayer();
 	this->initProjectile();
 	this->initEnemy();
-
+	this->initBG();
 
 	this->score = 0;
 }
@@ -29,113 +34,159 @@ Game::~Game()
 
 void Game::initPlayer()
 {
-	this->player = make_unique<Player>(100,100,1.0f,1.0f,500,500,false,10.f, "asset/Perso stu.png");
+	this->player = make_unique<Player>(100,100,1.0f,1.0f,500,500,false,10.f, "asset/SpriteAsset/Perso stu.png");
 }
 
 void Game::initProjectile()
 {
-	this->playerProjectileTexture = new Texture;
-	string imagePath = "asset/boulet de canon.png";
-	if (!this->playerProjectileTexture->loadFromFile("asset/boulet de canon.png"))
+	//Texture pour le joueur
+
+	this->playerProjectileTexture["boulet"] = new Texture;
+	if (!this->playerProjectileTexture["boulet"]->loadFromFile("asset/SpriteAsset/boulet de canon.png"))
 	{
 		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
 	}
-	else {
-		std::cout << "Texture loaded successfully: " << imagePath << std::endl;
+
+	this->playerProjectileTexture["laser"] = new Texture;
+	if (!this->playerProjectileTexture["laser"]->loadFromFile("asset/SpriteAsset/Laser"))
+	{
+		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
+	}
+
+	this->playerProjectileTexture["missile"] = new Texture;
+	if (!this->playerProjectileTexture["missile"]->loadFromFile("asset/SpriteAsset/missile"))
+	{
+		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
+	}
+
+	this->playerProjectileTexture["bouclier"] = new Texture;
+	if (!this->playerProjectileTexture["bouclier"]->loadFromFile("asset/SpriteAsset/bouclier"))
+	{
+		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
+	}
+
+	this->playerProjectileTexture["bombe"] = new Texture;
+	if (!this->playerProjectileTexture["bombe"]->loadFromFile("asset/SpriteAsset/bouclier"))
+	{
+		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
+	}
+
+
+
+	//Texture pour l'ennemi
+
+	this->enemyProjectileTexture["boulet"] = new Texture;
+	if (!this->enemyProjectileTexture["boulet"]->loadFromFile("asset/SpriteAsset/boulet de canon.png"))
+	{
+		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
+	}
+
+	this->enemyProjectileTexture["bombe"] = new Texture;
+	if (!this->enemyProjectileTexture["bombe"]->loadFromFile("asset/SpriteAsset/bombe.png"))
+	{
+		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
 	}
 
 }
 
 void Game::initEnemy()
 {
-	cout << "test";
-	enemyTextures["ranged"] = new Texture;
-	if (!enemyTextures["ranged"]->loadFromFile("asset/Avion.png"))
+	enemyTextures["Avion"] = new Texture;
+	if (!enemyTextures["Avion"]->loadFromFile("asset/SpriteAsset/Avion.png"))
 	{
-		cout << "ERROR::ENEMY::INITTEXTURE::Could not load Ranged enemy texture." << endl;
+		cout << "ERROR::ENEMY::INITTEXTURE::Could not load Avion enemy texture." << endl;
 	}
 
-	enemyTextures["close"] = new Texture;
-	if (!enemyTextures["close"]->loadFromFile("asset/gargouille.png"))
+	enemyTextures["Gargouille"] = new Texture;
+	if (!enemyTextures["Gargouille"]->loadFromFile("asset/SpriteAsset/gargouille.png"))
 	{
-		cout << "ERROR::ENEMY::INITTEXTURE::Could not load Close Range enemy texture." << endl;
+		cout << "ERROR::ENEMY::INITTEXTURE::Could not load Gargouille enemy texture." << endl;
 	}
 
-	enemyTextures["big"] = new Texture;
-	if (!enemyTextures["big"]->loadFromFile("asset/Dirigeable ennemie.png"))
+	enemyTextures["Dirigeable Ennemi"] = new Texture;
+	if (!enemyTextures["Dirigeable"]->loadFromFile("asset/SpriteAsset/Dirigeable ennemie.png"))
 	{
-		cout << "ERROR::ENEMY::INITTEXTURE::Could not load Big enemy texture." << endl;
+		cout << "ERROR::ENEMY::INITTEXTURE::Could not load Dirigeable Ennemi texture." << endl;
+	}
+	enemyTextures["Boss_1"] = new Texture;
+	if (!enemyTextures["Boss_1"]->loadFromFile("asset/SpriteAsset/Dirigeable ennemie.png"))
+	{
+		cout << "ERROR::ENEMY::INITTEXTURE::Could not load Boss_1 texture." << endl;
+	}
+
+}
+
+void Game::initBG()
+{
+	this->BackGroundTexture["Tour"] = new Texture;
+	if (!this->BackGroundTexture["Tour"]->loadFromFile("asset/SpriteAsset/Tour.png"))
+	{
+		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
+	}
+
+	this->BackGroundTexture["1stMapVide"] = new Texture;
+	if (!this->BackGroundTexture["1stMapVide"]->loadFromFile("asset/SpriteAsset/Map vide.png"))
+	{
+		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
 	}
 }
 
 
-/*void Game::spawnEnemy() {
-	deltaTimeElasped = deltaClock.getElapsedTime();
 
-	if (deltaTimeElasped.asSeconds() >= 2.0f) { // Temps entre deux spawns
-		deltaClock.restart();
-
-		// Définir les types d'ennemis avec leurs poids
-		std::vector<std::pair<std::function<BigEnemy* ()>, int>> enemyTypes = {
-			{ [this]() { return new RangedEnemy(this->enemyTexture, 1.5f, 1.5f, window->getSize().x, rand() % window->getSize().y, false, 10.f); }, 60 },
-			{ [this]() { return new CloseRangeEnemy(this->enemyTexture, 2.0f, 2.0f, window->getSize().x, rand() % window->getSize().y, false, 0.05f, this->player->getPos()); }, 30 },
-			{ [this]() { return new BigEnemy(this->enemyTexture, 3.0f, 3.0f, window->getSize().x, rand() % window->getSize().y, false, 0.03f, 1.5f); }, 10 }
-		};
-
-		// Calculer un ennemi à partir des probabilités
-		int totalWeight = 0;
-		for (const auto& enemyType : enemyTypes) {
-			totalWeight += enemyType.second;
-		}
-
-		int randomWeight = rand() % totalWeight;
-		BigEnemy* spawnedEnemy = nullptr;
-
-		for (const auto& enemyType : enemyTypes) {
-			if (randomWeight < enemyType.second) {
-				spawnedEnemy = enemyType.first();
-				break;
-			}
-			randomWeight -= enemyType.second;
-		}
-
-		if (spawnedEnemy) {
-			this->allEnemies.push_back(spawnedEnemy);
-			count++;
-		}
-	}
-}*/
 void Game::spawnEnemy()
 {
 	deltaTimeElasped = deltaClock.getElapsedTime();
 	this->startTimeElapsed = this->startClock.getElapsedTime();
-	if (deltaTimeElasped.asSeconds() >= enemySpawnInterval) {
-		deltaClock.restart();
+	
+		
+		
+		
+		int min = 200;
+		int max = window->getSize().y - min;
 
 		int enemyX = window->getSize().x ;
-		int enemyY = rand() % window->getSize().y;
+		int enemyY = min + rand() % (max - min + 1);
+
+
 
 		int enemyType = -1;
 		int randomWeight = rand() % 100;
 
-
+		if (startTimeElapsed.asSeconds() >= 30) {
+			this->enemySpawnInterval = 2;
+		}
+		else if (startTimeElapsed.asSeconds() >= 120) {
+			this->enemySpawnInterval = 1;
+		}
+		else if (startTimeElapsed.asSeconds() >= 180) {
+			this->enemySpawnInterval = 0.5f;
+		}
 
 		if (randomWeight < 90) {
-			if (this->startTimeElapsed.asSeconds() >= 5) {
-				enemyType = 0;
+			if (this->startTimeElapsed.asSeconds() >= 1) {
+				if (deltaTimeElasped.asSeconds() >= enemySpawnInterval) {
+					enemyType = 0;
+					deltaClock.restart();
+				}
 			}
 		}
 
 		if (randomWeight < 60) {
 			if (this->startTimeElapsed.asSeconds() >= 15) {
-				enemyType = 1;
+				if (deltaTimeElasped.asSeconds() >= enemySpawnInterval) {
+					enemyType = 1;
+					deltaClock.restart();
+				}
 			}
 		}
 		
 
 		if (randomWeight < 10) {
 			if (this->startTimeElapsed.asSeconds() >= 20) {
-				enemyType = 2;
+				if (deltaTimeElasped.asSeconds() >= enemySpawnInterval) {
+					enemyType = 2;
+					deltaClock.restart();
+				}
 			}
 		}
 		
@@ -152,15 +203,13 @@ void Game::spawnEnemy()
 		case 2:
 			selectedTexture = enemyTextures["big"];
 			break;
-		default:
-			std::cerr << "Unknown enemy type!" << std::endl;
-			break;
 		}
 
 		if (selectedTexture) {
 			switch (enemyType) {
 			case 0:
 				this->allEnemies.push_back(new CloseRangeEnemy(
+					
 					selectedTexture, 2.0f, 2.0f, enemyX, enemyY, false, 10.f, this->player->getPos()
 				));
 				break;
@@ -177,10 +226,8 @@ void Game::spawnEnemy()
 				break;
 			}
 		}
-
-		std::cout << "Enemy spawned successfully!" << std::endl;
 	}
-}
+
 
 
 
@@ -195,7 +242,7 @@ void Game::startLevel(int level) {
 	// Configurer des paramètres spécifiques au niveau
 	switch (level) {
 	case 1:
-		this->levelDuration = 60; // Durée du niveau 1 (en secondes)
+		this->levelDuration = 5; // Durée du niveau 1 (en secondes)
 		this->enemySpawnInterval = 3; // Temps entre les spawns d'ennemis
 		break;
 	case 2:
@@ -256,9 +303,9 @@ void Game::updateInput()
 
 	if (this->player->attack() == 1 && this->player->canAttack()) 
 	{
-		this->allPlayerProjectiles.push_back(new Projectile(playerProjectileTexture,
-			20.0f,
-			20.0f,
+		this->allPlayerProjectiles.push_back(new Projectile(playerProjectileTexture["boulet"],
+			5.0f,
+			5.0f,
 			this->player->getBounds().left + this->player->getBounds().width,
 			this->player->getBounds().top + (this->player->getBounds().height / 2),
 			false,
@@ -276,8 +323,44 @@ void Game::updateInput()
 }
 
 
+void Game::updateAnim()
+{
+	animP.x++;
+	if (animP.x * 54 >= this->player->getTexture().getSize().x) {
+		animP.x = 0;
+	}
+	animG.x++;
+	if (animG.x * 100 >= enemyTextures["Gargouille"]->getSize().x) {
+		animG.x = 0;
+	}
+	animB.x++;
+	if (animB.x * 274 >= enemyTextures["Boss_1"]->getSize().x) {
+		animB.x = 0;
+	}
+	animD.x++;
+	if (animD.x * 47 >= enemyTextures["Dirigeable Ennemi"]->getSize().x) {
+		animD.x = 0;
+	}
+
+	if (TourMap.getPosition().x <= -347) {
+		TourMap.setPosition(Vector2f(window->getSize().x + 350, 384));
+	}
+	if (TourMap.getPosition().x > -347 and TourMap.getPosition().x <= window->getSize().x + 350) {
+		TourMap.setPosition(Vector2f(TourMap.getPosition().x - 10, 384));
+	}
+	for (auto enemies = this->allEnemies.begin(); enemies != this->allEnemies.end();) {
+		if (dynamic_cast<BigEnemy*> (*enemies) != nullptr) {
+			(*enemies)->getSprite().setTextureRect(IntRect(animD.x * 100, animG.y * 100, 100, 100));
+		}
+		if (dynamic_cast<CloseRangeEnemy*> (*enemies) != nullptr) {
+			(*enemies)->getSprite().setTextureRect(IntRect(animG.x * 100, animG.y * 100, 100, 100));
+		}
+	}
+}
+
 void Game::updateLevel() {
 	startTimeElapsed = startClock.getElapsedTime();
+
 
 	if (startTimeElapsed.asSeconds() >= levelDuration) {
 		if (currentLevel == 1) {
@@ -297,23 +380,48 @@ void Game::updateEnemy()
 	for (auto enemies = this->allEnemies.begin(); enemies != this->allEnemies.end();) {
 		(*enemies)->updateSelf(window);
 		if ((*enemies)->canAttack() &&  dynamic_cast<CloseRangeEnemy*> (*enemies) == nullptr) {
-			this->allEnemyProjectiles.push_back(new Projectile(playerProjectileTexture,
-				20.0f,
-				20.0f,
+			
+			this->allEnemyProjectiles.push_back(new Projectile(enemyProjectileTexture["Boulet"],
+				5.0f,
+				5.0f,
 				(*enemies)->getBounds().left + (*enemies)->getBounds().width,
 				(*enemies)->getBounds().top + ((*enemies)->getBounds().height / 2),
 				false,
 				( (-(*enemies)->getSpeed() - 10.f))
 			)
 			);
+			for (auto enemyProjectiles = this->allEnemyProjectiles.begin(); enemyProjectiles != this->allEnemyProjectiles.end();) {
+				if ((*enemyProjectiles)->getBounds().intersects(this->player->getBounds())) {
+					this->player->loseHp((*enemies)->getDamage());
+					cout << this->player->getHp();
+					delete* enemyProjectiles;
+					enemyProjectiles = this->allEnemyProjectiles.erase(enemyProjectiles);
+				}
+				else {
+					++enemyProjectiles;
+				}
+			}
 		}
+
+			
+		if ((*enemies)->getBounds().intersects(this->player->getBounds())) {
+				this->player->loseHp((*enemies)->getDamage());
+				cout << this->player->getHp();
+				delete* enemies;
+				enemies = this->allEnemies.erase(enemies);
+		}
+		
+		
+
 
 		for (auto projectiles = this->allPlayerProjectiles.begin(); projectiles != this->allPlayerProjectiles.end();) {
 
 			if ((*projectiles)->getBounds().intersects((*enemies)->getBounds())) {
-				delete* enemies;
-				enemies = this->allEnemies.erase(enemies); 
-
+				(*enemies)->setHealth((*enemies)->getHealth() - this->player->getDamage());
+				if ((*enemies)->getHealth() <= 0) {
+					delete* enemies;
+					enemies = this->allEnemies.erase(enemies);
+				}
 				delete* projectiles;
 				projectiles = this->allPlayerProjectiles.erase(projectiles); 
 
@@ -328,6 +436,7 @@ void Game::updateEnemy()
 			++enemies;
 		}
 	}
+	
 
 
 }
@@ -361,10 +470,13 @@ void Game::updateProjectile()
 void Game::updatePlayer()
 {
 	this->player->update(window);
+	if (this->player->getHp() <= 0) {
+
+	}
 }
 
 void Game::update() {
-
+	
 	this->updatePlayer();
 
 	this->spawnEnemy();

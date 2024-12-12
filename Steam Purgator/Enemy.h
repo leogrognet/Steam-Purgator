@@ -23,13 +23,15 @@ public:
 	const Vector2f& getPos() const;
 	const FloatRect getBounds() const;
 
+	int getHealth();
+
 	virtual const bool canAttack();
 
 	virtual void updateSelf(RenderWindow* window);
 	void renderEnemy(RenderWindow* target);
 	Sprite getSprite();
 	float getSpeed();
-
+	int getDamage();
 	
 	virtual void setHealth(int hp);
 	virtual void setSpeed(float speed);

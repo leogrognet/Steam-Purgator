@@ -10,6 +10,7 @@ Player::Player(int hp, int maxHp, float size_x, float size_y, float pos_x, float
 	this->AttackBind[Attacks::LeftAttack] = Keyboard::Space;
 
 	this->speed = speed;
+	this->damage = 10;
 
 	this->initVariables();
 	this->initTexture(image);
@@ -71,6 +72,21 @@ const FloatRect Player::getBounds() const
 const float Player::getSpeed() const
 {
 	return this->speed;
+}
+
+const int Player::getDamage() const
+{
+	return this->damage;
+}
+
+const Sprite Player::getSprite() const
+{
+	return this->playerSprite;
+}
+
+const Texture Player::getTexture() const
+{
+	return this->texture;
 }
 
 void Player::setHp(const int hp)

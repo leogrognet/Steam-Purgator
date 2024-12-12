@@ -18,10 +18,11 @@ class Game {
 private :
 	RenderWindow* window;
 
-	Texture * playerProjectileTexture;
-	Texture* enemyProjectileTexture;
+	map<String, Texture*> playerProjectileTexture;
+	map<String, Texture*> enemyProjectileTexture;
+	map<String, Texture*> BackGroundTexture;
 
-	
+	Sprite TourMap;
 	Texture* enemyTexture;
 
 	vector<Projectile*> allPlayerProjectiles;
@@ -37,7 +38,7 @@ private :
 	int currentLevel; 
 	int levelDuration; 
 	int enemySpawnInterval;
-
+	Vector2f animP, animG, animB, animD;
 
 	int score;
 
@@ -49,6 +50,8 @@ private :
 	void initPlayer();
 	void initProjectile();
 	void initEnemy();
+	void initBG();
+
 
 public:
 	
@@ -61,6 +64,7 @@ public:
 
 	void spawnEnemy();
 
+	void updateAnim();
 	void updateLevel();
 	void updateEnemy();
 	void updateProjectile();

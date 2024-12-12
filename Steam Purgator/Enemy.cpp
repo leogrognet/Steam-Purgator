@@ -12,8 +12,8 @@ BigEnemy::BigEnemy(Texture* texture, float size_x, float size_y, float pos_x, fl
 	this->sprite.setPosition(pos_x, pos_y);
 	this->sprite.setScale(size_x, size_y);
 	this->speed = speed;
-
-
+	this->health = 100;
+	this->damage = 10;
 
 	this->amplitudeX = 100.f * mult; 
 	this->amplitudeY = 50.f * mult;  
@@ -37,6 +37,11 @@ const Vector2f& BigEnemy::getPos() const
 const FloatRect BigEnemy::getBounds() const
 {
 	return this->sprite.getGlobalBounds();
+}
+
+int BigEnemy::getHealth()
+{
+	return this->health;
 }
 
 
@@ -79,12 +84,17 @@ void BigEnemy::renderEnemy(RenderWindow* target)
 
 Sprite BigEnemy::getSprite()
 {
-	return sprite;
+	return  this->sprite;
 }
 
 float BigEnemy::getSpeed()
 {
-	return speed;
+	return this->speed;
+}
+
+int BigEnemy::getDamage()
+{
+	return this->damage;
 }
 
 void BigEnemy::setHealth(int hp)
@@ -112,7 +122,10 @@ RangedEnemy::RangedEnemy(Texture* texture, float size_x, float size_y, float pos
 	this->sprite.setTexture(*texture);
 	this->sprite.setPosition(pos_x, pos_y);
 	this->sprite.setScale(size_x, size_y);
+
+	this->damage = 10;
 	this->speed = speed;
+	this->health = 20;
 
 	this->attackCooldownMax = 0.5f;
 	this->startX = pos_x;           // Position de départ horizontale
@@ -154,6 +167,9 @@ CloseRangeEnemy::CloseRangeEnemy(Texture* texture, float size_x, float size_y, f
 	this->sprite.setTexture(*texture);
 	this->sprite.setPosition(pos_x, pos_y);
 	this->sprite.setScale(size_x, size_y);
+
+	this->damage = 10;
+	this->health = 20;
 	this->speed = speed;
 
 	

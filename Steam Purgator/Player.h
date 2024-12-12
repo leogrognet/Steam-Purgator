@@ -27,7 +27,10 @@ public:
 	const Vector2f& getPos() const;
 	const FloatRect getBounds() const;
 	const float getSpeed() const;
-	
+	const int getDamage() const;
+	const Sprite getSprite() const;
+	const Texture getTexture() const;
+
 	void loseHp(const int value);
 
 	void setHp(const int hp);
@@ -63,6 +66,7 @@ private:
 
 	int health;
 	int maxHealth;
+	int damage;
 	
 	float attackCooldownMax;
 

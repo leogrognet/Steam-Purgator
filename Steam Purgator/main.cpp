@@ -15,7 +15,7 @@ int main() {
 
 
     Texture texture;
-    if (!texture.loadFromFile("asset/bc menu.png")) {
+    if (!texture.loadFromFile("asset/SpriteAsset/bc menu.png")) {
         
         return -1;
     }
@@ -30,7 +30,7 @@ int main() {
     Menu optionsMenu(window.getSize().x, window.getSize().y, optionsMenuOptions);
     GameState gameState = GameState::MainMenu;
     sf::Font font;
-    if (!font.loadFromFile("asset/arial.ttf")) {
+    if (!font.loadFromFile("asset/textAsset/arial.ttf")) {
         return -1;
     }
     sf::Text quittingMessage;
