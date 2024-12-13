@@ -16,7 +16,7 @@ public:
 
 	BigEnemy();
 
-	BigEnemy(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, float mult);
+	BigEnemy(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, float mult,int left, int top, int width, int height);
 	virtual ~BigEnemy();
 
 
@@ -45,7 +45,11 @@ protected:
 	float amplitudeY;
 	float frequencyX;
 	float frequencyY;
+
+	Texture* texture;
 	Sprite sprite;
+
+
 	float speed;
 	int health;
 	int damage;
@@ -56,6 +60,9 @@ protected:
 	float attackCooldownMax;
 	bool isMovingLeft = true;
 	float totalTime;
+
+	int left, top, width, height;
+	Vector2f deltaTexture;
 };
 
 class RangedEnemy : public BigEnemy {
@@ -79,11 +86,11 @@ private:
 class CloseRangeEnemy : public BigEnemy {
 public:
 
-	CloseRangeEnemy(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, Vector2f playerPos);
+	CloseRangeEnemy(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, Vector2f playerPos, int left, int top, int width, int height);
 
 
 	void updateSelf(RenderWindow *window) override ;
-
+	void updateAnimation();
 	void setSpeed(float speed) override;
 
 private:

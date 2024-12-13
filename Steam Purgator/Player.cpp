@@ -79,7 +79,7 @@ const int Player::getDamage() const
 	return this->damage;
 }
 
-const Sprite Player::getSprite() const
+Sprite Player::getSprite()
 {
 	return this->playerSprite;
 }

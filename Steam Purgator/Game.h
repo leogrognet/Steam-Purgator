@@ -23,7 +23,6 @@ private :
 	map<String, Texture*> BackGroundTexture;
 
 	Sprite TourMap;
-	Texture* enemyTexture;
 
 	vector<Projectile*> allPlayerProjectiles;
 
@@ -52,6 +51,10 @@ private :
 	void initEnemy();
 	void initBG();
 
+
+	Clock animClock;            // Horloge pour contrôler l'animation
+	Vector2f animTourmap;     // Frame actuelle de Tourmap (ou autre objet)
+	float animSpeed = 0.1f;
 
 public:
 	

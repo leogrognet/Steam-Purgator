@@ -2,7 +2,7 @@
 
     Menu::Menu(float width, float height, const std::vector<std::string>& options)
         : selectedIndex(0) {
-        if (!font.loadFromFile("asset/arial.ttf")) {
+        if (!font.loadFromFile("asset/textAsset/arial.ttf")) {
         }
         for (size_t i = 0; i < options.size(); ++i) {
             sf::Text text;

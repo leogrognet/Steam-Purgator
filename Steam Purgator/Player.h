@@ -28,7 +28,7 @@ public:
 	const FloatRect getBounds() const;
 	const float getSpeed() const;
 	const int getDamage() const;
-	const Sprite getSprite() const;
+	Sprite getSprite() ;
 	const Texture getTexture() const;
 
 	void loseHp(const int value);
