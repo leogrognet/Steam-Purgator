@@ -6,12 +6,26 @@ BigEnemy::BigEnemy()
 
 BigEnemy::BigEnemy(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, float mult, int left, int top, int width, int height)
 {
+
+
 	this->move_count = false;
 	this->attackCooldownMax = 0.5f;
+
+	
+	this->texture = texture;
 	this->sprite.setTexture(*texture);
 	this->sprite.setTextureRect(IntRect(left,top,width,height));
 	this->sprite.setPosition(pos_x, pos_y);
 	this->sprite.setScale(size_x, size_y);
+
+	this->deltaTexture = Vector2f(1, 0);
+
+	this->top = top;
+	this->left = left;
+	this->width = width;
+	this->height = height;
+
+
 	this->speed = speed;
 	this->health = 100;
 	this->damage = 10;
@@ -61,8 +75,10 @@ const bool BigEnemy::canAttack()
 
 void BigEnemy::updateSelf(RenderWindow* window)
 {
+
 	
-	float time = moveClock.getElapsedTime().asSeconds(); // Temps écoulé
+	
+	float time = moveClock.getElapsedTime().asSeconds(); 
 
 	if (this->sprite.getPosition().x > (window->getSize().x - 300) && move_count == false) {
 		this->sprite.move(-speed, 0);
@@ -77,11 +93,27 @@ void BigEnemy::updateSelf(RenderWindow* window)
 		float newY = this->startY + this->amplitudeY * sin(this->frequencyY * time); 
 		this->sprite.setPosition(newX, newY);
 	}
+
+	updateAnim();
 }
 
 void BigEnemy::renderEnemy(RenderWindow* target)
 {
 	target->draw(this->sprite);
+}
+
+void BigEnemy::updateAnim()
+{
+	AnimTime = AnimClock.getElapsedTime();
+	if (AnimTime.asMilliseconds() > 100){
+		deltaTexture.x++;
+		AnimClock.restart();
+	}
+
+	if (this->texture != nullptr && this->deltaTexture.x * this->width >= this->texture->getSize().x) {
+		deltaTexture.x = 0;
+	}
+	this->sprite.setTextureRect(IntRect(deltaTexture.x * this->width, deltaTexture.y * this->height, this->width, this->height));
 }
 
 Sprite BigEnemy::getSprite()
@@ -167,7 +199,7 @@ void RangedEnemy::setSpeed(float speed)
 //CloseRangeEnemy//-----------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------
 
-CloseRangeEnemy::CloseRangeEnemy(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, Vector2f playerPos, int left, int top, int width, int height)
+CloseRangeEnemy::CloseRangeEnemy(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, Vector2f playerPos, int left, int top, int width, int height )
 {
 	this->texture = texture;
 	this->sprite.setTexture(*texture);
@@ -175,9 +207,17 @@ CloseRangeEnemy::CloseRangeEnemy(Texture* texture, float size_x, float size_y, f
 	this->sprite.setScale(size_x, size_y);
 	this->sprite.setTextureRect(IntRect(left, top, width, height));
 
+
+	this->top = top;
+	this->left = left;
+	this->width = width;
+	this->height = height;
+
 	this->damage = 10;
 	this->health = 20;
 	this->speed = speed;
+
+	deltaTexture = Vector2f(1, 0);
 
 	
 	direction = playerPos - sprite.getPosition();  
@@ -189,24 +229,11 @@ CloseRangeEnemy::CloseRangeEnemy(Texture* texture, float size_x, float size_y, f
 
 void CloseRangeEnemy::updateSelf(RenderWindow* window)
 {
-
+	this->updateAnim();
 	Vector2f moveVector = direction * speed;  
 	sprite.move(moveVector);  
-	this->updateAnimation();
 }
 
-void CloseRangeEnemy::updateAnimation()
-{
-	if (!this->texture) {
-		std::cerr << "Erreur : texture non initialisée dans updateAnimation." << std::endl;
-		return;
-	}
-
-	deltaTexture.x++;
-	if (this->deltaTexture.x * 100 >= this->texture->getSize().x) {
-		deltaTexture.x = 0;
-	}
-}
 
 
 

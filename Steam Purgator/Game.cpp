@@ -17,6 +17,7 @@ Game::Game()
 
 
 	this->initPlayer();
+	this->initAmmo();
 	this->initProjectile();
 	this->initEnemy();
 	this->initBG();
@@ -63,8 +64,37 @@ Game::~Game()
 
 void Game::initPlayer()
 {
-	this->player = make_unique<Player>(100,100,1.0f,1.0f,500,500,false,10.f, "asset/SpriteAsset/Perso stu.png");
+	this->player = make_unique<Player>(100,100,1.0f,1.0f,500,500,false,10.f, "asset/SpriteAsset/Perso stu.png",54,30,54,30 );
 }
+
+void Game::initAmmo()
+{
+	this->AmmoTexture["bombeMunition"] = new Texture;
+	if (!this->playerProjectileTexture["bombeMunition"]->loadFromFile("asset/SpriteAsset/mun Bombe.png"))
+	{
+		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
+	}
+
+	this->AmmoTexture["laserMunition"] = new Texture;
+	if (!this->playerProjectileTexture["laserMunition"]->loadFromFile("asset/SpriteAsset/mun laser.png"))
+	{
+		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
+	}
+
+	this->AmmoTexture["missileMunition"] = new Texture;
+	if (!this->playerProjectileTexture["missileMunition"]->loadFromFile("asset/SpriteAsset/mun missile.png"))
+	{
+		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
+	}
+
+	this->AmmoTexture["bouclierMunition"] = new Texture;
+	if (!this->playerProjectileTexture["bouclierMunition"]->loadFromFile("asset/SpriteAsset/mun Bouclier.png"))
+	{
+		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
+	}
+}
+
+
 
 void Game::initProjectile()
 {
@@ -237,8 +267,9 @@ void Game::spawnEnemy()
 			switch (enemyType) {
 			case 0:
 				this->allEnemies.push_back(new CloseRangeEnemy(
-					
-					selectedTexture, 2.0f, 2.0f, enemyX, enemyY, false, 10.f, this->player->getPos(), animG.x * 100, animG.y * 100, 100, 100
+
+					selectedTexture, 2.0f, 2.0f, enemyX, enemyY, false, 10.f, this->player->getPos(), 
+				100, 100, 100, 100
 				));
 				break;
 			case 1:
@@ -249,7 +280,8 @@ void Game::spawnEnemy()
 			
 			case 2:
 				this->allEnemies.push_back(new BigEnemy(
-					selectedTexture, 3.0f, 3.0f, enemyX, enemyY, false, 10.f, 1.5f, animD.x * 47, animD.y * 31, 47, 31
+					selectedTexture, 3.0f, 3.0f, enemyX, enemyY, false, 10.f, 1.5f, 
+					47, 31,47,31
 				));
 				break;
 			}
@@ -343,112 +375,38 @@ void Game::updateInput()
 	}
 
 	if (this->player->attack() == 2) {
+		switch (currentWeapon) {
+		case 0:
+			if (this->player->weaponCount["missileUse"] > 0) {
 
+			}
+		case 1:
+			if (this->player->weaponCount["laserUse"] > 0) {
+
+			}
+		case 2:
+			if (this->player->weaponCount["shieldUse"] > 0) {
+
+			}
+		case 3:
+			if (this->player->weaponCount["bombUse"] > 0) {
+
+			}
+		}
 	}
 	if (this->player->attack() == 3) {
-
+		currentWeapon++;
+		if (currentWeapon > 3) {
+			currentWeapon = 0;
+		}
 	}
+	
 }
 
 
-void Game::updateAnim() {
-	static sf::Clock clock; // Horloge pour suivre le temps écoulé
-	float elapsedTime = clock.restart().asSeconds(); // Temps écoulé depuis la dernière frame
-
-	// Vitesse des animations (en secondes par frame)
-	const float playerAnimSpeed = 0.1f;  // 10 FPS pour le joueur
-	const float gargouilleAnimSpeed = 0.15f;  // 6.67 FPS pour les gargouilles
-	const float bossAnimSpeed = 0.2f;  // 5 FPS pour les boss
-	const float dirigeableAnimSpeed = 0.12f;  // 8.33 FPS pour les dirigeables
-
-	// Suivi des temps accumulés pour chaque animation
-	static float playerTimeAccumulator = 0.f;
-	static float gargouilleTimeAccumulator = 0.f;
-	static float bossTimeAccumulator = 0.f;
-	static float dirigeableTimeAccumulator = 0.f;
-
-	// Mise à jour du temps accumulé
-	playerTimeAccumulator += elapsedTime;
-	gargouilleTimeAccumulator += elapsedTime;
-	bossTimeAccumulator += elapsedTime;
-	dirigeableTimeAccumulator += elapsedTime;
-
-	// Mise à jour de l'animation du joueur
-	if (playerTimeAccumulator >= playerAnimSpeed) {
-		animP.x++;
-		if (animP.x * 54 >= this->player->getTexture().getSize().x) {
-			animP.x = 0;  // Réinitialisation de l'animation
-			animP.y++;    // Passer à la ligne suivante si nécessaire
-			if (animP.y * 54 >= this->player->getTexture().getSize().y) {
-				animP.y = 0;  // Réinitialiser si on dépasse les lignes
-			}
-		}
-		this->player->getSprite().setTextureRect(sf::IntRect(animP.x * 54, animP.y * 54, 54, 54));
-		playerTimeAccumulator = 0.f; // Réinitialiser l'accumulateur
-	}
-
-	// Mise à jour de l'animation des gargouilles
-	if (gargouilleTimeAccumulator >= gargouilleAnimSpeed) {
-		animG.x++;
-		if (animG.x * 100 >= enemyTextures["Gargouille"]->getSize().x) {
-			animG.x = 0;  // Réinitialisation de l'animation
-			animG.y++;
-			if (animG.y * 100 >= enemyTextures["Gargouille"]->getSize().y) {
-				animG.y = 0;  // Réinitialiser si on dépasse les lignes
-			}
-		}
-		gargouilleTimeAccumulator = 0.f; // Réinitialiser l'accumulateur
-	}
-
-	// Mise à jour de l'animation des boss
-	if (bossTimeAccumulator >= bossAnimSpeed) {
-		animB.x++;
-		if (animB.x * 274 >= enemyTextures["Boss_1"]->getSize().x) {
-			animB.x = 0;
-			animB.y++;
-			if (animB.y * 274 >= enemyTextures["Boss_1"]->getSize().y) {
-				animB.y = 0;
-			}
-		}
-		bossTimeAccumulator = 0.f; // Réinitialiser l'accumulateur
-	}
-
-	// Mise à jour de l'animation des dirigeables
-	if (dirigeableTimeAccumulator >= dirigeableAnimSpeed) {
-		animD.x++;
-		if (animD.x * 47 >= enemyTextures["Dirigeable Ennemi"]->getSize().x) {
-			animD.x = 0;
-			animD.y++;
-			if (animD.y * 47 >= enemyTextures["Dirigeable Ennemi"]->getSize().y) {
-				animD.y = 0;
-			}
-		}
-		dirigeableTimeAccumulator = 0.f; // Réinitialiser l'accumulateur
-	}
-
-	// Application des animations sur les sprites
-	for (auto enemies = this->allEnemies.begin(); enemies != this->allEnemies.end(); ++enemies) {
-		if (dynamic_cast<BigEnemy*>(*enemies) != nullptr) {
-			(*enemies)->getSprite().setTextureRect(sf::IntRect(animD.x * 47, animD.y * 31, 47, 31));
-		}
-		if (dynamic_cast<CloseRangeEnemy*>(*enemies) != nullptr) {
-			(*enemies)->getSprite().setTextureRect(sf::IntRect(animG.x * 100, animG.y * 100, 100, 100));
-		}
-		// Ajouter d'autres animations pour les autres types d'ennemis si nécessaire
-	}
-}
 
 
-/*void updateAnim(sf::Sprite& sprite, sf::Vector2f& animFrame, const sf::Texture& texture, int frameWidth, int frameHeight, float animSpeed, sf::Clock& clock) {*
-	if (clock.getElapsedTime().asSeconds() > animSpeed) {
-		animFrame.x++;
-		if (animFrame.x * frameWidth >= texture.getSize().x) {
-			animFrame.x = 0; // Réinitialise à la première frame
-		}
-		sprite.setTextureRect(sf::IntRect(animFrame.x * frameWidth, animFrame.y * frameHeight, frameWidth, frameHeight));
-		clock.restart();
-	}
-}*/
+
 
 
 
@@ -540,25 +498,27 @@ void Game::updateProjectile()
 	for (auto it = this->allPlayerProjectiles.begin(); it != this->allPlayerProjectiles.end();) {
 		(*it)->updateSelf();
 
-		if ((*it)->getBounds().left + (*it)->getBounds().width > window->getSize().x) {
-			delete* it; 
-			it = this->allPlayerProjectiles.erase(it); 
+		if ((*it)->getBounds().left + (*it)->getBounds().width > window->getSize().x && dynamic_cast<Shield*> (*it) == nullptr && dynamic_cast<Laser*> (*it) == nullptr) {
+			delete* it;
+			it = this->allPlayerProjectiles.erase(it);
 		}
-		else {
-			++it; 
-		}
-	}
-	for (auto it = this->allEnemyProjectiles.begin(); it != this->allEnemyProjectiles.end();) {
-		(*it)->updateSelf();
-
-		if ((*it)->getBounds().left + (*it)->getBounds().width < 0.f) {
+		else if ((*it)->getBounds().left + (*it)->getBounds().width < 0.f && dynamic_cast<Shield*> (*it) == nullptr && dynamic_cast<Laser*> (*it) == nullptr) {
 			delete* it;
 			it = this->allEnemyProjectiles.erase(it);
 		}
 		else {
 			++it;
 		}
+		for (auto enemies = this->allEnemies.begin(); enemies != this->allEnemies.end();) {
+			if (dynamic_cast<Laser*> (*it) != nullptr) {
+				if ((*it)->getBounds().intersects((*enemies)->getSprite().getGlobalBounds())) {
+					(*it)->getSprite().setTextureRect((*it)->getSprite().getTextureRect().width()-(*enemies)->getSprite().getGlobalBounds().left);
+				}
+			}
+		}
 	}
+
+
 }
 
 void Game::updatePlayer()
@@ -572,7 +532,8 @@ void Game::updatePlayer()
 void Game::update() {
 	
 
-	this->updateAnim();
+	
+
 
 	this->updatePlayer();
 

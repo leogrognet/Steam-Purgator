@@ -16,7 +16,7 @@ public:
 
 	BigEnemy();
 
-	BigEnemy(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, float mult,int left, int top, int width, int height);
+	BigEnemy(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, float mult, int left, int top, int width, int height);
 	virtual ~BigEnemy();
 
 
@@ -29,13 +29,17 @@ public:
 
 	virtual void updateSelf(RenderWindow* window);
 	void renderEnemy(RenderWindow* target);
+	void updateAnim();
+
 	Sprite getSprite();
+	Sprite sprite;
 	float getSpeed();
 	int getDamage();
 	
 	virtual void setHealth(int hp);
 	virtual void setSpeed(float speed);
 	virtual void setDamage(int dmg);
+
 
 protected:
 	bool move_count;
@@ -46,17 +50,21 @@ protected:
 	float frequencyX;
 	float frequencyY;
 
+	
 	Texture* texture;
-	Sprite sprite;
-
 
 	float speed;
 	int health;
 	int damage;
+
+
 	Clock shootClock;
 	Time shootTime;
 	Clock moveClock;
 	Time moveTime;
+	Clock AnimClock;
+	Time AnimTime;
+	
 	float attackCooldownMax;
 	bool isMovingLeft = true;
 	float totalTime;
@@ -90,7 +98,6 @@ public:
 
 
 	void updateSelf(RenderWindow *window) override ;
-	void updateAnimation();
 	void setSpeed(float speed) override;
 
 private:

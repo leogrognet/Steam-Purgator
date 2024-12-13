@@ -21,6 +21,7 @@ private :
 	map<String, Texture*> playerProjectileTexture;
 	map<String, Texture*> enemyProjectileTexture;
 	map<String, Texture*> BackGroundTexture;
+	map<String, Texture*> AmmoTexture;
 
 	Sprite TourMap;
 
@@ -34,6 +35,7 @@ private :
 	unique_ptr<Player> player;
 
 
+	int currentWeapon;
 	int currentLevel; 
 	int levelDuration; 
 	int enemySpawnInterval;
@@ -47,10 +49,11 @@ private :
 	Clock deltaClock;
 	Time deltaTimeElasped;
 	void initPlayer();
+	void initAmmo();
 	void initProjectile();
 	void initEnemy();
 	void initBG();
-
+	
 
 	Clock animClock;            // Horloge pour contrôler l'animation
 	Vector2f animTourmap;     // Frame actuelle de Tourmap (ou autre objet)
@@ -67,7 +70,7 @@ public:
 
 	void spawnEnemy();
 
-	void updateAnim();
+
 	void updateLevel();
 	void updateEnemy();
 	void updateProjectile();

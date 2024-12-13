@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(int hp, int maxHp, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, string image) : health(hp), maxHealth(maxHp)
+Player::Player(int hp, int maxHp, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, string image, int left, int top, int width, int height) : health(hp), maxHealth(maxHp)
 {
 	this->DirectionBind[Direction::Up] = Keyboard::Z;
 	this->DirectionBind[Direction::Down] = Keyboard::S;
@@ -11,6 +11,13 @@ Player::Player(int hp, int maxHp, float size_x, float size_y, float pos_x, float
 
 	this->speed = speed;
 	this->damage = 10;
+
+	this->deltaTexture = Vector2f(1, 0);
+
+	this->top = top;
+	this->left = left;
+	this->width = width;
+	this->height = height;
 
 	this->initVariables();
 	this->initTexture(image);
@@ -134,10 +141,27 @@ void Player::updateAttack()
 	}
 }
 
+void Player::updateAnim()
+{
+	AnimTime = AnimClock.getElapsedTime();
+	if (AnimTime.asMilliseconds() > 100) {
+		deltaTexture.x++;
+		AnimClock.restart();
+	}
+
+	if (this->deltaTexture.x * this->width >= this->texture.getSize().x) {
+		deltaTexture.x = 0;
+	}
+	this->playerSprite.setTextureRect(IntRect(deltaTexture.x * this->width, deltaTexture.y * this->height, this->width, this->height));
+}
+
 
 void Player::update(RenderWindow* window)
 {
-
+	movement(window);
+	attack();
+	updateAnim();
+	updateAttack();
 }
 
 void Player::render(sf::RenderTarget& target)
