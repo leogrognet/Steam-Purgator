@@ -201,7 +201,12 @@ void RangedEnemy::setSpeed(float speed)
 
 CloseRangeEnemy::CloseRangeEnemy(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, Vector2f playerPos, int left, int top, int width, int height )
 {
+
 	this->texture = texture;
+	if (this->texture == nullptr) {
+		cout << "unull" << endl;
+		this->sprite.setTexture(*texture);
+	}
 	this->sprite.setTexture(*texture);
 	this->sprite.setPosition(pos_x, pos_y);
 	this->sprite.setScale(size_x, size_y);

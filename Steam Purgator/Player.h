@@ -41,7 +41,7 @@ public:
 
 	const bool canAttack();
 
-	void updateAttack();
+
 	void updateAnim();
 	void update(RenderWindow* window);
 	void render(RenderTarget& target);

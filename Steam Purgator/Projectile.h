@@ -21,7 +21,7 @@ public:
 	
 	Sprite getSprite();
 
-	virtual void updateSelf();
+	virtual void updateSelf(Sprite sprite = Sprite());
 	void renderProjectile(RenderWindow* target);
 
 	
@@ -39,13 +39,14 @@ protected:
 
 class Missile : public Projectile {
 public:
-	Missile(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, vector<Sprite*>& enemiesSprites);
-	void updateSelf() override;
-
-private:
-	vector<Sprite*>& enemiesSprites;  // Liste des sprites ennemis
-	Sprite* targetSprite = nullptr;  // Pointeur vers le sprite ciblé
+	Missile(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed);
+	void updateSelf(Sprite sprite = Sprite()) override ;
+	//Sprite* findClosestEnemy(const sf::Sprite& referenceSprite, const std::vector<sf::Sprite>& allEnemies);
 	Vector2f direction;
+private:
+	//vector<Sprite*>& enemiesSprites;  // Liste des sprites ennemis
+	//Sprite* targetSprite = nullptr;  // Pointeur vers le sprite ciblé
+	
 };
 
 
@@ -55,7 +56,7 @@ private:
 class Laser : public Projectile {
 public:
 	Laser(Texture* texture, float size_x, float size_y, float pos_x, float pos_y);
-	void updateSelf() override;
+	void updateSelf(Sprite sprite = Sprite()) override;
 	bool active;
 };
 
@@ -66,7 +67,7 @@ public:
 class Shield : public Projectile {
 public:
 	Shield(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed);
-	void updateSelf() override;
+	void updateSelf(Sprite sprite = Sprite()) override;
 };
 
 
@@ -76,7 +77,7 @@ public:
 class Bomb : public Projectile {
 public:
 	Bomb(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed);
-	void updateSelf() override;
+	void updateSelf(Sprite sprite = Sprite()) override;
 };
 
 

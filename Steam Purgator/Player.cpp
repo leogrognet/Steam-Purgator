@@ -8,6 +8,9 @@ Player::Player(int hp, int maxHp, float size_x, float size_y, float pos_x, float
 	this->DirectionBind[Direction::Right] = Keyboard::D;
 
 	this->AttackBind[Attacks::LeftAttack] = Keyboard::Space;
+	this->AttackBind[Attacks::RightAttack] = Keyboard::W;
+	this->AttackBind[Attacks::ChangeAttack] = Keyboard::LAlt;
+
 
 	this->speed = speed;
 	this->damage = 10;
@@ -133,13 +136,7 @@ const bool Player::canAttack()
 	return false;
 }
 
-void Player::updateAttack()
-{
-	this->shootTime = this->shootClock.getElapsedTime();
-	if (this->shootTime.asSeconds() > this->attackCooldownMax) {
-		shootClock.restart();
-	}
-}
+
 
 void Player::updateAnim()
 {
@@ -161,7 +158,6 @@ void Player::update(RenderWindow* window)
 	movement(window);
 	attack();
 	updateAnim();
-	updateAttack();
 }
 
 void Player::render(sf::RenderTarget& target)
@@ -192,10 +188,8 @@ void Player::movement(RenderWindow* window)
 int Player::attack()
 {
 	if ((Keyboard::isKeyPressed(AttackBind[Attacks::LeftAttack]))) { return 1; }
-	else { return 0; }
-	if ((Keyboard::isKeyPressed(AttackBind[Attacks::RightAttack]))) { return 2; }
-	else { return 0; }
-	if ((Keyboard::isKeyPressed(AttackBind[Attacks::ChangeAttack]))) { return 3; }
+	else if ((Keyboard::isKeyPressed(AttackBind[Attacks::RightAttack]))) {  return 2; }
+	else if ((Keyboard::isKeyPressed(AttackBind[Attacks::ChangeAttack]))) { return 3; }
 	else { return 0; }
 }
 

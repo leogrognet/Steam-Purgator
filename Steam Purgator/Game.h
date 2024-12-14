@@ -25,6 +25,7 @@ private :
 
 	Sprite TourMap;
 
+
 	vector<Projectile*> allPlayerProjectiles;
 
 	vector<Projectile*> allEnemyProjectiles;
@@ -48,6 +49,8 @@ private :
 	Time startTimeElapsed;
 	Clock deltaClock;
 	Time deltaTimeElasped;
+
+	void loadTexture(map<String, Texture*>& textureMap, const string& key, const string& path);
 	void initPlayer();
 	void initAmmo();
 	void initProjectile();

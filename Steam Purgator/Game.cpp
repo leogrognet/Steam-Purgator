@@ -15,6 +15,7 @@ Game::Game()
 
 	this->animTourmap = Vector2f(0, 0);
 
+	this->currentWeapon = 0;
 
 	this->initPlayer();
 	this->initAmmo();
@@ -62,35 +63,31 @@ Game::~Game()
 //Fonction Init------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------
 
+void Game::loadTexture(map<String, Texture*>& textureMap, const string& key, const string& path)
+{
+	textureMap[key] = new Texture;
+	if (!textureMap[key]->loadFromFile(path)) {
+		cout << "ERROR::Could not load texture: " << path << endl;
+	}
+
+}
+
 void Game::initPlayer()
 {
 	this->player = make_unique<Player>(100,100,1.0f,1.0f,500,500,false,10.f, "asset/SpriteAsset/Perso stu.png",54,30,54,30 );
+
 }
 
 void Game::initAmmo()
 {
-	this->AmmoTexture["bombeMunition"] = new Texture;
-	if (!this->playerProjectileTexture["bombeMunition"]->loadFromFile("asset/SpriteAsset/mun Bombe.png"))
-	{
-		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
-	}
 
-	this->AmmoTexture["laserMunition"] = new Texture;
-	if (!this->playerProjectileTexture["laserMunition"]->loadFromFile("asset/SpriteAsset/mun laser.png"))
-	{
-		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
-	}
+	this->loadTexture(this->AmmoTexture,"bombeMunition", "asset/SpriteAsset/mun Bombe.png");
+	this->loadTexture(this->AmmoTexture, "laserMunition", "asset/SpriteAsset/mun laser.png");
+	this->loadTexture(this->AmmoTexture, "missileMunition", "asset/SpriteAsset/mun missile.png");
+	this->loadTexture(this->AmmoTexture, "bouclierMunition", "asset/SpriteAsset/mun bouclier.png");
 
-	this->AmmoTexture["missileMunition"] = new Texture;
-	if (!this->playerProjectileTexture["missileMunition"]->loadFromFile("asset/SpriteAsset/mun missile.png"))
-	{
-		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
-	}
-
-	this->AmmoTexture["bouclierMunition"] = new Texture;
-	if (!this->playerProjectileTexture["bouclierMunition"]->loadFromFile("asset/SpriteAsset/mun Bouclier.png"))
-	{
-		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
+	if (this->AmmoTexture["bombeMunition"] == nullptr) {
+		cout << "oui" << endl ;
 	}
 }
 
@@ -98,81 +95,26 @@ void Game::initAmmo()
 
 void Game::initProjectile()
 {
-	//Texture pour le joueur
-
-	this->playerProjectileTexture["boulet"] = new Texture;
-	if (!this->playerProjectileTexture["boulet"]->loadFromFile("asset/SpriteAsset/boulet de canon.png"))
-	{
-		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
-	}
-
-	this->playerProjectileTexture["laser"] = new Texture;
-	if (!this->playerProjectileTexture["laser"]->loadFromFile("asset/SpriteAsset/Laser.png"))
-	{
-		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
-	}
-
-	this->playerProjectileTexture["missile"] = new Texture;
-	if (!this->playerProjectileTexture["missile"]->loadFromFile("asset/SpriteAsset/missile.png"))
-	{
-		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
-	}
-
-	this->playerProjectileTexture["bouclier"] = new Texture;
-	if (!this->playerProjectileTexture["bouclier"]->loadFromFile("asset/SpriteAsset/Bouclier.png"))
-	{
-		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
-	}
-
-	this->playerProjectileTexture["bombe"] = new Texture;
-	if (!this->playerProjectileTexture["bombe"]->loadFromFile("asset/SpriteAsset/Bombe.png"))
-	{
-		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
-	}
+	this->loadTexture(this->playerProjectileTexture, "boulet", "asset/SpriteAsset/boulet de canon.png");
+	this->loadTexture(this->playerProjectileTexture, "laser", "asset/SpriteAsset/laser.png");
+	this->loadTexture(this->playerProjectileTexture, "missile", "asset/SpriteAsset/missile.png");
+	this->loadTexture(this->playerProjectileTexture, "bouclier", "asset/SpriteAsset/bouclier.png");
+	this->loadTexture(this->playerProjectileTexture, "bombe", "asset/SpriteAsset/Bombe.png");
 
 
 
 	//Texture pour l'ennemi
 
-	this->enemyProjectileTexture["boulet"] = new Texture;
-	if (!this->enemyProjectileTexture["boulet"]->loadFromFile("asset/SpriteAsset/boulet de canon.png"))
-	{
-		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
-	}
-
-	this->enemyProjectileTexture["bombe"] = new Texture;
-	if (!this->enemyProjectileTexture["bombe"]->loadFromFile("asset/SpriteAsset/bombe.png"))
-	{
-		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
-	}
-
+	this->loadTexture(this->enemyProjectileTexture, "boulet", "asset/SpriteAsset/boulet de canon.png");
+	this->loadTexture(this->enemyProjectileTexture, "bombe", "asset/SpriteAsset/Bombe.png");
 }
 
 void Game::initEnemy()
 {
-	this->enemyTextures["Avion"] = new Texture;
-	if (!enemyTextures["Avion"]->loadFromFile("asset/SpriteAsset/Avion.png"))
-	{
-		cout << "ERROR::ENEMY::INITTEXTURE::Could not load Avion enemy texture." << endl;
-	}
-
-	this->enemyTextures["Gargouille"] = new Texture;
-	if (!enemyTextures["Gargouille"]->loadFromFile("asset/SpriteAsset/gargouille.png"))
-	{
-		cout << "ERROR::ENEMY::INITTEXTURE::Could not load Gargouille enemy texture." << endl;
-	}
-
-	this->enemyTextures["Dirigeable Ennemi"] = new Texture;
-	if (!enemyTextures["Dirigeable Ennemi"]->loadFromFile("asset/SpriteAsset/Dirigeable ennemie.png"))
-	{
-		cout << "ERROR::ENEMY::INITTEXTURE::Could not load Dirigeable Ennemi texture." << endl;
-	}
-	this->enemyTextures["Boss_1"] = new Texture;
-	if (!enemyTextures["Boss_1"]->loadFromFile("asset/SpriteAsset/Boss.png"))
-	{
-		cout << "ERROR::ENEMY::INITTEXTURE::Could not load Boss_1 texture." << endl;
-	}
-
+	this->loadTexture(this->enemyTextures, "Avion", "asset/SpriteAsset/Avion.png");
+	this->loadTexture(this->enemyTextures, "Gargouille", "asset/SpriteAsset/gargouille.png");
+	this->loadTexture(this->enemyTextures, "Dirigeable Ennemi", "asset/SpriteAsset/Dirigeable ennemie.png");
+	this->loadTexture(this->enemyTextures, "Boss_1", "asset/SpriteAsset/Boss.png");
 }
 
 void Game::initBG()
@@ -359,10 +301,10 @@ bool Game::run() {
 
 void Game::updateInput()
 {
-	this->player->movement(window);
-
+	
 	if (this->player->attack() == 1 && this->player->canAttack()) 
 	{
+		//cout << "test";
 		this->allPlayerProjectiles.push_back(new Projectile(playerProjectileTexture["boulet"],
 			5.0f,
 			5.0f,
@@ -374,28 +316,33 @@ void Game::updateInput()
 		);
 	}
 
-	if (this->player->attack() == 2) {
+	if (this->player->attack() == 2 && player->canAttack()) {
+		
 		switch (currentWeapon) {
+			cout << currentWeapon << endl;
 		case 0:
-			if (this->player->weaponCount["missileUse"] > 0) {
-
-			}
+			this->allPlayerProjectiles.push_back(new Missile(playerProjectileTexture["missile"], 1.0f, 1.0f, this->player->getSprite().getPosition().x, this->player->getSprite().getPosition().y, false, 1.0f));
+			break;
 		case 1:
 			if (this->player->weaponCount["laserUse"] > 0) {
 
 			}
+			break;
 		case 2:
 			if (this->player->weaponCount["shieldUse"] > 0) {
-
+				
 			}
+			break;
 		case 3:
 			if (this->player->weaponCount["bombUse"] > 0) {
 
 			}
+			break;
 		}
 	}
-	if (this->player->attack() == 3) {
+	if (this->player->attack() == 3 && player->canAttack()) {
 		currentWeapon++;
+		cout << currentWeapon << endl;
 		if (currentWeapon > 3) {
 			currentWeapon = 0;
 		}
@@ -496,11 +443,44 @@ void Game::updateEnemy()
 void Game::updateProjectile()
 {
 	for (auto it = this->allPlayerProjectiles.begin(); it != this->allPlayerProjectiles.end();) {
-		(*it)->updateSelf();
+		if (typeid(**it) == typeid(Projectile)) {
+			(*it)->updateSelf();
 
+
+			if ((*it)->getBounds().left + (*it)->getBounds().width > window->getSize().x) {
+				delete* it;
+				it = this->allPlayerProjectiles.erase(it);
+			}
+			else if ((*it)->getBounds().left + (*it)->getBounds().width < 0.f) {
+				delete* it;
+				it = this->allPlayerProjectiles.erase(it);
+			}
+		}
+
+		else if (dynamic_cast<Laser*> (*it) != nullptr) {
+			for (auto enemies = this->allEnemies.begin(); enemies != this->allEnemies.end();) {
+			
+				if ((*it)->getBounds().intersects((*enemies)->getSprite().getGlobalBounds())) {
+					//(*it)->getSprite().setTextureRect((*it)->getSprite().getTextureRect().width()-(*enemies)->getSprite().getGlobalBounds().left,);
+				}
+			}
+		}
+		else if(dynamic_cast<Missile*> (*it) != nullptr ){
+			//for (auto enemies = this->allEnemies.begin(); enemies != this->allEnemies.end();) {
+				//(*it)->updateSelf((*enemies)->getSprite());
+			//}
+		}
+		else {
+			++it;
+		}
+	}
+	for (auto it = this->allEnemyProjectiles.begin(); it != this->allEnemyProjectiles.end();) {
+		if (dynamic_cast<Projectile*> (*it) != nullptr) {
+			(*it)->updateSelf();
+		}
 		if ((*it)->getBounds().left + (*it)->getBounds().width > window->getSize().x && dynamic_cast<Shield*> (*it) == nullptr && dynamic_cast<Laser*> (*it) == nullptr) {
 			delete* it;
-			it = this->allPlayerProjectiles.erase(it);
+			it = this->allEnemyProjectiles.erase(it);
 		}
 		else if ((*it)->getBounds().left + (*it)->getBounds().width < 0.f && dynamic_cast<Shield*> (*it) == nullptr && dynamic_cast<Laser*> (*it) == nullptr) {
 			delete* it;
@@ -509,15 +489,7 @@ void Game::updateProjectile()
 		else {
 			++it;
 		}
-		for (auto enemies = this->allEnemies.begin(); enemies != this->allEnemies.end();) {
-			if (dynamic_cast<Laser*> (*it) != nullptr) {
-				if ((*it)->getBounds().intersects((*enemies)->getSprite().getGlobalBounds())) {
-					(*it)->getSprite().setTextureRect((*it)->getSprite().getTextureRect().width()-(*enemies)->getSprite().getGlobalBounds().left);
-				}
-			}
-		}
 	}
-
 
 }
 

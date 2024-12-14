@@ -1,8 +1,18 @@
 #include "Projectile.h"
 
+Projectile::Projectile()
+{
+}
+
 Projectile::Projectile(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed)
 {
-	this->sprite.setTexture(*texture);
+    if (texture == nullptr){
+        cout << "unull" << endl;
+	    
+    }
+    else {
+        this->sprite.setTexture(*texture);
+    }
 	this->sprite.setPosition(pos_x, pos_y);
 	this->sprite.setScale(size_x, size_y);
 	this->speed = speed;
@@ -30,9 +40,7 @@ Sprite Projectile::getSprite()
 }
 
 
-
-
-void Projectile::updateSelf()
+void Projectile::updateSelf(Sprite sprite)
 {
 	this->sprite.move(this->speed , 0);
 }
@@ -47,24 +55,39 @@ void Projectile::renderProjectile(RenderWindow* target)
 //-------------------------------------------------------------------------------------
 //Class Missile------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------
-Missile::Missile(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, vector<Sprite*>& enemiesSprites)
+Missile::Missile(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed)
 {
+    this->sprite.setTexture(*texture);
+    this->sprite.setPosition(pos_x, pos_y);
+    this->sprite.setScale(size_x, size_y);
+    this->speed = speed;
 }
 
-Missile::~Missile()
-{
-}
 
-void Missile::updateSelf()
+
+void Missile::updateSelf(Sprite enemySprite) 
 {
+    /*
+    // Calculer la direction vers l'ennemi
+    sf::Vector2f enemyPos = enemySprite.getPosition();
+    sf::Vector2f missilePos = this->sprite.getPosition();
+
+    // Calculer le vecteur direction du missile vers l'ennemi
+    sf::Vector2f direction = enemyPos - missilePos;  // direction = (x_enemy - x_missile, y_enemy - y_missile)
+
+    // Normaliser la direction pour obtenir une magnitude de 1
     float length = sqrt(direction.x * direction.x + direction.y * direction.y);
     if (length != 0) {
         direction /= length;  // Normalisation
     }
 
-    // Déplacer le missile dans la direction normalisée avec la vitesse
+    // Déplacer le missile dans la direction de l'ennemi avec la vitesse
     this->sprite.move(direction * this->speed);
+    */
 }
+
+
+
 
 
 
@@ -76,7 +99,10 @@ void Missile::updateSelf()
 Laser::Laser(Texture* texture, float size_x, float size_y, float pos_x, float pos_y)
 {
 }
-
+void Laser::updateSelf(Sprite sprite)
+{
+}
+/*
 void Laser::updateSelf()
 {
     if (active) {
@@ -111,13 +137,10 @@ void Laser::updateSelf()
             active = false;  // Désactiver le laser une fois qu'il atteint le bord de la fenêtre
         }
     }
-}
+}*/
 
 
 
-Laser::~Laser()
-{
-}
 
 
 //-------------------------------------------------------------------------------------
@@ -127,13 +150,11 @@ Shield::Shield(Texture* texture, float size_x, float size_y, float pos_x, float 
 {
 }
 
-void Shield::updateSelf()
+void Shield::updateSelf(Sprite sprite)
 {
 }
 
-Shield::~Shield()
-{
-}
+
 
 
 //-------------------------------------------------------------------------------------
@@ -143,11 +164,7 @@ Bomb::Bomb(Texture* texture, float size_x, float size_y, float pos_x, float pos_
 {
 }
 
-void Bomb::updateSelf()
+void Bomb::updateSelf(Sprite sprite)
 {
 
-}
-
-Bomb::~Bomb()
-{
 }
