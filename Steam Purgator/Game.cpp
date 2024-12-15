@@ -134,6 +134,54 @@ void Game::initBG()
 
 
 
+void Game::deleteObjects() {
+	// Nettoyer les ennemis
+	this->allEnemies.erase(
+		std::remove_if(
+			this->allEnemies.begin(),
+			this->allEnemies.end(),
+			[](BigEnemy* enemy) {
+				if (enemy->isMarkedForRemoval()) {
+					delete enemy;
+					return true;
+				}
+				return false;
+			}),
+		this->allEnemies.end()
+	);
+
+	// Nettoyer les projectiles du joueur
+	this->allPlayerProjectiles.erase(
+		std::remove_if(
+			this->allPlayerProjectiles.begin(),
+			this->allPlayerProjectiles.end(),
+			[](Projectile* projectile) {
+				if (projectile->isMarkedForRemoval()) {
+					delete projectile;
+					return true;
+				}
+				return false;
+			}),
+		this->allPlayerProjectiles.end()
+	);
+
+	// Nettoyer les projectiles ennemis
+	this->allEnemyProjectiles.erase(
+		std::remove_if(
+			this->allEnemyProjectiles.begin(),
+			this->allEnemyProjectiles.end(),
+			[](Projectile* projectile) {
+				if (projectile->isMarkedForRemoval()) {
+					delete projectile;
+					return true;
+				}
+				return false;
+			}),
+		this->allEnemyProjectiles.end()
+	);
+}
+
+
 void Game::spawnEnemy()
 {
 	deltaTimeElasped = deltaClock.getElapsedTime();
@@ -252,7 +300,7 @@ void Game::startLevel(int level) {
 		this->enemySpawnInterval = 2; // Temps entre les spawns d'ennemis
 		break;
 	default:
-		std::cerr << "Level not implemented!" << std::endl;
+		cerr << "Level not implemented!" << endl;
 		break;
 	}
 }
@@ -301,54 +349,46 @@ bool Game::run() {
 
 void Game::updateInput()
 {
-	
-	if (this->player->attack() == 1 && this->player->canAttack()) 
+	this->player->movement(window);
+
+	if (this->player->attack() == 1 && this->player->canAttack())
 	{
-		//cout << "test";
-		this->allPlayerProjectiles.push_back(new Projectile(playerProjectileTexture["boulet"],
-			5.0f,
-			5.0f,
-			this->player->getBounds().left + this->player->getBounds().width,
-			this->player->getBounds().top + (this->player->getBounds().height / 2),
-			false,
-			1.f + this->player->getSpeed()
-		)
-		);
+
+			this->allPlayerProjectiles.push_back(new Projectile(playerProjectileTexture["boulet"],
+				5.0f,
+				5.0f,
+				this->player->getBounds().left + this->player->getBounds().width,
+				this->player->getBounds().top + (this->player->getBounds().height / 2),
+				1.f + this->player->getSpeed()
+			)
+			);
 	}
 
-	if (this->player->attack() == 2 && player->canAttack()) {
-		
-		switch (currentWeapon) {
-			cout << currentWeapon << endl;
-		case 0:
-			this->allPlayerProjectiles.push_back(new Missile(playerProjectileTexture["missile"], 1.0f, 1.0f, this->player->getSprite().getPosition().x, this->player->getSprite().getPosition().y, false, 1.0f));
-			break;
+	if (this->player->attack() == 2 && this->player->canAttack()) {
+		switch (currentWeapon)
+		{
 		case 1:
-			if (this->player->weaponCount["laserUse"] > 0) {
-
-			}
+			this->allPlayerProjectiles.push_back(new Missile(playerProjectileTexture["missile"], 1.0f, 1.0f, this->player->getSprite().getPosition().x, this->player->getSprite().getPosition().y,  1.f + this->player->getSpeed(),63,21,63,21));
 			break;
 		case 2:
-			if (this->player->weaponCount["shieldUse"] > 0) {
-				
-			}
-			break;
 		case 3:
-			if (this->player->weaponCount["bombUse"] > 0) {
-
-			}
+		case 4:
 			break;
 		}
 	}
-	if (this->player->attack() == 3 && player->canAttack()) {
-		currentWeapon++;
-		cout << currentWeapon << endl;
-		if (currentWeapon > 3) {
-			currentWeapon = 0;
+
+	if (this->player->attack() == 3) {
+		if (this->player->attack() == 3 && player->canAttack()) {
+			currentWeapon++;
+			cout << currentWeapon << endl;
+			if (currentWeapon > 3) {
+				currentWeapon = 0;
+			}
 		}
+
 	}
-	
 }
+
 
 
 
@@ -373,121 +413,88 @@ void Game::updateLevel() {
 
 
 
-void Game::updateEnemy()
-{
+void Game::updateEnemy() {
+	for (auto enemies : allEnemies) {
+		enemies->updateSelf(window);
 
-	for (auto enemies = this->allEnemies.begin(); enemies != this->allEnemies.end();) {
-		(*enemies)->updateSelf(window);
-		if ((*enemies)->canAttack() &&  dynamic_cast<CloseRangeEnemy*> (*enemies) == nullptr) {
-			
+		// Gérer les attaques ennemies
+		if (enemies->canAttack() && typeid(*enemies) != typeid (CloseRangeEnemy)) {
 			this->allEnemyProjectiles.push_back(new Projectile(enemyProjectileTexture["boulet"],
-				5.0f,
-				5.0f,
-				(*enemies)->getBounds().left + (*enemies)->getBounds().width,
-				(*enemies)->getBounds().top + ((*enemies)->getBounds().height / 2),
-				false,
-				( (-(*enemies)->getSpeed() - 10.f))
-			)
-			);
-			
-			for (auto enemyProjectiles = this->allEnemyProjectiles.begin(); enemyProjectiles != this->allEnemyProjectiles.end();) {
-				if ((*enemyProjectiles)->getBounds().intersects(this->player->getBounds())) {
-					this->player->loseHp((*enemies)->getDamage());
-					cout << this->player->getHp();
-					delete* enemyProjectiles;
-					enemyProjectiles = this->allEnemyProjectiles.erase(enemyProjectiles);
-				}
-				else {
-					++enemyProjectiles;
-				}
-			}
-		}
-			
-		if ((*enemies)->getBounds().intersects(this->player->getBounds())) {
-				this->player->loseHp((*enemies)->getDamage());
-				cout << this->player->getHp();
-				delete* enemies;
-				enemies = this->allEnemies.erase(enemies);
-		}
-		
-		
-
-
-		for (auto projectiles = this->allPlayerProjectiles.begin(); projectiles != this->allPlayerProjectiles.end();) {
-
-			if ((*projectiles)->getBounds().intersects((*enemies)->getBounds())) {
-				(*enemies)->setHealth((*enemies)->getHealth() - this->player->getDamage());
-				if ((*enemies)->getHealth() <= 0) {
-					delete* enemies;
-					enemies = this->allEnemies.erase(enemies);
-				}
-				delete* projectiles;
-				projectiles = this->allPlayerProjectiles.erase(projectiles); 
-
-				this->score += 10;
-			}
-			else {
-				++projectiles; 
-			}
+				5.0f, 5.0f,
+				enemies->getBounds().left ,
+				(enemies->getBounds().top + (enemies->getBounds().height / 2)),
+				-(enemies->getSpeed() + 10.f)
+			));
 		}
 
-		if (enemies != this->allEnemies.end()) {
-			++enemies;
+		// Collision joueur <-> ennemi
+		if (enemies->getBounds().intersects(this->player->getBounds())) {
+			this->player->loseHp(enemies->getDamage());
+			enemies->markForRemoval();
+		}
+
+		// Collision projectiles joueur <-> ennemi
+		for (auto projectiles = this->allPlayerProjectiles.begin(); projectiles != this->allPlayerProjectiles.end(); ++projectiles) {
+			if ((*projectiles)->getBounds().intersects(enemies->getBounds())) {
+				enemies->setHealth(enemies->getHealth() - this->player->getDamage());
+				(*projectiles)->markForRemoval();
+
+				if (enemies->getHealth() <= 0) {
+					enemies->markForRemoval();
+					this->score += 10;
+				}
+			}
 		}
 	}
-	
-
-
 }
 
 void Game::updateProjectile()
 {
-	for (auto it = this->allPlayerProjectiles.begin(); it != this->allPlayerProjectiles.end();) {
-		if (typeid(**it) == typeid(Projectile)) {
-			(*it)->updateSelf();
-
-
-			if ((*it)->getBounds().left + (*it)->getBounds().width > window->getSize().x) {
-				delete* it;
-				it = this->allPlayerProjectiles.erase(it);
+	for (auto projectiles : allPlayerProjectiles) {
+		if (typeid (*projectiles) == typeid (Projectile)) {
+			projectiles->updateSelf();
+			if (projectiles->getBounds().left + projectiles->getBounds().width > window->getSize().x) {
+				projectiles->markForRemoval();
 			}
-			else if ((*it)->getBounds().left + (*it)->getBounds().width < 0.f) {
-				delete* it;
-				it = this->allPlayerProjectiles.erase(it);
+			else if (projectiles->getBounds().left + projectiles->getBounds().width < 0.f) {
+				projectiles->markForRemoval();
 			}
 		}
+		else if (typeid(*projectiles) == typeid(Missile)) {
+			// Trouver l'ennemi le plus proche
+			BigEnemy* closestEnemy = nullptr;
+			float closestDistance = std::numeric_limits<float>::max();
 
-		else if (dynamic_cast<Laser*> (*it) != nullptr) {
-			for (auto enemies = this->allEnemies.begin(); enemies != this->allEnemies.end();) {
-			
-				if ((*it)->getBounds().intersects((*enemies)->getSprite().getGlobalBounds())) {
-					//(*it)->getSprite().setTextureRect((*it)->getSprite().getTextureRect().width()-(*enemies)->getSprite().getGlobalBounds().left,);
+			for (auto enemy : allEnemies) {
+				float distance = std::sqrt(
+					std::pow(enemy->getSprite().getPosition().x - projectiles->getBounds().left, 2) +
+					std::pow(enemy->getSprite().getPosition().y - projectiles->getBounds().top, 2));
+
+				if (distance < closestDistance) {
+					closestDistance = distance;
+					closestEnemy = enemy;
 				}
 			}
-		}
-		else if(dynamic_cast<Missile*> (*it) != nullptr ){
-			//for (auto enemies = this->allEnemies.begin(); enemies != this->allEnemies.end();) {
-				//(*it)->updateSelf((*enemies)->getSprite());
-			//}
-		}
-		else {
-			++it;
+
+			// Si un ennemi le plus proche est trouvé, mettre à jour le missile
+			if (closestEnemy) {
+				projectiles->updateSelf(closestEnemy->getSprite());
+			}
 		}
 	}
-	for (auto it = this->allEnemyProjectiles.begin(); it != this->allEnemyProjectiles.end();) {
-		if (dynamic_cast<Projectile*> (*it) != nullptr) {
-			(*it)->updateSelf();
-		}
-		if ((*it)->getBounds().left + (*it)->getBounds().width > window->getSize().x && dynamic_cast<Shield*> (*it) == nullptr && dynamic_cast<Laser*> (*it) == nullptr) {
-			delete* it;
-			it = this->allEnemyProjectiles.erase(it);
-		}
-		else if ((*it)->getBounds().left + (*it)->getBounds().width < 0.f && dynamic_cast<Shield*> (*it) == nullptr && dynamic_cast<Laser*> (*it) == nullptr) {
-			delete* it;
-			it = this->allEnemyProjectiles.erase(it);
-		}
-		else {
-			++it;
+
+	
+	for (auto enemyProjectile : allEnemyProjectiles) {
+		if (typeid(*enemyProjectile) == typeid(Projectile)) {
+			enemyProjectile->updateSelf();
+
+			if (enemyProjectile->getBounds().left + enemyProjectile->getBounds().width > window->getSize().x) {
+				enemyProjectile->markForRemoval();
+			}
+			else if (enemyProjectile->getBounds().left + enemyProjectile->getBounds().width < 0.f) {
+				enemyProjectile->markForRemoval();
+			}
+
 		}
 	}
 
@@ -502,10 +509,6 @@ void Game::updatePlayer()
 }
 
 void Game::update() {
-	
-
-	
-
 
 	this->updatePlayer();
 
@@ -519,6 +522,7 @@ void Game::update() {
 
 	this->updateLevel();
 
+	this->deleteObjects();
 	
 
 }
@@ -536,9 +540,14 @@ void Game::render()
 	this->player->render(*window);
 
 	
-	for (auto* it : this->allPlayerProjectiles) 
+	for (auto* it : this->allPlayerProjectiles)
 	{
-		it->renderProjectile(window);
+		if (typeid(*it) == typeid(Missile)) {
+			cout << "cest un missile" << endl;
+
+
+			it->renderProjectile(window);
+		}
 	}
 	for (auto* it : this->allEnemyProjectiles)
 	{
@@ -547,6 +556,7 @@ void Game::render()
 
 	for (auto* it : this->allEnemies)
 	{
+
 		it->renderEnemy(window);
 	}
 	

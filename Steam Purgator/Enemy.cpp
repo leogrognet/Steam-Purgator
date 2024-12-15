@@ -146,6 +146,16 @@ void BigEnemy::setDamage(int dmg)
 	this->damage = dmg;
 }
 
+void BigEnemy::markForRemoval()
+{
+	this->markedForRemoval = true;
+}
+
+bool BigEnemy::isMarkedForRemoval() const
+{
+	return this->markedForRemoval;
+}
+
 
 //----------------------------------------------------------------------------------------------------------------------------------
 //Ennemi à distance//---------------------------------------------------------------------------------------------------------------

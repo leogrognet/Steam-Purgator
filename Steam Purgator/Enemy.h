@@ -41,7 +41,13 @@ public:
 	virtual void setDamage(int dmg);
 
 
+	void markForRemoval();
+	bool isMarkedForRemoval() const;
+
 protected:
+
+	bool markedForRemoval;
+
 	bool move_count;
 	int startX;
 	int startY;

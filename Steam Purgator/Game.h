@@ -22,6 +22,8 @@ private :
 	map<String, Texture*> enemyProjectileTexture;
 	map<String, Texture*> BackGroundTexture;
 	map<String, Texture*> AmmoTexture;
+	map<String, Texture*> enemyTextures;
+
 
 	Sprite TourMap;
 
@@ -30,7 +32,7 @@ private :
 
 	vector<Projectile*> allEnemyProjectiles;
 
-	map<String, Texture*> enemyTextures;
+	
 
 	vector <BigEnemy*> allEnemies;
 	unique_ptr<Player> player;
@@ -71,9 +73,10 @@ public:
 	void updateInput();
 	void startLevel(int level);
 
+	void deleteObjects();
 	void spawnEnemy();
 
-
+	
 	void updateLevel();
 	void updateEnemy();
 	void updateProjectile();
