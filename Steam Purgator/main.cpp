@@ -117,6 +117,46 @@ int main() {
 
     music.play();
 
+    enemy.enemySprite.setFillColor(Color::Red);
+    enemy.enemySprite.setPosition(0, 0);
+    enemy.enemySprite.setSize(Vector2f(10.0f, 10.0f));
+    enemy.speed = 0.01;
+*/
+
+    std::vector<std::string> mainMenuOptions = { "Lancer", "Options", "Quitter" };
+    std::vector<std::string> optionsMenuOptions = { "Choix Stage", "Son / Light", "Debug Mode", "Retour" };
+    Menu mainMenu(window.getSize().x, window.getSize().y, mainMenuOptions);
+    Menu optionsMenu(window.getSize().x, window.getSize().y, optionsMenuOptions);
+    GameState gameState = GameState::MainMenu;
+
+    Font font;
+    if (!font.loadFromFile("C:/Users/tburton/Desktop/asset/Daydream.ttf")) {
+        return -1; //Faut créer un chemin d'acces fixe parce que c'est chiant de le changer h24
+    }
+    /*
+    Font font;
+    if (!font.loadFromFile("C:/Users/tburton/Desktop/asset/Crang.ttf")) {
+        return -2; //Faut créer un chemin d'acces fixe parce que c'est chiant de le changer h24
+    }
+    */
+    Text quittingMessage;
+    quittingMessage.setFont(font);
+    quittingMessage.setString("En train de quitter...");
+    quittingMessage.setCharacterSize(20);
+    quittingMessage.setFillColor(Color::White);
+    quittingMessage.setPosition(10, 10);
+
+    Text Titre;
+    Titre.setFont(font);
+    Titre.setString("STEAM PURGATOR");
+    Titre.setCharacterSize(40);
+    Titre.setFillColor(Color::White);
+    Titre.setOutlineColor(Color::Black);
+    Titre.setPosition(960 , 50);
+
+    Clock escapeHoldTimer;
+    bool isHoldingEscape = false;
+
     while (window.isOpen()) {
 
         Event event;
@@ -444,6 +484,7 @@ int main() {
 
         window.display();
     }
+
 
     return 0;
 }

@@ -158,6 +158,13 @@
     <ClInclude Include="UpdateGame.h" />
     <ClInclude Include="Projectile.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\..\..\..\..\Desktop\asset\arial.ttf" />
+    <Font Include="..\..\..\..\..\Desktop\asset\Daydream.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\..\..\Downloads\bc_menu2.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -8,7 +8,7 @@
 #include <vector>
 #include <map>
 #include <string>
-#include <sstream> // Pour convertir les noms des touches en chaînes
+#include <sstream> // Pour convertir les noms des touches en chaÃ®nes
 #include <iostream>
 
 using namespace std;
@@ -45,12 +45,12 @@ public:
     void redefineKeys(Settings& settings, RenderWindow& window, const Font& font, const Sprite& background);
 
     void increaseVolume(); // Pour augmenter de 10
-    void decreaseVolume(); // Pour diminuer de 10
+    void decreaseVolume(); // Pour diminuer de 10        
     int getVolume() const;
 
 private:
 
-    int volume; // Volume de 0 à 100
+    int volume; // Volume de 0 Ã  100
 
     map<string, Keyboard::Key> customKeys;
 
