@@ -8,11 +8,9 @@ enum class GameState { MainMenu, OptionsMenu, OptionsMenu2, Key, Son, Diff, Niv,
 
 int main() {
 
-<<<<<<< HEAD
+
  //   cout << "Listes des erreurs :\n-1 : Police non chargée\n-2 : Musique non chargée\n-3 : Sprite non chargée\n\n";
-=======
-    //   cout << "Listes des erreurs :\n-1 : Police non chargée\n-2 : Musique non chargée\n-3 : Sprite non chargée\n\n";
->>>>>>> Branche-de-Leo-2
+
 
     RenderWindow window(VideoMode(1920, 1080), "STEAM PURGATOR");
 
