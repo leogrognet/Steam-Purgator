@@ -47,7 +47,7 @@ public:
 protected:
 
 	bool markedForRemoval;
-
+	int milliSecondAnim;
 	bool move_count;
 	int startX;
 	int startY;
@@ -87,11 +87,11 @@ public:
 	void setSpeed(float speed) override;
 
 private:
-	float amplitudeY;  // Amplitude de mouvement vertical
-	float frequencyY;  // Fréquence de l'oscillation verticale
-	float startY;      // Position de départ verticale
-	float startX;      // Position de départ horizontale (garde la position initiale en X)
-	float horizontalSpeed; // Vitesse du déplacement horizontal
+	float amplitudeY;  
+	float frequencyY;
+	float startY;      
+	float startX;      
+	float horizontalSpeed;
 };
 
 
@@ -121,5 +121,23 @@ private:
 
 };
 
+
+class Boss_1 : public BigEnemy {
+public:
+	Boss_1(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, int left, int top, int width, int height);
+	~Boss_1();
+	void updateSelf(RenderWindow* window) override;
+	bool firstPhaseMovement;
+	bool secondPhaseMovementLeft;
+	bool secondPhaseMovementRight;	
+	bool alive;
+private:
+
+	float amplitudeY;  
+	float frequencyY;  
+	float startY;     
+	float startX;      
+	float horizontalSpeed;
+};
 
 #endif // !WEAPONS_HPP

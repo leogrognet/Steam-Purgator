@@ -23,6 +23,7 @@ Game::Game()
 	this->initEnemy();
 	this->initBG();
 
+
 	this->score = 0;
 }
 
@@ -112,6 +113,7 @@ void Game::initEnemy()
 	this->loadTexture(this->enemyTextures, "Gargouille", "asset/SpriteAsset/gargouille.png");
 	this->loadTexture(this->enemyTextures, "Dirigeable Ennemi", "asset/SpriteAsset/Dirigeable ennemie.png");
 	this->loadTexture(this->enemyTextures, "Boss_1", "asset/SpriteAsset/Boss.png");
+	
 }
 
 void Game::initBG()
@@ -290,6 +292,11 @@ void Game::spawnEnemy()
 		}
 	}
 
+void Game::spawnBoss()
+{
+	this->allEnemies.push_back(new Boss_1(enemyTextures["Boss_1"], 1.0f, 1.0f, 400.f, 400.f, true, 1.0f, 274, 273, 274, 273));
+}
+
 
 
 
@@ -379,13 +386,10 @@ void Game::updateInput()
 			);
 	}
 	if (this->player->attack() == 2) { 
-		cout << "attack" << endl;
-		//cout << this->player->weaponCount["missileUse"];
 		switch (currentWeapon) {
 		case 1:
 		case 2:
 			if (this->player->canAttack() && this->player->weaponCount["missileUse"] > 0) {
-				cout << "missile use" << endl;
 				this->allPlayerProjectiles.push_back(new Missile(playerProjectileTexture["missile"], 1.0f, 1.0f, this->player->getSprite().getPosition().x, this->player->getSprite().getPosition().y, 1.f + this->player->getSpeed(), 63, 21, 63, 21));
 			}
 			break;
@@ -411,7 +415,6 @@ void Game::updateInput()
 	if (this->player->attack() == 3) {
 		if (this->player->attack() == 3 && player->canAttack()) {
 			currentWeapon++;
-			cout << currentWeapon << endl;
 			if (currentWeapon > 4) {
 				currentWeapon = 1;
 			}
@@ -429,9 +432,18 @@ void Game::updateInput()
 
 
 
+void Game::updateBoss()
+{
+	for (auto boss : allEnemies) {
+
+		if (typeid (boss) == typeid (Boss_1)) {
+			boss->updateSelf(window);
+		}
+	}
+}
+
 void Game::updateAmmo()
 {
-	cout << this->player->weaponCount["missileUse"] << endl;
 	for (auto Ammo : allAmmo) {
 		Ammo->updateSelf();
 		if (Ammo->sprite.getGlobalBounds().height + Ammo->sprite.getPosition().y > window->getSize().y) {
@@ -492,14 +504,21 @@ void Game::updateEnemy() {
 		}
 
 		// Collision joueur <-> ennemi
-		if (enemies->getBounds().intersects(this->player->getBounds()) && !this->playerShield->active) {
+		if (enemies->getBounds().intersects(this->player->getBounds()) && !this->playerShield->active &&  typeid(*enemies) != typeid (Boss_1)) {
 			this->player->loseHp(enemies->getDamage());
 			cout << this->player->getHp()<<endl;
 			enemies->markForRemoval();
 		}
-		else if (enemies->getBounds().intersects(this->player->getBounds()) && this->playerShield->active) {
+		else if (enemies->getBounds().intersects(this->player->getBounds()) && this->playerShield->active && typeid(*enemies) != typeid (Boss_1)) {
 			enemies->markForRemoval();
 		}
+		if (enemies->getBounds().intersects(this->player->getBounds()) && typeid(*enemies) == typeid (Boss_1)) {
+			this->player->loseHp(enemies->getDamage());
+		}
+		else if (enemies->getBounds().intersects(this->player->getBounds()) && this->playerShield->active && typeid(*enemies) == typeid (Boss_1)) {
+
+		}
+		
 
 		// Collision projectiles joueur <-> ennemi
 		for (auto projectiles = this->allPlayerProjectiles.begin(); projectiles != this->allPlayerProjectiles.end(); ++projectiles) {
@@ -629,6 +648,8 @@ void Game::update() {
 	this->updateEnemy();
 
 	this->updateLevel();
+	
+	this->updateBoss();
 
 	this->deleteObjects();
 	
@@ -672,6 +693,9 @@ void Game::render()
 		it->renderAmmo(window);
 	}
 
+	if (BossLevel1->alive) {
+		BossLevel1->renderEnemy(window);
+	}
 	this->playerLaser->renderProjectile(window);
 	this->playerShield->renderProjectile(window);
 

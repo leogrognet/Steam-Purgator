@@ -40,6 +40,7 @@ private :
 	unique_ptr<Laser> playerLaser;
 	unique_ptr<Shield> playerShield;
 
+
 	int currentWeapon;
 	int currentLevel; 
 	int levelDuration; 
@@ -77,7 +78,9 @@ public:
 
 	void deleteObjects();
 	void spawnEnemy();
+	void spawnBoss();
 
+	void updateBoss();
 	void updateAmmo();
 	void updateLevel();
 	void updateEnemy();

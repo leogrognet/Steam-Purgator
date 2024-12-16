@@ -24,6 +24,7 @@ BigEnemy::BigEnemy(Texture* texture, float size_x, float size_y, float pos_x, fl
 	this->left = left;
 	this->width = width;
 	this->height = height;
+	this->milliSecondAnim = 100;
 
 
 	this->speed = speed;
@@ -105,7 +106,7 @@ void BigEnemy::renderEnemy(RenderWindow* target)
 void BigEnemy::updateAnim()
 {
 	AnimTime = AnimClock.getElapsedTime();
-	if (AnimTime.asMilliseconds() > 100){
+	if (AnimTime.asMilliseconds() > this->milliSecondAnim){
 		deltaTexture.x++;
 		AnimClock.restart();
 	}
@@ -213,16 +214,13 @@ CloseRangeEnemy::CloseRangeEnemy(Texture* texture, float size_x, float size_y, f
 {
 
 	this->texture = texture;
-	if (this->texture == nullptr) {
-		cout << "unull" << endl;
-		this->sprite.setTexture(*texture);
-	}
+
 	this->sprite.setTexture(*texture);
 	this->sprite.setPosition(pos_x, pos_y);
 	this->sprite.setScale(size_x, size_y);
 	this->sprite.setTextureRect(IntRect(left, top, width, height));
 
-
+	this->milliSecondAnim = 100;
 	this->top = top;
 	this->left = left;
 	this->width = width;
@@ -231,6 +229,7 @@ CloseRangeEnemy::CloseRangeEnemy(Texture* texture, float size_x, float size_y, f
 	this->damage = 10;
 	this->health = 20;
 	this->speed = speed;
+
 
 	deltaTexture = Vector2f(1, 0);
 
@@ -263,3 +262,79 @@ void CloseRangeEnemy::setSpeed(float speed)
 
 }
 
+Boss_1::Boss_1(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, int left, int top, int width, int height)
+{
+	this->texture = texture;
+
+	this->sprite.setTexture(*texture);
+	this->sprite.setPosition(pos_x, pos_y);
+	this->sprite.setScale(size_x, size_y);
+	this->sprite.setTextureRect(IntRect(left, top, width, height));
+
+	this->alive = alive;
+
+	this->milliSecondAnim = 200;
+	this->top = top;
+	this->left = left;
+	this->width = width;
+	this->height = height;
+	
+	deltaTexture = Vector2f(1, 0);
+
+}
+
+Boss_1::~Boss_1()
+{
+}
+
+void Boss_1::updateSelf(RenderWindow* window)
+{
+	this->updateAnim();
+	
+	if (this->firstPhaseMovement) {
+		float time = moveClock.getElapsedTime().asSeconds(); // Temps écoulé depuis le dernier appel
+
+		float newY = this->startY + this->amplitudeY * sin(this->frequencyY * time);
+
+
+		float newX = this->sprite.getPosition().x - horizontalSpeed;
+
+
+		this->sprite.setPosition(newX, newY);
+		if (this->sprite.getPosition().x < -100) {
+			this->sprite.setPosition(window->getSize().x - 100, -300);
+			this->firstPhaseMovement = false;
+		}
+	}
+
+	if (!this->firstPhaseMovement && this->sprite.getPosition().y != window->getSize().y/2 && !this->secondPhaseMovementLeft && !this->secondPhaseMovementRight)  {
+		
+		this->sprite.move(0, 2.0f);
+	}
+
+
+	if (this->secondPhaseMovementLeft) {
+		float time = moveClock.getElapsedTime().asSeconds(); // Temps écoulé depuis le dernier appel
+
+		float newY = this->startY + this->amplitudeY * sin(this->frequencyY * time);
+
+
+		float newX = this->sprite.getPosition().x - horizontalSpeed;
+
+
+		this->sprite.setPosition(newX, newY);
+		}
+
+	if (this->secondPhaseMovementRight) {
+		float time = moveClock.getElapsedTime().asSeconds(); // Temps écoulé depuis le dernier appel
+
+		float newY = this->startY + this->amplitudeY * sin(this->frequencyY * time);
+
+
+		float newX = this->sprite.getPosition().x + horizontalSpeed;
+
+
+		this->sprite.setPosition(newX, newY);
+
+	}
+}
