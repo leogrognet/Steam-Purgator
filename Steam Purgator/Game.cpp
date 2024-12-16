@@ -1,6 +1,6 @@
 #include "Game.h"
 
-
+// constructeur de game
 Game::Game()
 {
 	this->window = new RenderWindow(VideoMode(1920, 1080), "Steam Purgator");
@@ -27,6 +27,8 @@ Game::Game()
 	this->score = 0;
 }
 
+
+//destructeur de game vidant la memoire 
 Game::~Game()
 {
 
@@ -64,6 +66,8 @@ Game::~Game()
 //Fonction Init------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------
 
+
+//fonction qui pemet de creer une nouvelle texture avec une image
 void Game::loadTexture(map<String, Texture*>& textureMap, const string& key, const string& path)
 {
 	textureMap[key] = new Texture;
@@ -73,12 +77,16 @@ void Game::loadTexture(map<String, Texture*>& textureMap, const string& key, con
 
 }
 
+
+//initie le joueur et sa texture
 void Game::initPlayer()
 {
 	this->player = make_unique<Player>(100,100,2.0f,2.0f,500,500,false,10.f, "asset/SpriteAsset/Perso stu.png",54,30,54,30 );
 
 }
 
+
+//initie les textures des munitions
 void Game::initAmmo()
 {
 
@@ -90,7 +98,7 @@ void Game::initAmmo()
 }
 
 
-
+//initie les textures des projectiles
 void Game::initProjectile()
 {
 	this->loadTexture(this->playerProjectileTexture, "boulet", "asset/SpriteAsset/boulet de canon.png");
@@ -107,6 +115,8 @@ void Game::initProjectile()
 	this->loadTexture(this->enemyProjectileTexture, "bombe", "asset/SpriteAsset/Bombe.png");
 }
 
+
+//inities les textures des ennemis
 void Game::initEnemy()
 {
 	this->loadTexture(this->enemyTextures, "Avion", "asset/SpriteAsset/Avion.png");
@@ -116,6 +126,7 @@ void Game::initEnemy()
 	
 }
 
+//inititie l'arriere plan
 void Game::initBG()
 {
 	this->BackGroundTexture["Tour"] = new Texture;
@@ -132,7 +143,7 @@ void Game::initBG()
 }
 
 
-
+//detruit un objet d'une liste
 void Game::deleteObjects() {
 	// Nettoyer les ennemis
 	this->allEnemies.erase(
@@ -196,6 +207,8 @@ void Game::deleteObjects() {
 }
 
 
+
+//fonction pour faire spawn les ennemis aleatoirement
 void Game::spawnEnemy()
 {
 	deltaTimeElasped = deltaClock.getElapsedTime();
@@ -292,6 +305,8 @@ void Game::spawnEnemy()
 		}
 	}
 
+
+//fonction de spwan du boss
 void Game::spawnBoss()
 {
 	this->allEnemies.push_back(new Boss_1(enemyTextures["Boss_1"], 1.0f, 1.0f, 400.f, 400.f, true, 1.0f, 274, 273, 274, 273));
@@ -301,7 +316,7 @@ void Game::spawnBoss()
 
 
 
-
+//fonction pour configurer les niveau
 void Game::startLevel(int level) {
 	this->currentLevel = level;
 	this->allEnemies.clear();  // Nettoyer les ennemis existants
@@ -331,6 +346,8 @@ void Game::startLevel(int level) {
 //Fonction Run-------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------
 
+
+//fonction pour lancer le jeu
 bool Game::run() {
 	startClock.restart();
 	startTimeElapsed = startClock.getElapsedTime();
@@ -370,6 +387,8 @@ bool Game::run() {
 //Fonction Update----------------------------------------------------------------------
 //-------------------------------------------------------------------------------------
 
+
+//fonction pour mettre a jour les input du joueur et les interactions de ses input
 void Game::updateInput()
 {
 	this->player->movement(window);
@@ -431,7 +450,7 @@ void Game::updateInput()
 
 
 
-
+//fonction de mise a jour du boss
 void Game::updateBoss()
 {
 	for (auto boss : allEnemies) {
@@ -442,6 +461,8 @@ void Game::updateBoss()
 	}
 }
 
+
+//fonction de mise a jour des munitions
 void Game::updateAmmo()
 {
 	for (auto Ammo : allAmmo) {
@@ -473,6 +494,8 @@ void Game::updateAmmo()
 	}
 }
 
+
+//fonction qui passe dun niveau a un autre
 void Game::updateLevel() {
 	startTimeElapsed = startClock.getElapsedTime();
 
@@ -489,6 +512,8 @@ void Game::updateLevel() {
 
 
 
+
+//fonction pour mettre a jour les annemis
 void Game::updateEnemy() {
 	for (auto enemies : allEnemies) {
 		enemies->updateSelf(window);
@@ -567,6 +592,9 @@ void Game::updateEnemy() {
 	}
 }
 
+
+
+//fonction de mise a jour des projectiles
 void Game::updateProjectile()
 {
 	for (auto projectiles : allPlayerProjectiles) {
@@ -623,6 +651,9 @@ void Game::updateProjectile()
 
 }
 
+
+
+//fonction de mise a jour de letat du joueur et de ses armes
 void Game::updatePlayer()
 {	
 	this->playerLaser->followPlayer(this->player->getSprite());
@@ -633,6 +664,8 @@ void Game::updatePlayer()
 	}
 }
 
+
+//fonction qui utilise toute les mise a jour
 void Game::update() {
 	
 	this->updateAmmo();
@@ -661,6 +694,9 @@ void Game::update() {
 //Fonction Render----------------------------------------------------------------------
 //-------------------------------------------------------------------------------------
 
+
+
+//fonctiuon daffichage du jeu
 void Game::render()
 {
 	window->clear(Color::White);
