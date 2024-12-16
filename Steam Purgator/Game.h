@@ -36,7 +36,8 @@ private :
 
 	vector <BigEnemy*> allEnemies;
 	unique_ptr<Player> player;
-
+	unique_ptr<Laser> playerLaser;
+	unique_ptr<Shield> playerShield;
 
 	int currentWeapon;
 	int currentLevel; 
@@ -60,8 +61,8 @@ private :
 	void initBG();
 	
 
-	Clock animClock;            // Horloge pour contrôler l'animation
-	Vector2f animTourmap;     // Frame actuelle de Tourmap (ou autre objet)
+	Clock animClock;          
+	Vector2f animTourmap;    
 	float animSpeed = 0.1f;
 
 public:

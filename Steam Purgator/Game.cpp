@@ -15,7 +15,7 @@ Game::Game()
 
 	this->animTourmap = Vector2f(0, 0);
 
-	this->currentWeapon = 0;
+	this->currentWeapon = 1;
 
 	this->initPlayer();
 	this->initAmmo();
@@ -100,8 +100,8 @@ void Game::initProjectile()
 	this->loadTexture(this->playerProjectileTexture, "missile", "asset/SpriteAsset/missile.png");
 	this->loadTexture(this->playerProjectileTexture, "bouclier", "asset/SpriteAsset/bouclier.png");
 	this->loadTexture(this->playerProjectileTexture, "bombe", "asset/SpriteAsset/Bombe.png");
-
-
+	this->playerLaser = make_unique<Laser>(playerProjectileTexture["laser"], 1.0f, 1.0f, this->player->getPos().x + this->player->getBounds().width, this->player->getPos().y + this->player->getBounds().height / 2,this->player->getSprite());
+	this->playerShield = make_unique<Shield>(playerProjectileTexture["bouclier"], 1.0f, 1.0f, this->player->getPos().x + this->player->getBounds().width, this->player->getPos().y + this->player->getBounds().height / 2);
 
 	//Texture pour l'ennemi
 
@@ -364,25 +364,35 @@ void Game::updateInput()
 			);
 	}
 
-	if (this->player->attack() == 2 && this->player->canAttack()) {
-		switch (currentWeapon)
-		{
+	if (this->player->attack() == 2) { // Vérifie si le joueur attaque avec le laser
+		switch (currentWeapon) {
 		case 1:
-			this->allPlayerProjectiles.push_back(new Missile(playerProjectileTexture["missile"], 1.0f, 1.0f, this->player->getSprite().getPosition().x, this->player->getSprite().getPosition().y,  1.f + this->player->getSpeed(),63,21,63,21));
-			break;
 		case 2:
+			if (this->player->canAttack()) {
+				this->allPlayerProjectiles.push_back(new Missile(playerProjectileTexture["missile"], 1.0f, 1.0f, this->player->getSprite().getPosition().x, this->player->getSprite().getPosition().y, 1.f + this->player->getSpeed(), 63, 21, 63, 21));
+			}
+			break;
 		case 3:
+			this->playerLaser->setActive(true);
+			break;
+
 		case 4:
+			this->playerShield->setActive(true);
 			break;
 		}
 	}
+	else {
+		this->playerLaser->setActive(false); 
+		this->playerShield->setActive(false);
+	}
+
 
 	if (this->player->attack() == 3) {
 		if (this->player->attack() == 3 && player->canAttack()) {
 			currentWeapon++;
 			cout << currentWeapon << endl;
-			if (currentWeapon > 3) {
-				currentWeapon = 0;
+			if (currentWeapon > 4) {
+				currentWeapon = 1;
 			}
 		}
 
@@ -428,8 +438,12 @@ void Game::updateEnemy() {
 		}
 
 		// Collision joueur <-> ennemi
-		if (enemies->getBounds().intersects(this->player->getBounds())) {
+		if (enemies->getBounds().intersects(this->player->getBounds()) && !this->playerShield->active) {
 			this->player->loseHp(enemies->getDamage());
+			cout << this->player->getHp()<<endl;
+			enemies->markForRemoval();
+		}
+		else if (enemies->getBounds().intersects(this->player->getBounds()) && this->playerShield->active) {
 			enemies->markForRemoval();
 		}
 
@@ -480,6 +494,10 @@ void Game::updateProjectile()
 			if (closestEnemy) {
 				projectiles->updateSelf(closestEnemy->getSprite());
 			}
+			else 
+			{
+				projectiles->updateSelf(Sprite());
+			}
 		}
 	}
 
@@ -502,6 +520,8 @@ void Game::updateProjectile()
 
 void Game::updatePlayer()
 {	
+	this->playerLaser->followPlayer(this->player->getSprite());
+	this->playerShield->followPlayer(this->player->getSprite());
 	this->player->update(window);
 	if (this->player->getHp() <= 0) {
 
@@ -540,6 +560,7 @@ void Game::render()
 	this->player->render(*window);
 
 	
+	
 	for (auto* it : this->allPlayerProjectiles)
 	{
 		if (typeid(*it) == typeid(Missile)) {
@@ -560,6 +581,9 @@ void Game::render()
 		it->renderEnemy(window);
 	}
 	
+	this->playerLaser->renderProjectile(window);
+	this->playerShield->renderProjectile(window);
+
 	window->display();
 }
 

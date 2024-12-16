@@ -15,6 +15,8 @@ public:
 	Projectile(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, float speed);
 	virtual ~Projectile();
 	
+	bool active;
+
 	Texture* texture;
 
 	const Vector2f& getPos() const;
@@ -22,8 +24,9 @@ public:
 	
 	Sprite getSprite();
 
-	virtual void updateSelf(Sprite sprite = Sprite());
-	void renderProjectile(RenderWindow* target);
+
+	virtual void updateSelf(Sprite enemySprite = Sprite(), Sprite playerSprite = Sprite());
+	virtual void renderProjectile(RenderWindow* target);
 	void markForRemoval();
 	bool isMarkedForRemoval() const;
 	void updateAnim();
@@ -36,10 +39,13 @@ protected:
 	Clock AnimClock;
 	Time AnimTime;
 
+	int ammo;
+	int max_ammo;
 	int top;
 	int left;
 	int width;
 	int height;
+	
 	Vector2f deltaTexture;
 
 };
@@ -51,7 +57,7 @@ protected:
 class Missile : public Projectile {
 public:
 	Missile(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, float speed, int left, int top, int width, int height);
-	void updateSelf(Sprite sprite = Sprite()) override ;
+	void updateSelf(Sprite enemySprite , Sprite playerSprite = Sprite()) override ;
 	//Sprite* findClosestEnemy(const sf::Sprite& referenceSprite, const std::vector<sf::Sprite>& allEnemies);
 	Vector2f direction;
 private:
@@ -66,9 +72,17 @@ private:
 //-------------------------------------------------------------------------------------
 class Laser : public Projectile {
 public:
-	Laser(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, int left, int top, int width, int height);
-	void updateSelf(Sprite sprite = Sprite()) override;
-	bool active;
+	Laser(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, Sprite player);
+	void updateSelf(Sprite sprite, Sprite player ) override;
+	void renderProjectile(RenderWindow* target) override;
+	void setActive(bool setter);
+	void followPlayer(Sprite player);
+	Sprite tempSprite;
+private:
+	
+	bool checkLaserCollisionWithEnemy(const Vector2f& laserStart, const Vector2f& laserDirection, float laserLength, const Sprite& enemySprite);
+	float calculateCollisionDistance(const Vector2f& laserStart, const Vector2f& laserDirection, const Sprite& enemySprite);
+	
 };
 
 
@@ -77,8 +91,10 @@ public:
 //-------------------------------------------------------------------------------------
 class Shield : public Projectile {
 public:
-	Shield(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, int left, int top, int width, int height);
-	void updateSelf(Sprite sprite = Sprite()) override;
+	Shield(Texture* texture, float size_x, float size_y, float pos_x, float pos_y);
+	void setActive(bool setter);
+	void followPlayer(Sprite player);
+	void renderProjectile(RenderWindow* target);
 };
 
 
@@ -88,7 +104,7 @@ public:
 class Bomb : public Projectile {
 public:
 	Bomb(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, float speed, int left, int top, int width, int height);
-	void updateSelf(Sprite sprite = Sprite()) override;
+
 };
 
 

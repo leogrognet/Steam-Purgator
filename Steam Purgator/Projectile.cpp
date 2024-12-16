@@ -38,7 +38,9 @@ Sprite Projectile::getSprite()
 }
 
 
-void Projectile::updateSelf(Sprite sprite)
+
+
+void Projectile::updateSelf(Sprite enemySprite, Sprite playerSprite )
 {
 	this->sprite.move(this->speed , 0);
 }
@@ -92,26 +94,37 @@ Missile::Missile(Texture* texture, float size_x, float size_y, float pos_x, floa
     this->left = left;
     this->width = width;
     this->height = height;
+
+    this->max_ammo = 40;
+    this->ammo = 0;
 }
 
 
 
-void Missile::updateSelf(Sprite enemySprite)
+void Missile::updateSelf(Sprite enemySprite, Sprite playerSprite )
 {
-    // Calculer la direction vers l'ennemi
-    Vector2f enemyPos = enemySprite.getPosition();
-    Vector2f missilePos = this->sprite.getPosition();
+    // Calculer la direction vers l'ennemi si l'ennemi existe
+    Vector2f direction;
 
-    // Calculer le vecteur direction du missile vers l'ennemi
-    Vector2f direction = enemyPos - missilePos; // direction = (x_enemy - x_missile, y_enemy - y_missile)
+    if (enemySprite.getTexture() !=nullptr) {
+        // Si l'ennemi existe, calculer la direction vers lui
+        Vector2f enemyPos = enemySprite.getPosition();
+        Vector2f missilePos = this->sprite.getPosition();
 
-    // Normaliser la direction pour obtenir une magnitude de 1
-    float length = sqrt(direction.x * direction.x + direction.y * direction.y);
-    if (length != 0) {
-        direction /= length; // Normalisation
+        direction = enemyPos - missilePos; // direction = (x_enemy - x_missile, y_enemy - y_missile)
+
+        // Normaliser la direction pour obtenir une magnitude de 1
+        float length = sqrt(direction.x * direction.x + direction.y * direction.y);
+        if (length != 0) {
+            direction /= length; // Normalisation
+        }
+    }
+    else {
+        // Si l'ennemi n'existe pas, le missile va tout droit
+        direction = Vector2f(1.f, 0.f); // Direction initiale vers la droite (ou autre direction par défaut)
     }
 
-    // Déplacer le missile dans la direction de l'ennemi avec la vitesse
+    // Déplacer le missile dans la direction calculée (soit vers l'ennemi, soit tout droit)
     this->sprite.move(direction * this->speed);
 
     // Calculer l'angle du vecteur direction pour faire pivoter le missile
@@ -130,52 +143,111 @@ void Missile::updateSelf(Sprite enemySprite)
 
 
 
+
+
+
+
+
+
+
+
+
 //-------------------------------------------------------------------------------------
 //Class Laser------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------
 
-Laser::Laser(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, int left, int top, int width, int height)
+Laser::Laser(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, Sprite player)
 {
+
+    this->active = false;
+    this->sprite.setTexture(*texture);
+    this->sprite.setPosition(pos_x, pos_y);
+    this->sprite.setScale(size_x, size_y);
+    this->texture = texture;
+    this->max_ammo = 100;
+    this->ammo = 0;
 }
-void Laser::updateSelf(Sprite sprite)
+
+
+void Laser::updateSelf(Sprite enemySprite, Sprite playerSprite)
 {
-}
-/*
-void Laser::updateSelf()
-{
-    if (active) {
-        // Calculer la direction du laser à partir de la position du joueur
-        Vector2f laserPos = this->getPos();
-        Vector2f targetPos = this->targetDirection;  // Direction dans laquelle le laser se propage (par exemple, droite)
 
-        // Calculer le vecteur direction du laser
-        Vector2f direction = targetPos - laserPos;
+    Vector2f enemyPos = enemySprite.getPosition();
+    Vector2f missilePos = this->sprite.getPosition();
+    // Position initiale du laser
+    this->sprite.setPosition(playerSprite.getPosition());
 
-        // Normaliser la direction pour obtenir une direction unitaire
-        float length = sqrt(direction.x * direction.x + direction.y * direction.y);
-        if (length != 0) {
-            direction /= length;  // Normalisation
-        }
+    // Direction du laser (par exemple, vers la droite ou une direction spécifiée)
+    Vector2f laserDirection = Vector2f(1.f, 0.f); // Exemple : direction vers la droite
+    float laserLength = 1000.f; // Longueur du laser (peut être ajustée)
 
-        // Calculer la longueur du rayon de laser (ici, on peut le limiter à la taille de la fenêtre par exemple)
-        float maxDistance = 1000.0f;  // Peut être ajusté pour être la distance maximale du laser
-
-        // Vérifier la collision avec les objets génériques (ennemis, objets, etc.)
-        for (auto* objectSprite : allObjectsSprites) {
-            if (objectSprite->getGlobalBounds().intersects(this->sprite.getGlobalBounds())) {
-                // Si le laser touche un objet, arrêter à la position juste avant l'objet
-                active = false;  // Vous pouvez ajuster ce comportement pour l'arrêter juste avant l'objet
-                break;
-            }
-        }
-
-        // Vérifier si le laser touche un bord de la fenêtre
-        if (this->sprite.getPosition().x < 0 || this->sprite.getPosition().x > windowWidth ||
-            this->sprite.getPosition().y < 0 || this->sprite.getPosition().y > windowHeight) {
-            active = false;  // Désactiver le laser une fois qu'il atteint le bord de la fenêtre
-        }
+    // Vérification de la collision avec un ennemi dans le chemin du laser
+    if (checkLaserCollisionWithEnemy(playerSprite.getPosition(), laserDirection, laserLength, enemySprite)) {
+        // Si une collision est détectée, ajuster la longueur du laser
+        laserLength = calculateCollisionDistance(playerSprite.getPosition(), laserDirection, enemySprite);
     }
-}*/
+
+    // Mise à jour de la longueur du laser (ajuster le sprite en fonction de la distance)
+    this->sprite.setScale(laserLength / sprite.getTexture()->getSize().x, 1.f);
+
+    // Calculer l'angle du laser pour qu'il soit orienté correctement
+    float angle = atan2(laserDirection.y, laserDirection.x) * 180.f / 3.14159f; // Convertir en degrés
+    sprite.setRotation(angle);
+
+    // Mettre à jour l'animation du laser si nécessaire
+    this->updateAnim();
+}
+
+
+
+bool Laser::checkLaserCollisionWithEnemy(const Vector2f& laserStart, const Vector2f& laserDirection, float laserLength, const Sprite& enemySprite)
+{
+    // Calculer la direction du laser
+    Vector2f direction = laserDirection;
+    float laserEndX = laserStart.x + laserDirection.x * laserLength;
+    float laserEndY = laserStart.y + laserDirection.y * laserLength;
+    FloatRect laserBounds(laserStart.x, laserStart.y, laserEndX - laserStart.x, laserEndY - laserStart.y);
+
+    // Vérifie si le laser entre en collision avec l'ennemi
+    return laserBounds.intersects(enemySprite.getGlobalBounds());
+}
+
+float Laser::calculateCollisionDistance(const Vector2f& laserStart, const Vector2f& laserDirection, const Sprite& enemySprite)
+{
+    // Calculer la position de l'ennemi
+    Vector2f enemyPos = enemySprite.getPosition();
+
+    // Calculer la distance entre la position du laser et la position de l'ennemi
+    float distance = sqrt(pow(enemyPos.x - laserStart.x, 2) + pow(enemyPos.y - laserStart.y, 2));
+
+    // Retourner la distance à laquelle le laser doit s'arrêter
+    return distance;
+}
+
+
+void Laser::renderProjectile(RenderWindow* target)
+{
+    if (this->active) {
+        target->draw(this->sprite);
+    }
+}
+
+void Laser::setActive(bool setter)
+{
+    this->active = setter;
+}
+
+
+void Laser::followPlayer(Sprite player)
+{
+    this->sprite.setPosition(player.getPosition().x + player.getGlobalBounds().width, player.getPosition().y + player.getGlobalBounds().height/2);
+
+}
+
+
+
+
+
 
 
 
@@ -184,16 +256,34 @@ void Laser::updateSelf()
 //-------------------------------------------------------------------------------------
 //Class Shield------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------
-Shield::Shield(Texture* texture, float size_x, float size_y, float pos_x, float pos_y,int left, int top, int width, int height)
+Shield::Shield(Texture* texture, float size_x, float size_y, float pos_x, float pos_y)
 {
+    this->active = false;
+    this->sprite.setTexture(*texture);
+    this->sprite.setPosition(pos_x, pos_y);
+    this->sprite.setScale(size_x, size_y);
+    this->texture = texture;
+    this->max_ammo = 100;
+    this->ammo = 0;
 }
 
-void Shield::updateSelf(Sprite sprite)
+void Shield::setActive(bool setter)
 {
+    this->active = setter;
 }
 
+void Shield::followPlayer(Sprite player)
+{
+    this->sprite.setPosition(player.getPosition().x + player.getGlobalBounds().width, player.getPosition().y + player.getGlobalBounds().height / 2);
 
+}
 
+void Shield::renderProjectile(RenderWindow* target)
+{
+    if (this->active) {
+        target->draw(this->sprite);
+    }
+}
 
 //-------------------------------------------------------------------------------------
 //Class Bomb------------------------------------------------------------------------
@@ -202,7 +292,3 @@ Bomb::Bomb(Texture* texture, float size_x, float size_y, float pos_x, float pos_
 {
 }
 
-void Bomb::updateSelf(Sprite sprite)
-{
-
-}
