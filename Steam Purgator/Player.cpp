@@ -16,7 +16,8 @@ Player::Player(int hp, int maxHp, float size_x, float size_y, float pos_x, float
 	this->damage = 10;
 
 	this->deltaTexture = Vector2f(1, 0);
-
+	this->size_x = size_x;
+	this->size_y = size_y;
 	this->top = top;
 	this->left = left;
 	this->width = width;
@@ -34,11 +35,14 @@ Player::~Player()
 void Player::initVariables()
 {
 
-
 	this->attackCooldownMax = 0.5f;
 
 	this->maxHealth = 100;
 	this->health = this->maxHealth;
+	this->MissileMax = 50;
+	this->LaserMax = 100;
+	this->BombMax = 5;
+	this->ShieldMax = 100;
 }
 
 void Player::initTexture(string image)
@@ -53,7 +57,7 @@ void Player::initSprite()
 {
 	this->playerSprite.setTexture(this->texture);
 
-	this->playerSprite.scale(1.0f, 1.0f);
+	this->playerSprite.scale(this->size_x, this->size_y);
 }
 
 
@@ -155,6 +159,18 @@ void Player::updateAnim()
 
 void Player::update(RenderWindow* window)
 {
+	if (this->weaponCount["missileUse"] > this->MissileMax) {
+		this->weaponCount["missileUse"] = this->MissileMax;
+	}
+	if (this->weaponCount["shieldUse"] > this->ShieldMax) {
+		this->weaponCount["shieldUse"] = this->ShieldMax;
+	}
+	if (this->weaponCount["laserUse"] > this->LaserMax) {
+		this->weaponCount["laserUse"] = this->LaserMax;
+	}
+	if (this->weaponCount["bombUse"] > this->BombMax) {
+		this->weaponCount["bombUse"] = this->BombMax;
+	}
 	movement(window);
 	attack();
 	updateAnim();

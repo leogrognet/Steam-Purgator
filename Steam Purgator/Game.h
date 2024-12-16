@@ -4,7 +4,7 @@
 #include "Projectile.h"
 #include "Player.h"
 #include "Enemy.h"
-
+#include "Ammo.h"
 
 
 
@@ -27,6 +27,7 @@ private :
 
 	Sprite TourMap;
 
+	vector<Ammunition*> allAmmo;
 
 	vector<Projectile*> allPlayerProjectiles;
 
@@ -77,7 +78,7 @@ public:
 	void deleteObjects();
 	void spawnEnemy();
 
-	
+	void updateAmmo();
 	void updateLevel();
 	void updateEnemy();
 	void updateProjectile();

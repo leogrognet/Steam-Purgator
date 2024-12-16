@@ -12,6 +12,8 @@ Projectile::Projectile(Texture* texture, float size_x, float size_y, float pos_x
 	this->sprite.setScale(size_x, size_y);
 	this->speed = speed;
     this->texture = texture;
+    this->markedForRemoval = false;
+
     
     
 }
@@ -125,6 +127,7 @@ void Missile::updateSelf(Sprite enemySprite, Sprite playerSprite )
     }
 
     // Déplacer le missile dans la direction calculée (soit vers l'ennemi, soit tout droit)
+
     this->sprite.move(direction * this->speed);
 
     // Calculer l'angle du vecteur direction pour faire pivoter le missile

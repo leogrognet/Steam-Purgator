@@ -48,10 +48,10 @@ public:
 
 
 	map<string, int> weaponCount = {
-		{"missileUse", 0},
-		{"laserUse", 0},
-		{"shieldUse", 0},
-		{"bombUse", 0}
+		{"missileUse",  10},
+		{"laserUse", 10},
+		{"shieldUse", 10},
+		{"bombUse", 10}
 	};
 
 	
@@ -66,6 +66,12 @@ private:
 	Sprite playerSprite;
 
 	float speed;
+	int MissileMax;
+	int LaserMax;
+	int BombMax;
+	int ShieldMax;
+
+	float size_x, size_y;
 
 	Clock shootClock;
 	Time shootTime;

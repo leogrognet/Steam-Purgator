@@ -74,7 +74,7 @@ void Game::loadTexture(map<String, Texture*>& textureMap, const string& key, con
 
 void Game::initPlayer()
 {
-	this->player = make_unique<Player>(100,100,1.0f,1.0f,500,500,false,10.f, "asset/SpriteAsset/Perso stu.png",54,30,54,30 );
+	this->player = make_unique<Player>(100,100,2.0f,2.0f,500,500,false,10.f, "asset/SpriteAsset/Perso stu.png",54,30,54,30 );
 
 }
 
@@ -86,9 +86,6 @@ void Game::initAmmo()
 	this->loadTexture(this->AmmoTexture, "missileMunition", "asset/SpriteAsset/mun missile.png");
 	this->loadTexture(this->AmmoTexture, "bouclierMunition", "asset/SpriteAsset/mun bouclier.png");
 
-	if (this->AmmoTexture["bombeMunition"] == nullptr) {
-		cout << "oui" << endl ;
-	}
 }
 
 
@@ -178,6 +175,21 @@ void Game::deleteObjects() {
 				return false;
 			}),
 		this->allEnemyProjectiles.end()
+	);
+
+	// Nettoyer les Munitions
+	this->allAmmo.erase(
+		std::remove_if(
+			this->allAmmo.begin(),
+			this->allAmmo.end(),
+			[](Ammunition* ammos) {
+				if (ammos->isMarkedForRemoval()) {
+					delete ammos;
+					return true;
+				}
+				return false;
+			}),
+		this->allAmmo.end()
 	);
 }
 
@@ -316,6 +328,7 @@ bool Game::run() {
 	startClock.restart();
 	startTimeElapsed = startClock.getElapsedTime();
 	this->game_on = true;
+	
 
 	while (game_on) {
 		Event gameEvent;
@@ -327,9 +340,12 @@ bool Game::run() {
 				this->game_on = false;
 			}
 		}
+		
 
+		
 		// Mise à jour du jeu
 		this->update();
+		
 
 		// Rendu des objets à l'écran
 		this->render();
@@ -353,7 +369,6 @@ void Game::updateInput()
 
 	if (this->player->attack() == 1 && this->player->canAttack())
 	{
-
 			this->allPlayerProjectiles.push_back(new Projectile(playerProjectileTexture["boulet"],
 				5.0f,
 				5.0f,
@@ -363,21 +378,27 @@ void Game::updateInput()
 			)
 			);
 	}
-
-	if (this->player->attack() == 2) { // Vérifie si le joueur attaque avec le laser
+	if (this->player->attack() == 2) { 
+		cout << "attack" << endl;
+		//cout << this->player->weaponCount["missileUse"];
 		switch (currentWeapon) {
 		case 1:
 		case 2:
-			if (this->player->canAttack()) {
+			if (this->player->canAttack() && this->player->weaponCount["missileUse"] > 0) {
+				cout << "missile use" << endl;
 				this->allPlayerProjectiles.push_back(new Missile(playerProjectileTexture["missile"], 1.0f, 1.0f, this->player->getSprite().getPosition().x, this->player->getSprite().getPosition().y, 1.f + this->player->getSpeed(), 63, 21, 63, 21));
 			}
 			break;
 		case 3:
-			this->playerLaser->setActive(true);
+			if (this->player->weaponCount["laserUse"] > 0){
+				this->playerLaser->setActive(true);
+			}
 			break;
 
 		case 4:
-			this->playerShield->setActive(true);
+			if (this->player->weaponCount["shieldUse"] > 0) {
+				this->playerShield->setActive(true);
+			}
 			break;
 		}
 	}
@@ -394,6 +415,7 @@ void Game::updateInput()
 			if (currentWeapon > 4) {
 				currentWeapon = 1;
 			}
+			
 		}
 
 	}
@@ -406,6 +428,38 @@ void Game::updateInput()
 
 
 
+
+void Game::updateAmmo()
+{
+	cout << this->player->weaponCount["missileUse"] << endl;
+	for (auto Ammo : allAmmo) {
+		Ammo->updateSelf();
+		if (Ammo->sprite.getGlobalBounds().height + Ammo->sprite.getPosition().y > window->getSize().y) {
+			Ammo->markForRemoval();
+		}
+		if (Ammo->sprite.getGlobalBounds().intersects(this->player->getSprite().getGlobalBounds())) {
+			switch (Ammo->getAmmo())
+			{
+			case 1:
+				this->player->weaponCount["missileUse"] += Ammo->getAmmoMax();
+				Ammo->markForRemoval();
+				break;
+			case 2:
+				this->player->weaponCount["laserUse"] += Ammo->getAmmoMax();
+				Ammo->markForRemoval();
+				break;
+			case 3:
+				this->player->weaponCount["shieldUse"] += Ammo->getAmmoMax();
+				Ammo->markForRemoval();
+				break;
+			case 4:
+				this->player->weaponCount["bombeUse"] += Ammo->getAmmoMax();
+				Ammo->markForRemoval();
+				break;
+			}
+		}
+	}
+}
 
 void Game::updateLevel() {
 	startTimeElapsed = startClock.getElapsedTime();
@@ -456,6 +510,38 @@ void Game::updateEnemy() {
 				if (enemies->getHealth() <= 0) {
 					enemies->markForRemoval();
 					this->score += 10;
+				}
+			}
+		}
+		if (enemies->isMarkedForRemoval()) {
+			int spawnAmmo = rand() % 4;
+			int randomShield = rand() % 100;
+			int randomLaser = rand() % 100;
+			int randomMissile = rand() % 100;
+			int randomBomb = rand() % 100;
+			switch (spawnAmmo) {
+			case 0:
+				
+				if (randomShield < 10) {
+					this->allAmmo.push_back(new Ammunition(AmmoTexture["bouclierMunition"], 1.0f, 1.0f, enemies->getPos().x, enemies->getPos().y, 1.0f, 1));
+				}
+			case 1:
+				
+				if (randomLaser < 10) {
+					this->allAmmo.push_back(new Ammunition(AmmoTexture["missileMunition"], 1.0f, 1.0f, enemies->getPos().x, enemies->getPos().y, 1.0f, 2));
+
+				}
+			case 2:
+				
+				if (randomMissile < 10) {
+					this->allAmmo.push_back(new Ammunition(AmmoTexture["bombeMunition"], 1.0f, 1.0f, enemies->getPos().x, enemies->getPos().y, 1.0f, 3));
+
+				}
+			case 3:
+				
+				if (randomBomb < 10) {
+					this->allAmmo.push_back(new Ammunition(AmmoTexture["laserMunition"], 1.0f, 1.0f, enemies->getPos().x, enemies->getPos().y, 1.0f, 4));
+
 				}
 			}
 		}
@@ -529,7 +615,9 @@ void Game::updatePlayer()
 }
 
 void Game::update() {
-
+	
+	this->updateAmmo();
+	
 	this->updatePlayer();
 
 	this->spawnEnemy();
@@ -563,12 +651,9 @@ void Game::render()
 	
 	for (auto* it : this->allPlayerProjectiles)
 	{
-		if (typeid(*it) == typeid(Missile)) {
-			cout << "cest un missile" << endl;
 
-
-			it->renderProjectile(window);
-		}
+		it->renderProjectile(window);
+		
 	}
 	for (auto* it : this->allEnemyProjectiles)
 	{
@@ -581,6 +666,12 @@ void Game::render()
 		it->renderEnemy(window);
 	}
 	
+	for (auto* it : this->allAmmo)
+	{
+
+		it->renderAmmo(window);
+	}
+
 	this->playerLaser->renderProjectile(window);
 	this->playerShield->renderProjectile(window);
 
