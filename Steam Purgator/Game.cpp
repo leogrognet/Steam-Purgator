@@ -1,12 +1,43 @@
 #include "Game.h"
 
-void Game::updatePlayer()
+// constructeur de game
+Game::Game()
 {
+	this->window = new RenderWindow(VideoMode(1920, 1080), "Steam Purgator");
+	this->window->setFramerateLimit(60);
+	this->enemySpawnInterval = 1.f;
+	srand(static_cast<unsigned int>(time(nullptr)));
+
+	this->animP = Vector2f(1, 0);
+	this->animG = Vector2f(1, 0);
+	this->animB = Vector2f(1, 0);
+	this->animD = Vector2f(1, 0);
+
+	this->animTourmap = Vector2f(0, 0);
+
+	this->currentWeapon = 1;
+
+	this->initPlayer();
+	this->initAmmo();
+	this->initProjectile();
+	this->initEnemy();
+	this->initBG();
+
+
+	this->score = 0;
 }
 
+<<<<<<< HEAD
 Game::~Game()
 {
 	//Vidage de la memoire lors de la fermeture du jeu
+=======
+
+//destructeur de game vidant la memoire 
+Game::~Game()
+{
+
+>>>>>>> Branche-de-Leo-2
 	
 	for (auto enemyProjectiles = this->allEnemyProjectiles.begin(); enemyProjectiles != this->allEnemyProjectiles.end();) {
 		delete* enemyProjectiles;
@@ -23,7 +54,11 @@ Game::~Game()
 	playerProjectileTexture.clear();
 
 	for (auto it = enemyProjectileTexture.begin(); it != enemyProjectileTexture.end(); ++it) {
+<<<<<<< HEAD
 		delete it->second;  
+=======
+		delete it->second;  // Libère le pointeur Texture*
+>>>>>>> Branche-de-Leo-2
 	}
 	enemyProjectileTexture.clear();
 
@@ -42,7 +77,11 @@ Game::~Game()
 //-------------------------------------------------------------------------------------
 
 
+<<<<<<< HEAD
 //fonction pour charger les textures
+=======
+//fonction qui pemet de creer une nouvelle texture avec une image
+>>>>>>> Branche-de-Leo-2
 void Game::loadTexture(map<String, Texture*>& textureMap, const string& key, const string& path)
 {
 	textureMap[key] = new Texture;
@@ -52,14 +91,24 @@ void Game::loadTexture(map<String, Texture*>& textureMap, const string& key, con
 
 }
 
+<<<<<<< HEAD
 //fonction pour initier les textures ou les objets du jeu
 
+=======
+
+//initie le joueur et sa texture
+>>>>>>> Branche-de-Leo-2
 void Game::initPlayer()
 {
 	this->player = make_unique<Player>(100,100,2.0f,2.0f,500,500,false,10.f, "asset/SpriteAsset/Perso stu.png",54,30,54,30 );
 
 }
 
+<<<<<<< HEAD
+=======
+
+//initie les textures des munitions
+>>>>>>> Branche-de-Leo-2
 void Game::initAmmo()
 {
 
@@ -71,7 +120,11 @@ void Game::initAmmo()
 }
 
 
+<<<<<<< HEAD
 
+=======
+//initie les textures des projectiles
+>>>>>>> Branche-de-Leo-2
 void Game::initProjectile()
 {
 	this->loadTexture(this->playerProjectileTexture, "boulet", "asset/SpriteAsset/boulet de canon.png");
@@ -88,6 +141,11 @@ void Game::initProjectile()
 	this->loadTexture(this->enemyProjectileTexture, "bombe", "asset/SpriteAsset/Bombe.png");
 }
 
+<<<<<<< HEAD
+=======
+
+//inities les textures des ennemis
+>>>>>>> Branche-de-Leo-2
 void Game::initEnemy()
 {
 	this->loadTexture(this->enemyTextures, "Avion", "asset/SpriteAsset/Avion.png");
@@ -97,6 +155,10 @@ void Game::initEnemy()
 	
 }
 
+<<<<<<< HEAD
+=======
+//inititie l'arriere plan
+>>>>>>> Branche-de-Leo-2
 void Game::initBG()
 {
 	this->BackGroundTexture["Tour"] = new Texture;
@@ -113,9 +175,13 @@ void Game::initBG()
 }
 
 
+<<<<<<< HEAD
 
 //fonction pour detruire un objet
 
+=======
+//detruit un objet d'une liste
+>>>>>>> Branche-de-Leo-2
 void Game::deleteObjects() {
 	// Nettoyer les ennemis
 	this->allEnemies.erase(
@@ -180,8 +246,12 @@ void Game::deleteObjects() {
 
 
 
+<<<<<<< HEAD
 //fonction de spawn des ennemies
 
+=======
+//fonction pour faire spawn les ennemis aleatoirement
+>>>>>>> Branche-de-Leo-2
 void Game::spawnEnemy()
 {
 	deltaTimeElasped = deltaClock.getElapsedTime();
@@ -279,9 +349,13 @@ void Game::spawnEnemy()
 	}
 
 
+<<<<<<< HEAD
 
 //fonction de spawn du boss
 
+=======
+//fonction de spwan du boss
+>>>>>>> Branche-de-Leo-2
 void Game::spawnBoss()
 {
 	this->allEnemies.push_back(new Boss_1(enemyTextures["Boss_1"], 1.0f, 1.0f, 400.f, 400.f, true, 1.0f, 274, 273, 274, 273));
@@ -290,8 +364,13 @@ void Game::spawnBoss()
 
 
 
+<<<<<<< HEAD
 //fonction qui start le un niveau
 
+=======
+
+//fonction pour configurer les niveau
+>>>>>>> Branche-de-Leo-2
 void Game::startLevel(int level) {
 	this->currentLevel = level;
 	this->allEnemies.clear();  // Nettoyer les ennemis existants
@@ -363,7 +442,11 @@ bool Game::run() {
 //-------------------------------------------------------------------------------------
 
 
+<<<<<<< HEAD
 //input du joueur et les interactions avec lui
+=======
+//fonction pour mettre a jour les input du joueur et les interactions de ses input
+>>>>>>> Branche-de-Leo-2
 void Game::updateInput()
 {
 	this->player->movement(window);
@@ -424,8 +507,13 @@ void Game::updateInput()
 
 
 
+<<<<<<< HEAD
 //fonction pour mettre a jour le boss
 
+=======
+
+//fonction de mise a jour du boss
+>>>>>>> Branche-de-Leo-2
 void Game::updateBoss()
 {
 	for (auto boss : allEnemies) {
@@ -437,9 +525,13 @@ void Game::updateBoss()
 }
 
 
+<<<<<<< HEAD
 
 //fonction pour mettre a jour les munitons
 
+=======
+//fonction de mise a jour des munitions
+>>>>>>> Branche-de-Leo-2
 void Game::updateAmmo()
 {
 	for (auto Ammo : allAmmo) {
@@ -472,8 +564,12 @@ void Game::updateAmmo()
 }
 
 
+<<<<<<< HEAD
 //fonction pour changer de niveau
 
+=======
+//fonction qui passe dun niveau a un autre
+>>>>>>> Branche-de-Leo-2
 void Game::updateLevel() {
 	startTimeElapsed = startClock.getElapsedTime();
 
@@ -491,8 +587,12 @@ void Game::updateLevel() {
 
 
 
+<<<<<<< HEAD
 //fonction pour mettre a jour les enemis
 
+=======
+//fonction pour mettre a jour les annemis
+>>>>>>> Branche-de-Leo-2
 void Game::updateEnemy() {
 	for (auto enemies : allEnemies) {
 		enemies->updateSelf(window);
@@ -573,12 +673,69 @@ void Game::updateEnemy() {
 
 
 
+<<<<<<< HEAD
 //fonction pour mettre a jour les projectiles
 
+=======
+//fonction de mise a jour des projectiles
+>>>>>>> Branche-de-Leo-2
 void Game::updateProjectile()
 {
+	for (auto projectiles : allPlayerProjectiles) {
+		if (typeid (*projectiles) == typeid (Projectile)) {
+			projectiles->updateSelf();
+			if (projectiles->getBounds().left + projectiles->getBounds().width > window->getSize().x) {
+				projectiles->markForRemoval();
+			}
+			else if (projectiles->getBounds().left + projectiles->getBounds().width < 0.f) {
+				projectiles->markForRemoval();
+			}
+		}
+		else if (typeid(*projectiles) == typeid(Missile)) {
+			// Trouver l'ennemi le plus proche
+			BigEnemy* closestEnemy = nullptr;
+			float closestDistance = std::numeric_limits<float>::max();
+
+			for (auto enemy : allEnemies) {
+				float distance = std::sqrt(
+					std::pow(enemy->getSprite().getPosition().x - projectiles->getBounds().left, 2) +
+					std::pow(enemy->getSprite().getPosition().y - projectiles->getBounds().top, 2));
+
+				if (distance < closestDistance) {
+					closestDistance = distance;
+					closestEnemy = enemy;
+				}
+			}
+
+			// Si un ennemi le plus proche est trouvé, mettre à jour le missile
+			if (closestEnemy) {
+				projectiles->updateSelf(closestEnemy->getSprite());
+			}
+			else 
+			{
+				projectiles->updateSelf(Sprite());
+			}
+		}
+	}
+
+	
+	for (auto enemyProjectile : allEnemyProjectiles) {
+		if (typeid(*enemyProjectile) == typeid(Projectile)) {
+			enemyProjectile->updateSelf();
+
+			if (enemyProjectile->getBounds().left + enemyProjectile->getBounds().width > window->getSize().x) {
+				enemyProjectile->markForRemoval();
+			}
+			else if (enemyProjectile->getBounds().left + enemyProjectile->getBounds().width < 0.f) {
+				enemyProjectile->markForRemoval();
+			}
+
+		}
+	}
+
 }
 
+<<<<<<< HEAD
 			// Si un ennemi le plus proche est trouvé, mettre à jour le missile
 			if (closestEnemy) {
 				projectiles->updateSelf(closestEnemy->getSprite());
@@ -624,6 +781,23 @@ void Game::updatePlayer()
 
 //fonction qui lance toute les fonctions de mises a jour du statut du jeu
 
+=======
+
+
+//fonction de mise a jour de letat du joueur et de ses armes
+void Game::updatePlayer()
+{	
+	this->playerLaser->followPlayer(this->player->getSprite());
+	this->playerShield->followPlayer(this->player->getSprite());
+	this->player->update(window);
+	if (this->player->getHp() <= 0) {
+
+	}
+}
+
+
+//fonction qui utilise toute les mise a jour
+>>>>>>> Branche-de-Leo-2
 void Game::update() {
 	
 	this->updateAmmo();
@@ -653,7 +827,12 @@ void Game::update() {
 //-------------------------------------------------------------------------------------
 
 
+<<<<<<< HEAD
 //fonction pour afficher tout le jeu
+=======
+
+//fonctiuon daffichage du jeu
+>>>>>>> Branche-de-Leo-2
 void Game::render()
 {
 	window->clear(Color::White);
@@ -686,6 +865,12 @@ void Game::render()
 		it->renderAmmo(window);
 	}
 
+<<<<<<< HEAD
+=======
+	if (BossLevel1->alive) {
+		BossLevel1->renderEnemy(window);
+	}
+>>>>>>> Branche-de-Leo-2
 	this->playerLaser->renderProjectile(window);
 	this->playerShield->renderProjectile(window);
 
