@@ -15,6 +15,8 @@ Game::Game()
 
 	this->animTourmap = Vector2f(0, 0);
 
+	this->isBossKilled = false;
+
 	this->currentWeapon = 1;
 
 	this->initPlayer();
@@ -142,17 +144,11 @@ void Game::initEnemy()
 //inititie l'arriere plan
 void Game::initBG()
 {
-	this->BackGroundTexture["Tour"] = new Texture;
-	if (!this->BackGroundTexture["Tour"]->loadFromFile("asset/SpriteAsset/Tour.png"))
-	{
-		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
-	}
+	this->loadTexture(this->BackGroundTexture, "Tour", "asset/SpriteAsset/Tour.png");
+	this->loadTexture(this->BackGroundTexture, "1stMapVide", "asset/SpriteAsset/Map vide.png");
 
-	this->BackGroundTexture["1stMapVide"] = new Texture;
-	if (!this->BackGroundTexture["1stMapVide"]->loadFromFile("asset/SpriteAsset/Map vide.png"))
-	{
-		cerr << "ERROR::PROJECTILE::INITTEXTURE::Could not load texture file." << endl;
-	}
+	this->levelBG = make_unique<setBG>(this->BackGroundTexture["Tour"], this->BackGroundTexture["1stMapVide"], 1.0f,1.0f,500.f, 384.f);
+
 }
 
 
@@ -228,16 +224,19 @@ void Game::deleteObjects() {
 
 void Game::spawnEnemy()
 {
-	deltaTimeElasped = deltaClock.getElapsedTime();
-	this->startTimeElapsed = this->startClock.getElapsedTime();
-	
 
-		
-		
+	if (this->canSpawn) {
+		//cout << "test" << endl;
+		deltaTimeElasped = deltaClock.getElapsedTime();
+		this->startTimeElapsed = this->startClock.getElapsedTime();
+
+
+
+
 		int min = 200;
 		int max = window->getSize().y - min;
 
-		int enemyX = window->getSize().x ;
+		int enemyX = window->getSize().x;
 		int enemyY = min + rand() % (max - min + 1);
 
 
@@ -272,7 +271,7 @@ void Game::spawnEnemy()
 				}
 			}
 		}
-		
+
 
 		if (randomWeight < 10) {
 			if (this->startTimeElapsed.asSeconds() >= 20) {
@@ -282,7 +281,7 @@ void Game::spawnEnemy()
 				}
 			}
 		}
-		
+
 
 		Texture* selectedTexture = nullptr;
 		switch (enemyType) {
@@ -302,25 +301,28 @@ void Game::spawnEnemy()
 			case 0:
 				this->allEnemies.push_back(new CloseRangeEnemy(
 
-					selectedTexture, 2.0f, 2.0f, enemyX, enemyY, false, 10.f, this->player->getPos(), 
-				100, 100, 100, 100
+					selectedTexture, 2.0f, 2.0f, enemyX, enemyY, false, 10.f, this->player->getPos(),
+					100, 100, 100, 100
 				));
+
+
 				break;
 			case 1:
 				this->allEnemies.push_back(new RangedEnemy(
 					selectedTexture, 1.5f, 1.5f, enemyX, enemyY, false, 10.f
 				));
 				break;
-			
+
 			case 2:
 				this->allEnemies.push_back(new BigEnemy(
-					selectedTexture, 3.0f, 3.0f, enemyX, enemyY, false, 10.f, 1.5f, 
-					47, 31,47,31
+					selectedTexture, 3.0f, 3.0f, enemyX, enemyY, false, 10.f, 1.5f,
+					47, 31, 47, 31
 				));
 				break;
 			}
 		}
 	}
+}
 
 
 
@@ -328,7 +330,7 @@ void Game::spawnEnemy()
 
 void Game::spawnBoss()
 {
-	this->allEnemies.push_back(new Boss_1(enemyTextures["Boss_1"], 1.0f, 1.0f, 400.f, 400.f, true, 1.0f, 274, 273, 274, 273));
+	this->allEnemies.push_back(new Boss_1(enemyTextures["Boss_1"], 2.0f, 2.0f, window->getSize().x - 300, window->getSize().y / 2 -200, true, 1.0f, 274, 273, 274, 273));
 }
 
 
@@ -347,11 +349,11 @@ void Game::startLevel(int level) {
 	// Configurer des paramètres spécifiques au niveau
 	switch (level) {
 	case 1:
-		this->levelDuration = 5; // Durée du niveau 1 (en secondes)
-		this->enemySpawnInterval = 3; // Temps entre les spawns d'ennemis
+		this->levelDuration = 30; // Durée du niveau 1 (en secondes)
+		this->enemySpawnInterval = 3;// Temps entre les spawns d'ennemis
 		break;
 	case 2:
-		this->levelDuration = 90; // Durée du niveau 2 (en secondes)
+		this->levelDuration = 420; // Durée du niveau 2 (en secondes)
 		this->enemySpawnInterval = 2; // Temps entre les spawns d'ennemis
 		break;
 	default:
@@ -373,7 +375,7 @@ bool Game::run() {
 	startClock.restart();
 	startTimeElapsed = startClock.getElapsedTime();
 	this->game_on = true;
-	
+	this->startLevel(1);
 
 	while (game_on) {
 		Event gameEvent;
@@ -385,6 +387,7 @@ bool Game::run() {
 				this->game_on = false;
 			}
 		}
+		
 		
 
 		
@@ -477,10 +480,35 @@ void Game::updateInput()
 void Game::updateBoss()
 {
 	for (auto boss : allEnemies) {
+		// Tenter de caster boss en Boss_1
+		Boss_1* boss1 = dynamic_cast<Boss_1*>(boss);
 
-		if (typeid (boss) == typeid (Boss_1)) {
-			boss->updateSelf(window);
+		if (boss1) { // Si le cast est réussi, boss est un Boss_1
+			int randomPattern = rand() % 20;
+
+			if (randomPattern > 10) {
+				boss1->firstPhase(true); // Appeler une fonction spécifique à Boss_1
+			}
+
+			boss1->updateSelf(window);
+			if (boss1->getHealth() < 0) {
+				this->isBossKilled = true;
+			}
+
+			// Gérer les collisions
+			if (boss1->getBounds().intersects(this->player->getBounds())) {
+				if (this->playerShield->active) {
+					this->player->setHp(this->player->getHp());
+				}
+				else {
+					this->player->loseHp(boss1->getDamage());
+				}
+			}
 		}
+		
+		if (this->isBossKilled) {
+				boss->markForRemoval();
+			}
 	}
 }
 
@@ -524,16 +552,19 @@ void Game::updateAmmo()
 //fonction qui passe dun niveau a un autre
 void Game::updateLevel() {
 	startTimeElapsed = startClock.getElapsedTime();
-
-
-	if (startTimeElapsed.asSeconds() >= levelDuration) {
-		if (currentLevel == 1) {
-			startLevel(2); // Passer au niveau 2
-		}
-		else if (currentLevel == 2) {
-			game_on = false; // Terminer le jeu après le niveau 2
-		}
+	if (startTimeElapsed.asSeconds() < levelDuration && currentLevel == 1) {
+		this->canSpawn = true;
+		spawnEnemy();
 	}
+	if (startTimeElapsed.asSeconds() >= levelDuration && this->allEnemies.empty() && currentLevel == 1) {
+		this->canSpawn = false;
+		spawnBoss();
+	}
+	if (startTimeElapsed.asSeconds() >= levelDuration + 5 && this->allEnemies.empty() && isBossKilled && currentLevel == 1){
+		startLevel(2);
+		this->isBossKilled = false;
+	}
+
 }
 
 
@@ -547,7 +578,7 @@ void Game::updateEnemy() {
 		enemies->updateSelf(window);
 
 		// Gérer les attaques ennemies
-		if (enemies->canAttack() && typeid(*enemies) != typeid (CloseRangeEnemy)) {
+		if (enemies->canAttack() && typeid(*enemies) != typeid (CloseRangeEnemy) && typeid(*enemies) != typeid (Boss_1)) {
 			this->allEnemyProjectiles.push_back(new Projectile(enemyProjectileTexture["boulet"],
 				5.0f, 5.0f,
 				enemies->getBounds().left ,
@@ -565,12 +596,7 @@ void Game::updateEnemy() {
 		else if (enemies->getBounds().intersects(this->player->getBounds()) && this->playerShield->active && typeid(*enemies) != typeid (Boss_1)) {
 			enemies->markForRemoval();
 		}
-		if (enemies->getBounds().intersects(this->player->getBounds()) && typeid(*enemies) == typeid (Boss_1)) {
-			this->player->loseHp(enemies->getDamage());
-		}
-		else if (enemies->getBounds().intersects(this->player->getBounds()) && this->playerShield->active && typeid(*enemies) == typeid (Boss_1)) {
-
-		}
+		
 		
 
 		// Collision projectiles joueur <-> ennemi
@@ -640,22 +666,23 @@ void Game::updateProjectile()
 		else if (typeid(*projectiles) == typeid(Missile)) {
 			// Trouver l'ennemi le plus proche
 			BigEnemy* closestEnemy = nullptr;
-			float closestDistance = std::numeric_limits<float>::max();
+			float closestDistance = numeric_limits<float>::max();
 
 			for (auto enemy : allEnemies) {
 				float distance = std::sqrt(
-					std::pow(enemy->getSprite().getPosition().x - projectiles->getBounds().left, 2) +
-					std::pow(enemy->getSprite().getPosition().y - projectiles->getBounds().top, 2));
+					pow(enemy->getSprite().getPosition().x - projectiles->getBounds().left, 2) +
+					pow(enemy->getSprite().getPosition().y - projectiles->getBounds().top, 2));
 
-				if (distance < closestDistance) {
-					closestDistance = distance;
-					closestEnemy = enemy;
-				}
+					if (distance < closestDistance) {
+						closestDistance = distance;
+						closestEnemy = enemy;
+					}
 			}
 
 			// Si un ennemi le plus proche est trouvé, mettre à jour le missile
 			if (closestEnemy) {
 				projectiles->updateSelf(closestEnemy->getSprite());
+				projectiles->isClosest = true;
 			}
 			else 
 			{
@@ -695,15 +722,21 @@ void Game::updatePlayer()
 	}
 }
 
+void Game::updateBG()
+{
+	this->levelBG->animBG(window);
+
+}
+
 
 //fonction qui utilise toute les mise a jour
 void Game::update() {
-	
+
+	this->updateLevel();
+
 	this->updateAmmo();
 	
 	this->updatePlayer();
-
-	this->spawnEnemy();
 
 	this->updateInput();
 
@@ -711,7 +744,7 @@ void Game::update() {
 
 	this->updateEnemy();
 
-	this->updateLevel();
+	
 	
 	this->updateBoss();
 
@@ -733,7 +766,8 @@ void Game::update() {
 void Game::render()
 {
 	window->clear(Color::White);
-
+	
+	this->levelBG->renderBg(window);
 
 	this->player->render(*window);
 
@@ -749,6 +783,7 @@ void Game::render()
 	{
 		it->renderProjectile(window);
 	}
+	
 
 	for (auto* it : this->allEnemies)
 	{
@@ -762,10 +797,19 @@ void Game::render()
 		it->renderAmmo(window);
 	}
 
+
+	
+	
+
+
 	this->playerLaser->renderProjectile(window);
 	this->playerShield->renderProjectile(window);
 
 	window->display();
 }
+
+
+
+
 
 
