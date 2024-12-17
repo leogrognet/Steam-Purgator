@@ -26,8 +26,13 @@ int main() {
     vector<string> diffMenuOptions = { "Facile","Normal","Difficile","RETOUR" };
     vector<string> nivMenuOptions = { "Niv 1","Niv 2","Niv 3","RETOUR" };
 
-    vector<string> pauseMenuOptions = { "Continuer", "Quitter au menu principal" };
-
+    vector<string> pauseMenuOptions;
+if (gameState == GameState::Edit) {
+    pauseMenuOptions = { "Continuer", "Sauvegarder", "Menu Principal" };
+} else {
+    pauseMenuOptions = { "Continuer", "Menu Principal" };
+}
+//save option
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Menus (copies pour simple)
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -471,7 +476,7 @@ int main() {
             break;
 
         case GameState::Pause:
-            window.draw(sprite); // Afficher l'arrière-plan ou l'état actuel
+            window.draw(sprite);
             pauseMenu.draw(window);
             window.draw(Titre);
             break;
