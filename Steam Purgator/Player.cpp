@@ -117,6 +117,7 @@ void Player::loseHp(const int value)
 
 
 
+
 void Player::setPosition(const Vector2f pos)
 {
 	this->playerSprite.setPosition(pos);

@@ -30,7 +30,7 @@ public:
 	void markForRemoval();
 	bool isMarkedForRemoval() const;
 	void updateAnim();
-
+	bool isClosest = false;
 protected:	
 	bool markedForRemoval;
 	Sprite sprite;
@@ -45,6 +45,7 @@ protected:
 	int left;
 	int width;
 	int height;
+	
 	
 	Vector2f deltaTexture;
 

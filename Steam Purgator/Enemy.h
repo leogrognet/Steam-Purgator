@@ -46,7 +46,7 @@ public:
 
 protected:
 
-	bool markedForRemoval;
+	bool markedForRemoval = false;
 	int milliSecondAnim;
 	bool move_count;
 	int startX;
@@ -127,12 +127,14 @@ public:
 	Boss_1(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, int left, int top, int width, int height);
 	~Boss_1();
 	void updateSelf(RenderWindow* window) override;
+	void firstPhase(bool set);
+	void secondPhase(bool set);
+	
+private:
 	bool firstPhaseMovement;
 	bool secondPhaseMovementLeft;
 	bool secondPhaseMovementRight;	
 	bool alive;
-private:
-
 	float amplitudeY;  
 	float frequencyY;  
 	float startY;     

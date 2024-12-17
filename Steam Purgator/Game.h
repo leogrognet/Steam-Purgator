@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Ammo.h"
+#include "setBackGround.h"
 
 
 
@@ -22,10 +23,11 @@ private :
 	map<String, Texture*> enemyProjectileTexture;
 	map<String, Texture*> BackGroundTexture;
 	map<String, Texture*> AmmoTexture;
-	map<String, Texture*> enemyTextures;
+	map<String, Texture*> enemyTextures;          
 
 
 	Sprite TourMap;
+	Sprite Map;
 
 	vector<Ammunition*> allAmmo;
 
@@ -34,17 +36,17 @@ private :
 	vector<Projectile*> allEnemyProjectiles;
 
 	
-
 	vector <BigEnemy*> allEnemies;
 	unique_ptr<Player> player;
 	unique_ptr<Laser> playerLaser;
 	unique_ptr<Shield> playerShield;
-
+	unique_ptr<setBG> levelBG;
 
 	int currentWeapon;
 	int currentLevel; 
 	int levelDuration; 
 	int enemySpawnInterval;
+	bool isBossKilled;
 	Vector2f animP, animG, animB, animD;
 
 	int score;
@@ -68,7 +70,7 @@ private :
 	float animSpeed = 0.1f;
 
 public:
-	
+	bool canSpawn;
 	Game();
 	virtual ~Game();
 
@@ -86,6 +88,7 @@ public:
 	void updateEnemy();
 	void updateProjectile();
 	void updatePlayer();
+	void updateBG();
 	void update();
 
 	int count=0;
@@ -93,6 +96,7 @@ public:
 	void render();
 
 };
+
 
 
 #endif

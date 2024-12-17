@@ -5,7 +5,7 @@ using namespace sf;
 
 Menu::Menu(float width, float height, const vector<string>& options)
     : selectedIndex(0) {
-    if (!font.loadFromFile("C:/Users/tburton/Desktop/asset/Daydream.ttf")) {
+    if (!font.loadFromFile("asset/textAsset/Crang.ttf")) {
         // Erreur de chargement de la police
     }
 

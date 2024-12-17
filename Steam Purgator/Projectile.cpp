@@ -110,7 +110,7 @@ void Missile::updateSelf(Sprite enemySprite, Sprite playerSprite )
 
     if (enemySprite.getTexture() !=nullptr) {
         // Si l'ennemi existe, calculer la direction vers lui
-        Vector2f enemyPos = enemySprite.getPosition();
+        Vector2f enemyPos = Vector2f(enemySprite.getPosition().x+(enemySprite.getGlobalBounds().width/2), enemySprite.getPosition().y + (enemySprite.getGlobalBounds().height / 2));
         Vector2f missilePos = this->sprite.getPosition();
 
         direction = enemyPos - missilePos; // direction = (x_enemy - x_missile, y_enemy - y_missile)

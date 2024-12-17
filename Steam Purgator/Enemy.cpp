@@ -9,7 +9,7 @@ BigEnemy::BigEnemy(Texture* texture, float size_x, float size_y, float pos_x, fl
 
 
 	this->move_count = false;
-	this->attackCooldownMax = 0.5f;
+	this->attackCooldownMax = 2.f;
 
 	
 	this->texture = texture;
@@ -29,7 +29,7 @@ BigEnemy::BigEnemy(Texture* texture, float size_x, float size_y, float pos_x, fl
 
 	this->speed = speed;
 	this->health = 100;
-	this->damage = 10;
+	this->damage = 40;
 
 
 	this->amplitudeX = 100.f * mult; 
@@ -226,7 +226,7 @@ CloseRangeEnemy::CloseRangeEnemy(Texture* texture, float size_x, float size_y, f
 	this->width = width;
 	this->height = height;
 
-	this->damage = 10;
+	this->damage = 20;
 	this->health = 20;
 	this->speed = speed;
 
@@ -273,6 +273,8 @@ Boss_1::Boss_1(Texture* texture, float size_x, float size_y, float pos_x, float 
 
 	this->alive = alive;
 
+
+	this->health = 1000;
 	this->milliSecondAnim = 200;
 	this->top = top;
 	this->left = left;
@@ -307,7 +309,7 @@ void Boss_1::updateSelf(RenderWindow* window)
 		}
 	}
 
-	if (!this->firstPhaseMovement && this->sprite.getPosition().y != window->getSize().y/2 && !this->secondPhaseMovementLeft && !this->secondPhaseMovementRight)  {
+	if (!this->firstPhaseMovement && this->sprite.getPosition().y+(this->sprite.getGlobalBounds().height/2) < window->getSize().y/2 && !this->secondPhaseMovementLeft && !this->secondPhaseMovementRight)  {
 		
 		this->sprite.move(0, 2.0f);
 	}
@@ -337,4 +339,14 @@ void Boss_1::updateSelf(RenderWindow* window)
 		this->sprite.setPosition(newX, newY);
 
 	}
+}
+
+void Boss_1::firstPhase(bool set)
+{
+	this->firstPhaseMovement= set;
+}
+
+void Boss_1::secondPhase(bool set)
+{
+	this->secondPhaseMovementLeft = set;
 }
