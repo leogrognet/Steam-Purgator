@@ -48,18 +48,20 @@ protected:
 
 	bool markedForRemoval = false;
 	int milliSecondAnim;
-	bool move_count;
+	bool move_count = false;
 	int startX;
 	int startY;
 	float amplitudeX;
 	float amplitudeY;
 	float frequencyX;
 	float frequencyY;
-
+	int moveRestart;
+	float randomMoveTime;
 	
 	Texture* texture;
 
 	float speed;
+	int maxHealth;
 	int health;
 	int damage;
 
@@ -129,17 +131,19 @@ public:
 	void updateSelf(RenderWindow* window) override;
 	void firstPhase(bool set);
 	void secondPhase(bool set);
-	
+	Clock deltaAttack;
+	Time deltaAttackTime;
 private:
+	
+	bool attackCooldown = 10;
 	bool firstPhaseMovement;
-	bool secondPhaseMovementLeft;
-	bool secondPhaseMovementRight;	
 	bool alive;
 	float amplitudeY;  
 	float frequencyY;  
 	float startY;     
 	float startX;      
 	float horizontalSpeed;
+	bool standPhase1;
 };
 
 #endif // !WEAPONS_HPP

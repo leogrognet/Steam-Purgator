@@ -1,10 +1,10 @@
 #include "Game.h"
 
 // constructeur de game
+
 Game::Game()
 {
-	this->window = new RenderWindow(VideoMode(1920, 1080), "Steam Purgator");
-	this->window->setFramerateLimit(60);
+	
 	this->enemySpawnInterval = 1.f;
 	srand(static_cast<unsigned int>(time(nullptr)));
 
@@ -126,6 +126,7 @@ void Game::initProjectile()
 
 	this->loadTexture(this->enemyProjectileTexture, "boulet", "asset/SpriteAsset/boulet de canon.png");
 	this->loadTexture(this->enemyProjectileTexture, "bombe", "asset/SpriteAsset/Bombe.png");
+	this->loadTexture(this->enemyProjectileTexture, "flame", "asset/SpriteAsset/flame.png");
 }
 
 
@@ -274,7 +275,7 @@ void Game::spawnEnemy()
 
 
 		if (randomWeight < 10) {
-			if (this->startTimeElapsed.asSeconds() >= 20) {
+			if (this->startTimeElapsed.asSeconds() >= 30) {
 				if (deltaTimeElasped.asSeconds() >= enemySpawnInterval) {
 					enemyType = 2;
 					deltaClock.restart();
@@ -330,7 +331,7 @@ void Game::spawnEnemy()
 
 void Game::spawnBoss()
 {
-	this->allEnemies.push_back(new Boss_1(enemyTextures["Boss_1"], 2.0f, 2.0f, window->getSize().x - 300, window->getSize().y / 2 -200, true, 1.0f, 274, 273, 274, 273));
+	this->allEnemies.push_back(new Boss_1(enemyTextures["Boss_1"], 2.0f, 2.0f, window->getSize().x - 300, window->getSize().y / 2 -200, true, 6.0f, 274, 273, 274, 273));
 }
 
 
@@ -349,7 +350,7 @@ void Game::startLevel(int level) {
 	// Configurer des paramètres spécifiques au niveau
 	switch (level) {
 	case 1:
-		this->levelDuration = 30; // Durée du niveau 1 (en secondes)
+		this->levelDuration = 300; // Durée du niveau 1 (en secondes)
 		this->enemySpawnInterval = 3;// Temps entre les spawns d'ennemis
 		break;
 	case 2:
@@ -376,6 +377,8 @@ bool Game::run() {
 	startTimeElapsed = startClock.getElapsedTime();
 	this->game_on = true;
 	this->startLevel(1);
+	this->window = new RenderWindow(VideoMode(1920, 1080), "Steam Purgator");
+	this->window->setFramerateLimit(60);
 
 	while (game_on) {
 		Event gameEvent;
@@ -480,15 +483,27 @@ void Game::updateInput()
 void Game::updateBoss()
 {
 	for (auto boss : allEnemies) {
-		// Tenter de caster boss en Boss_1
 		Boss_1* boss1 = dynamic_cast<Boss_1*>(boss);
 
 		if (boss1) { // Si le cast est réussi, boss est un Boss_1
-			int randomPattern = rand() % 20;
-
-			if (randomPattern > 10) {
-				boss1->firstPhase(true); // Appeler une fonction spécifique à Boss_1
-			}
+			int randomMove =  2;
+			cout << randomMove;
+			//if (boss1->deltaAttackTime.asSeconds() > 1) {
+				if (randomMove < 2) {
+					cout << "test1" << endl;
+					boss1->firstPhase(true);
+				}
+				else if (randomMove == 2) {
+					if (boss1->deltaAttackTime.asSeconds() > 1) {
+						boss1->deltaAttack.restart();
+						cout << "test2" << endl;
+						boss1->firstPhase(false);
+						this->allEnemyProjectiles.push_back(new FlameBall(enemyProjectileTexture["flame"], 1.0f, 1.0f, boss1->getPos().x, boss1->getPos().y, 1.0f, 45));
+						this->allEnemyProjectiles.push_back(new FlameBall(enemyProjectileTexture["flame"], 1.0f, 1.0f, boss1->getPos().x, boss1->getPos().y, 1.0f, 0));
+						this->allEnemyProjectiles.push_back(new FlameBall(enemyProjectileTexture["flame"], 1.0f, 1.0f, boss1->getPos().x, boss1->getPos().y, 1.0f, 12));
+					}
+				}
+			//}
 
 			boss1->updateSelf(window);
 			if (boss1->getHealth() < 0) {
@@ -689,6 +704,7 @@ void Game::updateProjectile()
 				projectiles->updateSelf(Sprite());
 			}
 		}
+		
 	}
 
 	
@@ -703,6 +719,12 @@ void Game::updateProjectile()
 				enemyProjectile->markForRemoval();
 			}
 
+		}
+		else if (typeid(*enemyProjectile) == typeid(FlameBall)) {
+			FlameBall* flameball = dynamic_cast<FlameBall*>(enemyProjectile);
+			if (flameball) {
+				flameball->updateSelf();
+			}
 		}
 	}
 
