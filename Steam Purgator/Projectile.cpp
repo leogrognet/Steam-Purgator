@@ -295,3 +295,32 @@ Bomb::Bomb(Texture* texture, float size_x, float size_y, float pos_x, float pos_
 {
 }
 
+FlameBall::FlameBall(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, float speed, float angle)
+{
+    this->angle = angle;
+    this->sprite.setTexture(*texture);
+    this->sprite.setPosition(pos_x, pos_y);
+    this->sprite.setScale(size_x, size_y);
+    this->speed = speed; // Utiliser la vitesse fournie
+}
+
+void FlameBall::updateSelf()
+{
+    // Calculer la direction en fonction de l'angle
+    
+    Vector2f direction = calculateDirection(this->angle);
+    // Appliquer la vitesse en multipliant la direction par la vitesse
+    this->sprite.move(direction * this->speed );
+}
+
+Vector2f FlameBall::calculateDirection(float angleInDegrees)
+{
+    // Conversion de l'angle de degrés à radians
+    float angleInRadians = angle * (3.14159f / 180.0f);
+
+    // Calculer les composantes x et y du vecteur de direction
+    float x = cos(angleInRadians);
+    float y = sin(angleInRadians);
+    return sf::Vector2f(x, y); // Retourner le vecteur normalisé
+}
+

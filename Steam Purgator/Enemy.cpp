@@ -26,12 +26,13 @@ BigEnemy::BigEnemy(Texture* texture, float size_x, float size_y, float pos_x, fl
 	this->height = height;
 	this->milliSecondAnim = 100;
 
-
+	this->markedForRemoval = false;
+	this->moveRestart = 0;
 	this->speed = speed;
 	this->health = 100;
 	this->damage = 40;
 
-
+	this->randomMoveTime = rand() % 3;
 	this->amplitudeX = 100.f * mult; 
 	this->amplitudeY = 50.f * mult;  
 	this->frequencyX = 1.f/mult ;   
@@ -77,14 +78,18 @@ const bool BigEnemy::canAttack()
 void BigEnemy::updateSelf(RenderWindow* window)
 {
 
-	
+
 	
 	float time = moveClock.getElapsedTime().asSeconds(); 
 
-	if (this->sprite.getPosition().x > (window->getSize().x - 300) && move_count == false) {
+	if (moveRestart < 1) {
+		moveClock.restart();
+		moveRestart++;
+	}
+	if (time < this->randomMoveTime ){
 		this->sprite.move(-speed, 0);
 	}
-	if (this->sprite.getPosition().x <= (window->getSize().x -300) && this->move_count == false) {
+	if (time > this->randomMoveTime && this->move_count == false) {
 		this->startX = this->sprite.getPosition().x;
 		this->startY = this->sprite.getPosition().y;
 		this->move_count = true;
@@ -171,6 +176,7 @@ RangedEnemy::RangedEnemy(Texture* texture, float size_x, float size_y, float pos
 
 	this->deltaTexture = Vector2f(1, 0);
 
+	this->markedForRemoval = false;
 	this->damage = 10;
 	this->speed = speed;
 	this->health = 20;
@@ -220,6 +226,7 @@ CloseRangeEnemy::CloseRangeEnemy(Texture* texture, float size_x, float size_y, f
 	this->sprite.setScale(size_x, size_y);
 	this->sprite.setTextureRect(IntRect(left, top, width, height));
 
+	this->markedForRemoval = false;
 	this->milliSecondAnim = 100;
 	this->top = top;
 	this->left = left;
@@ -274,7 +281,9 @@ Boss_1::Boss_1(Texture* texture, float size_x, float size_y, float pos_x, float 
 	this->alive = alive;
 
 
-	this->health = 1000;
+	this->horizontalSpeed = speed;
+	this->maxHealth = 1000;
+	this->health = this->maxHealth;
 	this->milliSecondAnim = 200;
 	this->top = top;
 	this->left = left;
@@ -283,6 +292,9 @@ Boss_1::Boss_1(Texture* texture, float size_x, float size_y, float pos_x, float 
 	
 	deltaTexture = Vector2f(1, 0);
 
+	this->deltaAttack.restart();
+
+	this->firstPhaseMovement = false;
 }
 
 Boss_1::~Boss_1()
@@ -292,53 +304,36 @@ Boss_1::~Boss_1()
 void Boss_1::updateSelf(RenderWindow* window)
 {
 	this->updateAnim();
-	
+	float time = moveClock.getElapsedTime().asSeconds();
+	this->deltaAttackTime = this->deltaAttack.getElapsedTime();
 	if (this->firstPhaseMovement) {
-		float time = moveClock.getElapsedTime().asSeconds(); // Temps écoulé depuis le dernier appel
-
+		 // Temps écoulé depuis le dernier appel
+		
 		float newY = this->startY + this->amplitudeY * sin(this->frequencyY * time);
+
 
 
 		float newX = this->sprite.getPosition().x - horizontalSpeed;
 
+		if (standPhase1 ) {
 
-		this->sprite.setPosition(newX, newY);
-		if (this->sprite.getPosition().x < -100) {
-			this->sprite.setPosition(window->getSize().x - 100, -300);
-			this->firstPhaseMovement = false;
+
+			this->sprite.setPosition(newX, newY);
+			if (this->sprite.getPosition().x < -100) {
+				this->sprite.setPosition(window->getSize().x - 600, -300);
+				this->firstPhaseMovement = false;
+			}
 		}
+		
+
 	}
 
-	if (!this->firstPhaseMovement && this->sprite.getPosition().y+(this->sprite.getGlobalBounds().height/2) < window->getSize().y/2 && !this->secondPhaseMovementLeft && !this->secondPhaseMovementRight)  {
+	if (!this->firstPhaseMovement && this->sprite.getPosition().y+(this->sprite.getGlobalBounds().height/2) < window->getSize().y/2 )  {
 		
 		this->sprite.move(0, 2.0f);
 	}
+	
 
-
-	if (this->secondPhaseMovementLeft) {
-		float time = moveClock.getElapsedTime().asSeconds(); // Temps écoulé depuis le dernier appel
-
-		float newY = this->startY + this->amplitudeY * sin(this->frequencyY * time);
-
-
-		float newX = this->sprite.getPosition().x - horizontalSpeed;
-
-
-		this->sprite.setPosition(newX, newY);
-		}
-
-	if (this->secondPhaseMovementRight) {
-		float time = moveClock.getElapsedTime().asSeconds(); // Temps écoulé depuis le dernier appel
-
-		float newY = this->startY + this->amplitudeY * sin(this->frequencyY * time);
-
-
-		float newX = this->sprite.getPosition().x + horizontalSpeed;
-
-
-		this->sprite.setPosition(newX, newY);
-
-	}
 }
 
 void Boss_1::firstPhase(bool set)
@@ -346,7 +341,4 @@ void Boss_1::firstPhase(bool set)
 	this->firstPhaseMovement= set;
 }
 
-void Boss_1::secondPhase(bool set)
-{
-	this->secondPhaseMovementLeft = set;
-}
+

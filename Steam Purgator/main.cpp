@@ -425,6 +425,7 @@ int main() {
             if (isHoldingEscape) {
                 window.draw(Quitter);
             }
+            window.close();
             if (game.run()) {
             }
             break;

@@ -109,5 +109,14 @@ public:
 };
 
 
+class FlameBall : public Projectile {
+public:
+	FlameBall(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, float speed, float angle);
+	void updateSelf();
+	Vector2f calculateDirection(float angleInDegrees);
+private:
+	float angle;
+};
+
 
 #endif // !WEAPONS_HPP
