@@ -12,7 +12,7 @@ class Projectile {
 public:
 	Projectile();
 	
-	Projectile(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, float speed);
+	Projectile(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, float speed, int damage);
 	virtual ~Projectile();
 	
 	bool active;
@@ -30,6 +30,7 @@ public:
 	void markForRemoval();
 	bool isMarkedForRemoval() const;
 	void updateAnim();
+	int getDamage();
 	bool isClosest = false;
 protected:	
 	bool markedForRemoval;
@@ -38,7 +39,7 @@ protected:
 
 	Clock AnimClock;
 	Time AnimTime;
-
+	int damage;
 	int ammo;
 	int max_ammo;
 	int top;
@@ -57,7 +58,7 @@ protected:
 
 class Missile : public Projectile {
 public:
-	Missile(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, float speed, int left, int top, int width, int height);
+	Missile(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, float speed, int left, int top, int width, int height, int damage);
 	void updateSelf(Sprite enemySprite , Sprite playerSprite = Sprite()) override ;
 	//Sprite* findClosestEnemy(const sf::Sprite& referenceSprite, const std::vector<sf::Sprite>& allEnemies);
 	Vector2f direction;
@@ -73,7 +74,7 @@ private:
 //-------------------------------------------------------------------------------------
 class Laser : public Projectile {
 public:
-	Laser(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, Sprite player);
+	Laser(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, Sprite player,int damage);
 	void updateSelf(Sprite sprite, Sprite player ) override;
 	void renderProjectile(RenderWindow* target) override;
 	void setActive(bool setter);
@@ -111,7 +112,7 @@ public:
 
 class FlameBall : public Projectile {
 public:
-	FlameBall(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, float speed, float angle);
+	FlameBall(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, float speed, float angle, int damage);
 	void updateSelf();
 	Vector2f calculateDirection(float angleInDegrees);
 private:

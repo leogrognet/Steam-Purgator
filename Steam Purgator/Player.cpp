@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(Texture* texture, Texture* healthTexture,  Texture* textureMissile, Texture* textureLaser, Texture* textureBouclier, Texture* textureBombe, int hp, int maxHp, float size_x, float size_y, float pos_x, float pos_y, float speed, int left, int top, int width, int height) : health(hp), maxHealth(maxHp)
+Player::Player(Texture* texture, Texture* healthTexture,  Texture* textureMissile, Texture* textureLaser, Texture* textureBouclier, Texture* textureBombe, int maxHp, float size_x, float size_y, float pos_x, float pos_y, float speed, int left, int top, int width, int height)
 {
 	this->DirectionBind[Direction::Up] = Keyboard::Z;
 	this->DirectionBind[Direction::Down] = Keyboard::S;
@@ -18,12 +18,12 @@ Player::Player(Texture* texture, Texture* healthTexture,  Texture* textureMissil
 	this->textureLaser = textureLaser;
 	this->textureBouclier = textureBouclier;
 	this->textureBombe = textureBombe;
-	if (textureMissile == nullptr) {
-		cout << NULL << endl;
-	}
+
 
 	this->speed = speed;
 	this->damage = 10;
+	this->maxHealth = maxHp;
+	this->health = maxHp;
 
 	this->deltaTexture = Vector2f(1, 0);
 	this->size_x = size_x;
@@ -33,8 +33,10 @@ Player::Player(Texture* texture, Texture* healthTexture,  Texture* textureMissil
 	this->width = width;
 	this->height = height;
 	
+
 	this->initVariables();
 	this->initSprite();
+	this->initTextAmmo();
 	this->playerSprite.setTextureRect(IntRect(this->width,this->height, this->width, this->height));
 }
 
@@ -46,8 +48,6 @@ void Player::initVariables()
 {
 
 	this->attackCooldownMax = 0.5f;
-	this->maxHealth = 100;
-	this->health = 100;
 	
 	this->MissileMax = 50;
 	this->LaserMax = 100;
@@ -88,6 +88,53 @@ void Player::initSprite()
 	this->NbBombe.setTexture(*textureBombe);
 	this->NbBombe.scale(1, 1);
 	this->NbBombe.setPosition(10, 0);
+
+	this->loadAmmoFont();
+}
+
+void Player::initTextAmmo()
+{
+	IntMissile.setFont(font);
+	IntMissile.setCharacterSize(50);
+	IntMissile.setFillColor(Color::Black);
+	IntMissile.setStyle(Text::Regular);
+	IntMissile.setPosition(this->NbMissile.getPosition().x, this->NbMissile.getPosition().y + 40);
+	IntMissile.setString("0");
+
+	IntLaser.setFont(font);
+	IntLaser.setCharacterSize(50);
+	IntLaser.setFillColor(Color::Black);
+	IntLaser.setStyle(Text::Regular);
+	IntLaser.setPosition(this->NbLaser.getPosition().x, this->NbLaser.getPosition().y + 40);
+	IntLaser.setString("0");
+
+	IntBouclier.setFont(font);
+	IntBouclier.setCharacterSize(50);
+	IntBouclier.setFillColor(Color::Black);
+	IntBouclier.setStyle(Text::Regular);
+	IntBouclier.setPosition(this->NbBouclier.getPosition().x, this->NbBouclier.getPosition().y + 40);
+	IntBouclier.setString("0");
+
+	IntBombe.setFont(font);
+	IntBombe.setCharacterSize(50);
+	IntBombe.setFillColor(Color::Black);
+	IntBombe.setStyle(Text::Regular);
+	IntBombe.setPosition(this->NbBombe.getPosition().x, this->NbBombe.getPosition().y);
+	IntBombe.setString("0");
+
+
+	String Missile(to_string(this->weaponCount["missileUse"]));
+	IntMissile.setString(Missile);
+
+	String Laser(to_string(this->weaponCount["laserUse"]));
+	IntLaser.setString(Laser);
+
+	String Bouclier(to_string(this->weaponCount["shieldUse"]));
+	IntBouclier.setString(Bouclier);
+
+	String Bomb(to_string(this->weaponCount["bombUse"]));
+	IntBombe.setString(Bomb);
+
 }
 
 
@@ -206,6 +253,18 @@ void Player::update(RenderWindow* window)
 	if (this->weaponCount["bombUse"] > this->BombMax) {
 		this->weaponCount["bombUse"] = this->BombMax;
 	}
+
+
+	String Missile(to_string(this->weaponCount["missileUse"]));
+	IntMissile.setString(Missile);
+
+	String Laser(to_string(this->weaponCount["laserUse"]));
+	IntLaser.setString(Laser);
+
+	String Bouclier(to_string(this->weaponCount["shieldUse"]));
+	IntBouclier.setString(Bouclier);
+
+
 	movement(window);
 	attack();
 	updateAnim();
@@ -219,7 +278,18 @@ void Player::render(sf::RenderTarget& target)
 	target.draw(this->NbMissile);
 	target.draw(this->NbLaser);
 	target.draw(this->NbBouclier);
+	target.draw(this->IntMissile);
+	target.draw(this->IntLaser);
+	target.draw(this->IntBouclier);
+
 	
+}
+
+int Player::loadAmmoFont()
+{
+	if (!font.loadFromFile("asset/textAsset/Crang.ttf")) {
+		return -1;
+	}
 }
 
 

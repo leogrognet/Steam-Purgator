@@ -159,7 +159,6 @@
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="setBackGround.h" />
-    <ClInclude Include="UpdateGame.h" />
     <ClInclude Include="Projectile.h" />
   </ItemGroup>
   <ItemGroup>

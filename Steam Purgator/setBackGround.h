@@ -4,7 +4,10 @@
 using namespace sf;
 using namespace std;
 
-#pragma once
+#ifndef SETBACKGROUND_H
+#define SETBACKGROUND_H
+
+
 
 class setBG {
 public:
@@ -27,3 +30,4 @@ public:
 
 };
 
+#endif // 
