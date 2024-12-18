@@ -44,6 +44,8 @@ public:
 	void markForRemoval();
 	bool isMarkedForRemoval() const;
 
+	int enemyScorePoints;
+
 protected:
 
 	bool markedForRemoval = false;
@@ -57,6 +59,7 @@ protected:
 	float frequencyY;
 	int moveRestart;
 	float randomMoveTime;
+
 	
 	Texture* texture;
 

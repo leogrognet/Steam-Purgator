@@ -14,7 +14,7 @@ using namespace sf;
 
 class Player {
 public:
-	Player(Texture* texture, Texture* healthTexture, Texture* textureMissile, Texture* textureLaser, Texture* textureBouclier , Texture* textureBombe, int hp, int maxHp, float size_x, float size_y, float pos_x, float pos_y, float speed, int left, int top, int width, int height);
+	Player(Texture* texture, Texture* healthTexture, Texture* textureMissile, Texture* textureLaser, Texture* textureBouclier , Texture* textureBombe, int maxHp, float size_x, float size_y, float pos_x, float pos_y, float speed, int left, int top, int width, int height);
 	virtual ~Player();
 
 	
@@ -50,10 +50,10 @@ public:
 
 
 	map<string, int> weaponCount = {
-		{"missileUse",  10},
-		{"laserUse", 10},
-		{"shieldUse", 10},
-		{"bombUse", 10}
+		{"missileUse",  15},
+		{"laserUse", 50},
+		{"shieldUse", 50},
+		{"bombUse", 0}
 	};
 
 	
@@ -62,6 +62,7 @@ public:
 	map<Direction, Keyboard::Key> DirectionBind;
 	map<Attacks, Keyboard::Key> AttackBind;
 
+	
 
 private:
 	
@@ -77,6 +78,9 @@ private:
 	Texture* texture;
 	Sprite playerSprite;
 	
+
+	Text IntMissile, IntLaser, IntBouclier, IntBombe;
+	Font font;
 
 	float speed;
 	int MissileMax;
@@ -101,9 +105,10 @@ private:
 	int left, top, width, height;
 	Vector2f deltaTexture;
 
-
+	int loadAmmoFont();
 	void initVariables();
 	void initSprite();
+	void initTextAmmo();
 
 
 	

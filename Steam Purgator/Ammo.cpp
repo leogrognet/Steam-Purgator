@@ -35,7 +35,6 @@ void Ammunition::Ammochoice()
 {
     switch(Ammo) {
     case 1:
-        std::cout << "test" << AmmoMax << std::endl;
         this->AmmoMax = 10;
     case 2:
         this->AmmoMax = 15;

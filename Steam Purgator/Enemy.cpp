@@ -38,6 +38,8 @@ BigEnemy::BigEnemy(Texture* texture, float size_x, float size_y, float pos_x, fl
 	this->frequencyX = 1.f/mult ;   
 	this->frequencyY = 2.f/mult ;   
 
+	this->enemyScorePoints = 150;
+
 	this->moveClock.restart(); 
 }
 
@@ -180,6 +182,8 @@ RangedEnemy::RangedEnemy(Texture* texture, float size_x, float size_y, float pos
 	this->damage = 10;
 	this->speed = speed;
 	this->health = 20;
+	this->damage = 10;
+	this->enemyScorePoints = 200;
 
 	this->attackCooldownMax = 0.5f;
 	this->startX = pos_x;           // Position de départ horizontale
@@ -233,8 +237,9 @@ CloseRangeEnemy::CloseRangeEnemy(Texture* texture, float size_x, float size_y, f
 	this->width = width;
 	this->height = height;
 
-	this->damage = 20;
+	this->damage = 50;
 	this->health = 20;
+	this->enemyScorePoints = 50;
 	this->speed = speed;
 
 
@@ -277,7 +282,7 @@ Boss_1::Boss_1(Texture* texture, float size_x, float size_y, float pos_x, float 
 	this->sprite.setPosition(pos_x, pos_y);
 	this->sprite.setScale(size_x, size_y);
 	this->sprite.setTextureRect(IntRect(left, top, width, height));
-
+	this->enemyScorePoints = 1000;
 
 
 

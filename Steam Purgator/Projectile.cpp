@@ -4,7 +4,7 @@ Projectile::Projectile()
 {
 }
 
-Projectile::Projectile(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, float speed) : markedForRemoval(false)
+Projectile::Projectile(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, float speed,int damage) : markedForRemoval(false)
 {
    
     this->sprite.setTexture(*texture);
@@ -13,7 +13,7 @@ Projectile::Projectile(Texture* texture, float size_x, float size_y, float pos_x
 	this->speed = speed;
     this->texture = texture;
     this->markedForRemoval = false;
-
+    this->damage = damage;
     
     
 }
@@ -76,12 +76,17 @@ void Projectile::updateAnim()
     this->sprite.setTextureRect(IntRect(deltaTexture.x * this->width, deltaTexture.y * this->height, this->width, this->height));
 }
 
+int Projectile::getDamage()
+{
+    return this->damage;
+}
+
 
 
 //-------------------------------------------------------------------------------------
 //Class Missile------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------
-Missile::Missile(Texture* texture, float size_x, float size_y, float pos_x, float pos_y,float speed, int left, int top, int width, int height) 
+Missile::Missile(Texture* texture, float size_x, float size_y, float pos_x, float pos_y,float speed, int left, int top, int width, int height, int damage)
 {
     this->sprite.setTexture(*texture);
     this->sprite.setPosition(pos_x, pos_y);
@@ -97,6 +102,7 @@ Missile::Missile(Texture* texture, float size_x, float size_y, float pos_x, floa
     this->width = width;
     this->height = height;
 
+    this->damage = damage;
     this->max_ammo = 40;
     this->ammo = 0;
 }
@@ -159,7 +165,7 @@ void Missile::updateSelf(Sprite enemySprite, Sprite playerSprite )
 //Class Laser------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------
 
-Laser::Laser(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, Sprite player)
+Laser::Laser(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, Sprite player, int damage)
 {
 
     this->active = false;
@@ -169,6 +175,7 @@ Laser::Laser(Texture* texture, float size_x, float size_y, float pos_x, float po
     this->texture = texture;
     this->max_ammo = 100;
     this->ammo = 0;
+    this->damage = damage;
 }
 
 
@@ -289,18 +296,17 @@ void Shield::renderProjectile(RenderWindow* target)
 }
 
 //-------------------------------------------------------------------------------------
-//Class Bomb------------------------------------------------------------------------
+//Class flame------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------
-Bomb::Bomb(Texture* texture, float size_x, float size_y, float pos_x, float pos_y,float speed, int left, int top, int width, int height)
-{
-}
 
-FlameBall::FlameBall(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, float speed, float angle)
+
+FlameBall::FlameBall(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, float speed, float angle,int damage)
 {
     this->angle = angle;
     this->sprite.setTexture(*texture);
     this->sprite.setPosition(pos_x, pos_y);
     this->sprite.setScale(size_x, size_y);
+    this->damage = damage;
     this->speed = speed; // Utiliser la vitesse fournie
 }
 

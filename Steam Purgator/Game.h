@@ -47,6 +47,9 @@ private :
 	int currentLevel; 
 	int levelDuration; 
 	int enemySpawnInterval;
+
+	bool enemy1, enemy2, enemy3;
+
 	bool isBossKilled;
 	Vector2f animP, animG, animB, animD;
 
@@ -64,7 +67,13 @@ private :
 	void initProjectile();
 	void initEnemy();
 	void initBG();
+	void initScoreText();
+	int loadScoreFont();
 	void allinit();
+
+	Text ScoreText;
+	Font font;
+
 
 
 	Clock animClock;          
