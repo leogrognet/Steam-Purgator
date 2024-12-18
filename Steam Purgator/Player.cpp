@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(Texture* texture, Texture* healthTexture,int hp, int maxHp, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, int left, int top, int width, int height) : health(hp), maxHealth(maxHp)
+Player::Player(Texture* texture, Texture* healthTexture,  Texture* textureMissile, Texture* textureLaser, Texture* textureBouclier, Texture* textureBombe, int hp, int maxHp, float size_x, float size_y, float pos_x, float pos_y, float speed, int left, int top, int width, int height) : health(hp), maxHealth(maxHp)
 {
 	this->DirectionBind[Direction::Up] = Keyboard::Z;
 	this->DirectionBind[Direction::Down] = Keyboard::S;
@@ -13,6 +13,15 @@ Player::Player(Texture* texture, Texture* healthTexture,int hp, int maxHp, float
 
 	this->texture = texture;
 	this->healthTexture = healthTexture;
+
+	this->textureMissile = textureMissile;
+	this->textureLaser = textureLaser;
+	this->textureBouclier = textureBouclier;
+	this->textureBombe = textureBombe;
+	if (textureMissile == nullptr) {
+		cout << NULL << endl;
+	}
+
 	this->speed = speed;
 	this->damage = 10;
 
@@ -61,6 +70,24 @@ void Player::initSprite()
 	this->healthBar.setFillColor(Color::Green);
 	this->healthBar.setPosition(this->healthSprite.getPosition().x + 50, this->healthSprite.getPosition().y + (this->healthSprite.getGlobalBounds().height /3) + 5);
 	this->healthBar.setSize(Vector2f(this->healthSprite.getGlobalBounds().width - 75, 10));
+
+
+
+	this->NbMissile.setTexture(*textureMissile);
+	this->NbMissile.scale(0.8, 0.8);
+	this->NbMissile.setPosition(this->healthSprite.getPosition().x + this->healthSprite.getGlobalBounds().width + 50, 30);
+
+	this->NbLaser.setTexture(*textureLaser);
+	this->NbLaser.scale(2, 2);
+	this->NbLaser.setPosition(this->NbMissile.getPosition().x + this->NbMissile.getGlobalBounds().width + 50, 20);
+
+	this->NbBouclier.setTexture(*textureBouclier);
+	this->NbBouclier.scale(0.8, 0.8);
+	this->NbBouclier.setPosition(this->NbLaser.getPosition().x + this->NbLaser.getGlobalBounds().width + 50, 20);
+
+	this->NbBombe.setTexture(*textureBombe);
+	this->NbBombe.scale(1, 1);
+	this->NbBombe.setPosition(10, 0);
 }
 
 
@@ -189,6 +216,9 @@ void Player::render(sf::RenderTarget& target)
 	target.draw(this->healthBar);
 	target.draw(this->playerSprite);
 	target.draw(this->healthSprite);
+	target.draw(this->NbMissile);
+	target.draw(this->NbLaser);
+	target.draw(this->NbBouclier);
 	
 }
 

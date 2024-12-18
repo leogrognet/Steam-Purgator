@@ -79,9 +79,11 @@ void Game::initPlayer()
 {
 	this->loadTexture(this->playerTextures, "barreVie", "asset/SpriteAsset/barre_de_vie.png");
 	this->loadTexture(this->playerTextures, "perso", "asset/SpriteAsset/Perso stu.png");
-	this->loadTexture(this->AmmoTexture, "missileMunition", "asset/SpriteAsset/mun missile.png");
-	this->loadTexture(this->AmmoTexture, "bouclierMunition", "asset/SpriteAsset/mun bouclier.png");
-	this->player = make_unique<Player>(playerTextures["perso"],playerTextures["barreVie"], 100, 100, 2.0f, 2.0f, 500, 500, false, 10.f, 54, 30, 54, 30);
+	this->loadTexture(this->playerTextures, "NbMissile", "asset/SpriteAsset/NbMissile.png");
+	this->loadTexture(this->playerTextures, "NbLaser", "asset/SpriteAsset/Nblaser.png");
+	this->loadTexture(this->playerTextures, "NbBouclier", "asset/SpriteAsset/NbBouclier.png");
+	this->loadTexture(this->playerTextures, "NbBombe", "asset/SpriteAsset/NbBombe.png");
+	this->player = make_unique<Player>(playerTextures["perso"],playerTextures["barreVie"], playerTextures["NbMissile"], playerTextures["NbLaser"], playerTextures["NbBouclier"], playerTextures["NbBombe"], 100, 100, 2.0f, 2.0f, 500, 500, 10.f, 54, 30, 54, 30);
 
 
 }
@@ -341,7 +343,7 @@ void Game::startLevel(int level) {
 	// Configurer des paramètres spécifiques au niveau
 	switch (level) {
 	case 1:
-		this->levelDuration = 2; // Durée du niveau 1 (en secondes)
+		this->levelDuration = 1; // Durée du niveau 1 (en secondes)
 		this->enemySpawnInterval = 3;// Temps entre les spawns d'ennemis
 		break;
 	case 2:
@@ -502,12 +504,12 @@ void Game::updateBoss()
 
 			// Gérer les collisions
 			if (boss1->getBounds().intersects(this->player->getBounds())) {
-				if (this->playerShield->active) {
-					this->player->setHp(this->player->getHp());
-				}
-				else {
-					this->player->loseHp(boss1->getDamage());
-				}
+				//if (this->playerShield->active) {
+					//this->player->setHp(this->player->getHp());
+				//}
+				//else {
+					this->player->loseHp(10);
+				//}
 			}
 		}
 		
@@ -523,7 +525,7 @@ void Game::updateAmmo()
 {
 	for (auto Ammo : allAmmo) {
 		Ammo->updateSelf();
-		if (Ammo->sprite.getGlobalBounds().height + Ammo->sprite.getPosition().y > window->getSize().y) {
+		if (Ammo->sprite.getPosition().y > window->getSize().y) {
 			Ammo->markForRemoval();
 		}
 		if (Ammo->sprite.getGlobalBounds().intersects(this->player->getSprite().getGlobalBounds())) {
@@ -596,7 +598,9 @@ void Game::updateEnemy() {
 		else if (enemies->getBounds().intersects(this->player->getBounds()) && this->playerShield->active && typeid(*enemies) != typeid (Boss_1)) {
 			enemies->markForRemoval();
 		}
-		
+		if (enemies->sprite.getGlobalBounds().width + enemies->sprite.getPosition().x < 0) {
+			enemies->markForRemoval();
+		}
 		
 
 		// Collision projectiles joueur <-> ennemi
