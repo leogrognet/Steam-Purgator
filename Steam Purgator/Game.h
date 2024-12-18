@@ -23,7 +23,8 @@ private :
 	map<String, Texture*> enemyProjectileTexture;
 	map<String, Texture*> BackGroundTexture;
 	map<String, Texture*> AmmoTexture;
-	map<String, Texture*> enemyTextures;          
+	map<String, Texture*> enemyTextures;        
+	map<String, Texture*> playerTextures;
 
 
 	Sprite TourMap;
@@ -63,7 +64,8 @@ private :
 	void initProjectile();
 	void initEnemy();
 	void initBG();
-	
+	void allinit();
+
 
 	Clock animClock;          
 	Vector2f animTourmap;    

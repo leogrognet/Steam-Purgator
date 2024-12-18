@@ -129,21 +129,28 @@ public:
 	Boss_1(Texture* texture, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, int left, int top, int width, int height);
 	~Boss_1();
 	void updateSelf(RenderWindow* window) override;
-	void firstPhase(bool set);
-	void secondPhase(bool set);
+
+
 	Clock deltaAttack;
 	Time deltaAttackTime;
+
+	Clock movingPhase;
+	Time movingPhaseTime;
+	bool standPhase1;
+	int timephase = 10;
+	bool isShooting = true;
+	bool moveleft;
+	bool movedown;
+
 private:
 	
-	bool attackCooldown = 10;
-	bool firstPhaseMovement;
-	bool alive;
+	
 	float amplitudeY;  
 	float frequencyY;  
 	float startY;     
 	float startX;      
 	float horizontalSpeed;
-	bool standPhase1;
+	
 };
 
 #endif // !WEAPONS_HPP

@@ -240,10 +240,10 @@ CloseRangeEnemy::CloseRangeEnemy(Texture* texture, float size_x, float size_y, f
 
 	deltaTexture = Vector2f(1, 0);
 
-	
-	direction = playerPos - sprite.getPosition();  
+
+	direction = playerPos - sprite.getPosition();
 	float length = sqrt(direction.x * direction.x + direction.y * direction.y);
-	direction /= length;  
+	direction /= length;
 
 
 }
@@ -251,8 +251,8 @@ CloseRangeEnemy::CloseRangeEnemy(Texture* texture, float size_x, float size_y, f
 void CloseRangeEnemy::updateSelf(RenderWindow* window)
 {
 	this->updateAnim();
-	Vector2f moveVector = direction * speed;  
-	sprite.move(moveVector);  
+	Vector2f moveVector = direction * speed;
+	sprite.move(moveVector);
 }
 
 
@@ -278,7 +278,7 @@ Boss_1::Boss_1(Texture* texture, float size_x, float size_y, float pos_x, float 
 	this->sprite.setScale(size_x, size_y);
 	this->sprite.setTextureRect(IntRect(left, top, width, height));
 
-	this->alive = alive;
+
 
 
 	this->horizontalSpeed = speed;
@@ -289,12 +289,19 @@ Boss_1::Boss_1(Texture* texture, float size_x, float size_y, float pos_x, float 
 	this->left = left;
 	this->width = width;
 	this->height = height;
-	
+
+
+	this->startX = pos_x;           // Position de départ horizontale
+	this->startY = pos_y;           // Position de départ verticale
+	this->amplitudeY = 300.f;        // Amplitude verticale (distance de haut en bas)
+	this->frequencyY = 2.f;         // Fréquence de l'oscillation verticale (la vitesse de l'oscillation)
+
+
 	deltaTexture = Vector2f(1, 0);
 
 	this->deltaAttack.restart();
 
-	this->firstPhaseMovement = false;
+
 }
 
 Boss_1::~Boss_1()
@@ -304,41 +311,41 @@ Boss_1::~Boss_1()
 void Boss_1::updateSelf(RenderWindow* window)
 {
 	this->updateAnim();
-	float time = moveClock.getElapsedTime().asSeconds();
+	float time = this->moveClock.getElapsedTime().asSeconds();
 	this->deltaAttackTime = this->deltaAttack.getElapsedTime();
-	if (this->firstPhaseMovement) {
-		 // Temps écoulé depuis le dernier appel
+	this->movingPhaseTime = this->movingPhase.getElapsedTime();
+
+	if (movingPhaseTime.asSeconds() < 15 && (this->sprite.getPosition().x) > 0) {
+		// Calcul de la nouvelle position verticale
+		float newY = startY + amplitudeY * std::sin(frequencyY * time);
+		sprite.setPosition(sprite.getPosition().x, newY);
+		this->moveleft = true;
+	}
+	if (movingPhaseTime.asSeconds() > 15 && (this->sprite.getPosition().x + this->sprite.getGlobalBounds().width) > 0  && this->moveleft) {
 		
-		float newY = this->startY + this->amplitudeY * sin(this->frequencyY * time);
-
-
-
-		float newX = this->sprite.getPosition().x - horizontalSpeed;
-
-		if (standPhase1 ) {
-
-
-			this->sprite.setPosition(newX, newY);
-			if (this->sprite.getPosition().x < -100) {
-				this->sprite.setPosition(window->getSize().x - 600, -300);
-				this->firstPhaseMovement = false;
-			}
-		}
+		this->isShooting = false;
+		this->sprite.move(-8.0f, 0);
+	}
+	else if ((this->sprite.getPosition().x + this->sprite.getGlobalBounds().width) <= 0) {
+		cout << "test" << endl;
+		this->moveleft = false;
+		this->sprite.setPosition(startX, startY-2000);
+		this->movedown = true;
 		
+	}
+	else if (this->sprite.getPosition().y < startY && movingPhaseTime.asSeconds() > 0 && this->movedown) {
+			this->sprite.move(0, 4.0f);
+	}
+	else if (this->sprite.getPosition().y >= startY && movingPhaseTime.asSeconds() > 10 && !this->moveleft && this->movedown) {
+		this->movedown = false;
+		this->movingPhase.restart();
+		this->isShooting = true;
 
 	}
-
-	if (!this->firstPhaseMovement && this->sprite.getPosition().y+(this->sprite.getGlobalBounds().height/2) < window->getSize().y/2 )  {
-		
-		this->sprite.move(0, 2.0f);
-	}
-	
-
 }
 
-void Boss_1::firstPhase(bool set)
-{
-	this->firstPhaseMovement= set;
-}
+
+
+
 
 

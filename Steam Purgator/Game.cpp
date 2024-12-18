@@ -19,12 +19,6 @@ Game::Game()
 
 	this->currentWeapon = 1;
 
-	this->initPlayer();
-	this->initAmmo();
-	this->initProjectile();
-	this->initEnemy();
-	this->initBG();
-
 
 	this->score = 0;
 }
@@ -91,7 +85,12 @@ void Game::loadTexture(map<String, Texture*>& textureMap, const string& key, con
 
 void Game::initPlayer()
 {
-	this->player = make_unique<Player>(100,100,2.0f,2.0f,500,500,false,10.f, "asset/SpriteAsset/Perso stu.png",54,30,54,30 );
+	this->loadTexture(this->playerTextures, "barreVie", "asset/SpriteAsset/barre_de_vie.png");
+	this->loadTexture(this->playerTextures, "perso", "asset/SpriteAsset/Perso stu.png");
+	this->loadTexture(this->AmmoTexture, "missileMunition", "asset/SpriteAsset/mun missile.png");
+	this->loadTexture(this->AmmoTexture, "bouclierMunition", "asset/SpriteAsset/mun bouclier.png");
+	this->player = make_unique<Player>(playerTextures["perso"],playerTextures["barreVie"], 100, 100, 2.0f, 2.0f, 500, 500, false, 10.f, 54, 30, 54, 30);
+
 
 }
 
@@ -146,10 +145,22 @@ void Game::initEnemy()
 void Game::initBG()
 {
 	this->loadTexture(this->BackGroundTexture, "Tour", "asset/SpriteAsset/Tour.png");
-	this->loadTexture(this->BackGroundTexture, "1stMapVide", "asset/SpriteAsset/Map vide.png");
+	this->loadTexture(this->BackGroundTexture, "1stMapVide", "asset/SpriteAsset/Map vide2.png");
+	this->loadTexture(this->BackGroundTexture, "Nuage1", "asset/SpriteAsset/nuage.png");
+	this->loadTexture(this->BackGroundTexture, "Nuage2", "asset/SpriteAsset/nuage lv 2.png");
+	this->loadTexture(this->BackGroundTexture, "BG1", "asset/SpriteAsset/BackGround back.png");
+	this->loadTexture(this->BackGroundTexture, "BG2", "asset/SpriteAsset/BackGround back.png");
+	this->levelBG = make_unique<setBG>(this->BackGroundTexture["Tour"], this->BackGroundTexture["1stMapVide"], this->BackGroundTexture["Nuage1"], this->BackGroundTexture["Nuage2"], this->BackGroundTexture["BG1"], this->BackGroundTexture["BG2"],window);
 
-	this->levelBG = make_unique<setBG>(this->BackGroundTexture["Tour"], this->BackGroundTexture["1stMapVide"], 1.0f,1.0f,500.f, 384.f);
+}
 
+void Game::allinit()
+{
+	this->initPlayer();
+	this->initAmmo();
+	this->initProjectile();
+	this->initEnemy();
+	this->initBG();
 }
 
 
@@ -331,7 +342,7 @@ void Game::spawnEnemy()
 
 void Game::spawnBoss()
 {
-	this->allEnemies.push_back(new Boss_1(enemyTextures["Boss_1"], 2.0f, 2.0f, window->getSize().x - 300, window->getSize().y / 2 -200, true, 6.0f, 274, 273, 274, 273));
+	this->allEnemies.push_back(new Boss_1(enemyTextures["Boss_1"], 2.0f, 2.0f, window->getSize().x - 300, window->getSize().y / 2 -200, true, 1.0f, 274, 273, 274, 273));
 }
 
 
@@ -350,7 +361,7 @@ void Game::startLevel(int level) {
 	// Configurer des paramètres spécifiques au niveau
 	switch (level) {
 	case 1:
-		this->levelDuration = 300; // Durée du niveau 1 (en secondes)
+		this->levelDuration = 2; // Durée du niveau 1 (en secondes)
 		this->enemySpawnInterval = 3;// Temps entre les spawns d'ennemis
 		break;
 	case 2:
@@ -379,6 +390,8 @@ bool Game::run() {
 	this->startLevel(1);
 	this->window = new RenderWindow(VideoMode(1920, 1080), "Steam Purgator");
 	this->window->setFramerateLimit(60);
+
+	this->allinit();
 
 	while (game_on) {
 		Event gameEvent;
@@ -486,28 +499,27 @@ void Game::updateBoss()
 		Boss_1* boss1 = dynamic_cast<Boss_1*>(boss);
 
 		if (boss1) { // Si le cast est réussi, boss est un Boss_1
-			int randomMove =  2;
-			cout << randomMove;
-			//if (boss1->deltaAttackTime.asSeconds() > 1) {
-				if (randomMove < 2) {
-					cout << "test1" << endl;
-					boss1->firstPhase(true);
-				}
-				else if (randomMove == 2) {
-					if (boss1->deltaAttackTime.asSeconds() > 1) {
-						boss1->deltaAttack.restart();
-						cout << "test2" << endl;
-						boss1->firstPhase(false);
-						this->allEnemyProjectiles.push_back(new FlameBall(enemyProjectileTexture["flame"], 1.0f, 1.0f, boss1->getPos().x, boss1->getPos().y, 1.0f, 45));
-						this->allEnemyProjectiles.push_back(new FlameBall(enemyProjectileTexture["flame"], 1.0f, 1.0f, boss1->getPos().x, boss1->getPos().y, 1.0f, 0));
-						this->allEnemyProjectiles.push_back(new FlameBall(enemyProjectileTexture["flame"], 1.0f, 1.0f, boss1->getPos().x, boss1->getPos().y, 1.0f, 12));
-					}
-				}
-			//}
 
-			boss1->updateSelf(window);
+				boss1->updateSelf(window);
+				if (boss1->deltaAttackTime.asSeconds() > 1 && boss1->isShooting) {
+					
+					
+					int angle = 180;
+					int speedFire = 4.0f;
+					this->allEnemyProjectiles.push_back(new FlameBall(enemyProjectileTexture["flame"], 5.0f, 5.0f, boss1->getPos().x + 20, boss1->getPos().y + 150, speedFire, angle));
+					this->allEnemyProjectiles.push_back(new FlameBall(enemyProjectileTexture["flame"], 5.0f, 5.0f, boss1->getPos().x + 20, boss1->getPos().y + 150, speedFire, angle - 20));
+					this->allEnemyProjectiles.push_back(new FlameBall(enemyProjectileTexture["flame"], 5.0f, 5.0f, boss1->getPos().x + 20, boss1->getPos().y + 150, speedFire, angle - 40));
+					this->allEnemyProjectiles.push_back(new FlameBall(enemyProjectileTexture["flame"], 5.0f, 5.0f, boss1->getPos().x + 20, boss1->getPos().y + 150, speedFire, angle + 20));
+					this->allEnemyProjectiles.push_back(new FlameBall(enemyProjectileTexture["flame"], 5.0f, 5.0f, boss1->getPos().x + 20, boss1->getPos().y + 150, speedFire, angle + 40));
+					boss1->deltaAttack.restart();
+				}
+			
+
+
+
 			if (boss1->getHealth() < 0) {
 				this->isBossKilled = true;
+				boss1->markForRemoval();
 			}
 
 			// Gérer les collisions
@@ -718,13 +730,22 @@ void Game::updateProjectile()
 			else if (enemyProjectile->getBounds().left + enemyProjectile->getBounds().width < 0.f) {
 				enemyProjectile->markForRemoval();
 			}
+			else if (enemyProjectile->getBounds().intersects(this->player->getBounds())) {
+				enemyProjectile->markForRemoval();
+				this->player->loseHp(10);
+			}
 
 		}
 		else if (typeid(*enemyProjectile) == typeid(FlameBall)) {
 			FlameBall* flameball = dynamic_cast<FlameBall*>(enemyProjectile);
 			if (flameball) {
 				flameball->updateSelf();
+				if (flameball->getBounds().intersects(this->player->getBounds())) {
+					flameball->markForRemoval();
+					this->player->loseHp(10);
+				}
 			}
+			
 		}
 	}
 
@@ -746,8 +767,7 @@ void Game::updatePlayer()
 
 void Game::updateBG()
 {
-	this->levelBG->animBG(window);
-
+	this->levelBG->updateScrolling(window);
 }
 
 
@@ -765,6 +785,8 @@ void Game::update() {
 	this->updateProjectile();
 
 	this->updateEnemy();
+
+	this->updateBG();
 
 	
 	

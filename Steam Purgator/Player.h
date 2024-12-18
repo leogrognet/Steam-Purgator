@@ -14,8 +14,10 @@ using namespace sf;
 
 class Player {
 public:
-	Player(int hp, int maxHp, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, string image, int left, int top, int width, int height);
+	Player(Texture* texture, Texture* healthTexture,int hp, int maxHp, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, int left, int top, int width, int height);
 	virtual ~Player();
+
+	
 
 
 	void movement(RenderWindow* window);
@@ -62,8 +64,11 @@ public:
 
 
 private:
-	Texture texture;
+	Texture* texture;
+	Texture* healthTexture;
+	Sprite healthSprite;
 	Sprite playerSprite;
+	RectangleShape healthBar;
 
 	float speed;
 	int MissileMax;
@@ -90,9 +95,8 @@ private:
 
 
 	void initVariables();
-	void initTexture(string image);
 	void initSprite();
-
+	void initTexture(string image);
 
 	
 
