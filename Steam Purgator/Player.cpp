@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(int hp, int maxHp, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, string image, int left, int top, int width, int height) : health(hp), maxHealth(maxHp)
+Player::Player(Texture* texture, Texture* healthTexture,int hp, int maxHp, float size_x, float size_y, float pos_x, float pos_y, bool alive, float speed, int left, int top, int width, int height) : health(hp), maxHealth(maxHp)
 {
 	this->DirectionBind[Direction::Up] = Keyboard::Z;
 	this->DirectionBind[Direction::Down] = Keyboard::S;
@@ -11,7 +11,8 @@ Player::Player(int hp, int maxHp, float size_x, float size_y, float pos_x, float
 	this->AttackBind[Attacks::RightAttack] = Keyboard::W;
 	this->AttackBind[Attacks::ChangeAttack] = Keyboard::LAlt;
 
-
+	this->texture = texture;
+	this->healthTexture = healthTexture;
 	this->speed = speed;
 	this->damage = 10;
 
@@ -22,10 +23,10 @@ Player::Player(int hp, int maxHp, float size_x, float size_y, float pos_x, float
 	this->left = left;
 	this->width = width;
 	this->height = height;
-
+	
 	this->initVariables();
-	this->initTexture(image);
 	this->initSprite();
+	this->playerSprite.setTextureRect(IntRect(this->width,this->height, this->width, this->height));
 }
 
 Player::~Player()
@@ -36,28 +37,30 @@ void Player::initVariables()
 {
 
 	this->attackCooldownMax = 0.5f;
-
 	this->maxHealth = 100;
-	this->health = this->maxHealth;
+	this->health = 100;
+	
 	this->MissileMax = 50;
 	this->LaserMax = 100;
 	this->BombMax = 5;
 	this->ShieldMax = 100;
 }
 
-void Player::initTexture(string image)
-{
-	if (!this->texture.loadFromFile(image))
-	{
-		cerr << "ERROR::PLAYER::INITTEXTURE::Could not load texture file." << endl;
-	}
-}
+
 
 void Player::initSprite()
 {
-	this->playerSprite.setTexture(this->texture);
-
+	this->playerSprite.setTexture(*texture);
+	this->playerSprite.setPosition(0, 500);
 	this->playerSprite.scale(this->size_x, this->size_y);
+
+	this->healthSprite.setTexture(*healthTexture);
+	this->healthSprite.scale(this->size_x +1, this->size_y );
+	this->healthSprite.setPosition(10, 0);
+
+	this->healthBar.setFillColor(Color::Green);
+	this->healthBar.setPosition(this->healthSprite.getPosition().x + 50, this->healthSprite.getPosition().y + (this->healthSprite.getGlobalBounds().height /3) + 5);
+	this->healthBar.setSize(Vector2f(this->healthSprite.getGlobalBounds().width - 75, 10));
 }
 
 
@@ -100,7 +103,7 @@ Sprite Player::getSprite()
 
 const Texture Player::getTexture() const
 {
-	return this->texture;
+	return *texture;
 }
 
 void Player::setHp(const int hp)
@@ -151,10 +154,14 @@ void Player::updateAnim()
 		AnimClock.restart();
 	}
 
-	if (this->deltaTexture.x * this->width >= this->texture.getSize().x) {
+	if (this->deltaTexture.x * this->width >= texture->getSize().x) {
 		deltaTexture.x = 0;
 	}
+
+	float percent = (static_cast<float>(this->health) / static_cast<float>(this->maxHealth));
+
 	this->playerSprite.setTextureRect(IntRect(deltaTexture.x * this->width, deltaTexture.y * this->height, this->width, this->height));
+	this->healthBar.setSize(Vector2f((this->healthSprite.getGlobalBounds().width - 75) * percent, 10));
 }
 
 
@@ -179,7 +186,10 @@ void Player::update(RenderWindow* window)
 
 void Player::render(sf::RenderTarget& target)
 {
+	target.draw(this->healthBar);
 	target.draw(this->playerSprite);
+	target.draw(this->healthSprite);
+	
 }
 
 
