@@ -5,9 +5,7 @@ using namespace sf;
 
 Menu::Menu(float width, float height, const vector<string>& options)
     : selectedIndex(0) {
-    if (!font.loadFromFile("C:/Users/tburton/Desktop/asset/Daydream.ttf")) {
-        // Erreur de chargement de la police
-    }
+    if (!font.loadFromFile("C:/Users/tburton/Desktop/asset/Daydream.ttf")) {}
 
     for (size_t i = 0; i < options.size(); ++i) {
         sf::Text text;
@@ -50,19 +48,6 @@ void Menu::moveDown() {
     }
 }
 
-void Menu::handleMouseClick(Vector2i mousePos) {
-    for (size_t i = 0; i < menuItems.size(); ++i) {
-        FloatRect bounds = menuItems[i].getGlobalBounds();
-        if (bounds.contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-            menuItems[selectedIndex].setFillColor(Color::White);
-            selectedIndex = i;
-            menuItems[selectedIndex].setFillColor(Color::Red);
-            updateFlechePosition();
-            break;
-        }
-    }
-}
-
 int Menu::getSelectedIndex() const {
     return selectedIndex;
 }
@@ -72,28 +57,14 @@ void Menu::updateFlechePosition() {
         menuItems[selectedIndex].getPosition().y - 5);
 }
 
-Settings::Settings() : volume(50) {
-    customKeys["1"] = Keyboard::A;
-    customKeys["2"] = Keyboard::Z;
-    customKeys["3"] = Keyboard::E;
-    customKeys["4"] = Keyboard::R;
-    customKeys["5"] = Keyboard::T;
-}
-
-void Settings::increaseVolume() {
-    if (volume < 100) {
-        volume += 10;
-    }
-}
-
-void Settings::decreaseVolume() {
-    if (volume > 0) {
-        volume -= 10;
-    }
-}
-
-int Settings::getVolume() const {
-    return volume;
+Settings::Settings() {
+    customKeys["MoveUp"] = Keyboard::Z;
+    customKeys["MoveDown"] = Keyboard::S;
+    customKeys["MoveLeft"] = Keyboard::Q;
+    customKeys["MoveRight"] = Keyboard::D;
+    customKeys["Action1"] = Keyboard::LAlt;
+    customKeys["Action2"] = Keyboard::Num1;
+    customKeys["Action3"] = Keyboard::Num2;
 }
 
 void Settings::setCustomKey(const string& action, Keyboard::Key key) {
@@ -101,19 +72,20 @@ void Settings::setCustomKey(const string& action, Keyboard::Key key) {
 }
 
 void Settings::redefineKeys(Settings& settings, RenderWindow& window, const Font& font, const Sprite& background) {
-    // Liste des actions et leurs descriptions
     vector<pair<string, string>> actions = {
-        {"MoveUp", "Monter"},
-        {"MoveDown", "Descendre"},
-        {"Confirm", "Confirmer"}
+        {"MoveUp", "Monter"}, //1
+        {"MoveDown", "Descendre"}, //2
+        {"MoveLeft", "Gauche"}, //3
+        {"MoveRight", "Droite"}, //4
+        {"Action1", "Action 1"}, //5
+        {"Action2", "Action 2"}, //6
+        {"Action3", "Action 3"} //7
     };
 
-    // Boucle pour redéfinir chaque touche
     for (const auto& actionPair : actions) {
-        const string& action = actionPair.first;       // Nom interne de l'action (ex: "MoveUp")
-        const string& description = actionPair.second; // Description affichée (ex: "Monter")
+        const string& action = actionPair.first;       // Nom interne
+        const string& description = actionPair.second; // Desc affichée
 
-        // Afficher l'instruction à l'utilisateur
         Text instruction;
         instruction.setFont(font);
         instruction.setString("Appuyez sur une touche pour : " + description);
@@ -121,18 +93,16 @@ void Settings::redefineKeys(Settings& settings, RenderWindow& window, const Font
         instruction.setFillColor(Color::White);
         instruction.setPosition(500, 400);
 
-        // Attente de l'appui sur une touche
         bool keyAssigned = false;
         while (!keyAssigned) {
             Event event;
             window.clear();
-            window.draw(background); // Afficher le fond
             window.draw(instruction);
             window.display();
 
             while (window.pollEvent(event)) {
                 if (event.type == Event::KeyPressed) {
-                    // Assigner la touche à l'action
+
                     settings.setCustomKey(action, event.key.code);
                     keyAssigned = true;
                 }
@@ -144,7 +114,6 @@ void Settings::redefineKeys(Settings& settings, RenderWindow& window, const Font
         }
     }
 
-    // Confirmation finale
     Text confirmation;
     confirmation.setFont(font);
     confirmation.setString("Touches redefinies");
@@ -154,11 +123,9 @@ void Settings::redefineKeys(Settings& settings, RenderWindow& window, const Font
     confirmation.setPosition(500, 500);
 
     window.clear();
-    window.draw(background);
     window.draw(confirmation);
     window.display();
 
-    // Pause pour afficher le message de confirmation
     sf::Clock clock;
     while (clock.getElapsedTime().asSeconds() < 2.0f) {
         Event event;
