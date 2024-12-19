@@ -18,13 +18,15 @@ setBG::setBG(Texture* frontTexture, Texture* backTexture,Texture* backtexture2, 
 
     this->BG1.setTexture(*backtexture4);
     this->BG1.setPosition(0, 0);
-    this->BG1.setScale(4, 3.1);
+    this->BG1.setScale(3+(1.f/3.f), 3.1);
 
     this->BG2.setTexture(*backtexture5);
-    this->BG2.setPosition(target->getSize().x-133.5, 0);
-    this->BG2.setScale(4, 3.1);
+    this->BG2.setPosition(target->getSize().x, 0);
+    this->BG2.setScale(3 + (1.f / 3.f), 3.1);
 
-
+    this->BG3.setTexture(*backtexture5);
+    this->BG3.setPosition(target->getSize().x, 0);
+    this->BG3.setScale(3.6, 3.1);
 
 	this->backSprite.setTexture(*backTexture);
     this->backSprite.setPosition(0, target->getSize().y - 100);
@@ -36,6 +38,8 @@ void setBG::renderBg(RenderWindow* target)
 
     target->draw(this->BG1);
     target->draw(this->BG2);
+    cout << this->BG1.getPosition().x + BG1.getGlobalBounds().width << endl;
+   // target->draw(this->BG3);
     target->draw(this->backSprite);
     
     target->draw(this->cloud2);
@@ -48,7 +52,7 @@ void setBG::animBG(RenderWindow* target, Sprite& sprite, int posY, float speed)
 {
     // Si le sprite dépasse la gauche de la fenêtre, réinitialisez-le à droite
     if (speed < 0) {
-        if (sprite.getGlobalBounds().left + sprite.getGlobalBounds().width <= 0) {
+        if (sprite.getGlobalBounds().left + sprite.getGlobalBounds().width < 0) {
             sprite.setPosition(Vector2f(target->getSize().x , posY));
         }
         else {
@@ -77,5 +81,6 @@ void setBG::updateScrolling(RenderWindow* window) {
     animBG(window, this->cloud2, 50, 1.0f);
     animBG(window, this->BG1, 0, -10.0f);
     animBG(window, this->BG2, 0, -10.0f);
+   // this->BG2.setPosition(this->BG1.getPosition().x + this->BG1.getGlobalBounds().width,0);
 
 }
