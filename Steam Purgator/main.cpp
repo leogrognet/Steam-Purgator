@@ -1,4 +1,5 @@
 #include "menu.h"
+#include "Game.h"
 
 using namespace std;
 using namespace sf;
@@ -163,7 +164,7 @@ int main() {
                         int selectedIndex = keyMenu.getSelectedIndex();
                         if (selectedIndex == 0) {
 
-                            settings.redefineKeys(settings, window, font,sprite2);
+                            settings.redefineKeys(settings, window, font, sprite2);
                             for (size_t i = 0; i < keyMenuOptions.size(); ++i) {
                                 Text keyText;
                                 keyText.setFont(font);
@@ -202,6 +203,7 @@ int main() {
                     if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
                         previousState = gameState;
                         gameState = GameState::Pause;
+                        bool pause = true;
                     }
                     break;
 
@@ -209,6 +211,7 @@ int main() {
                     if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
                         previousState = gameState;
                         gameState = GameState::Pause;
+                        bool pause = true;
                     }
                     break;
 
@@ -271,9 +274,9 @@ int main() {
         case GameState::Joue:
             window.clear(Color::White);
             music.pause();
-            if (!pause) {
+            while (!pause) {
+                Game game;
                 game.run();
-                game.render();
             }
             break;
         case GameState::Edit:
