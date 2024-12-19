@@ -58,6 +58,7 @@ Game::~Game()
 	BackGroundTexture.clear();
 
 	delete this->window;
+
 }
 
 
@@ -121,8 +122,8 @@ void Game::initProjectile()
 	this->loadTexture(this->playerProjectileTexture, "missile", "asset/SpriteAsset/missile.png");
 	this->loadTexture(this->playerProjectileTexture, "bouclier", "asset/SpriteAsset/bouclier.png");
 	this->loadTexture(this->playerProjectileTexture, "bombe", "asset/SpriteAsset/Bombe.png");
-	this->playerLaser = make_unique<Laser>(playerProjectileTexture["laser"], 1.0f, 1.0f, this->player->getPos().x + this->player->getBounds().width, this->player->getPos().y + this->player->getBounds().height / 2,this->player->getSprite(),3.0f);
-	this->playerShield = make_unique<Shield>(playerProjectileTexture["bouclier"], 1.0f, 1.0f, this->player->getPos().x + this->player->getBounds().width, this->player->getPos().y + this->player->getBounds().height / 2);
+	this->playerLaser = make_unique<Laser>(playerProjectileTexture["laser"], 1.0f, 2.0f, this->player->getPos().x + this->player->getBounds().width, this->player->getPos().y + this->player->getBounds().height / 2,this->player->getSprite(),3.0f);
+	this->playerShield = make_unique<Shield>(playerProjectileTexture["bouclier"], 2.0f, 2.0f, this->player->getPos().x + this->player->getBounds().width, this->player->getPos().y + 10 /*(this->player->getBounds().height / 4)*/);
 
 	//Texture pour l'ennemi
 
@@ -277,7 +278,6 @@ void Game::spawnEnemy()
 {
 
 	if (this->canSpawn) {
-		//cout << "test" << endl;
 		deltaTimeElasped = deltaClock.getElapsedTime();
 		this->startTimeElapsed = this->startClock.getElapsedTime();
 
@@ -386,7 +386,7 @@ void Game::startLevel(int level) {
 	// Configurer des paramètres spécifiques au niveau
 	switch (level) {
 	case 1:
-		this->levelDuration = 300; // Durée du niveau 1 (en secondes)
+		this->levelDuration = 20; // Durée du niveau 1 (en secondes)
 		this->enemySpawnInterval = 2;// Temps entre les spawns d'ennemis
 		break;
 	case 2:
@@ -428,18 +428,18 @@ bool Game::run() {
 				this->game_on = false;
 			}
 		}
-		
-		
 
-		
+
+
+
+
 		// Mise à jour du jeu
 		this->update();
-		
+
 
 		// Rendu des objets à l'écran
 		this->render();
 	}
-
 	return this->game_on;
 }
 
@@ -476,7 +476,6 @@ void Game::updateInput()
 			if (this->player->canAttack() && this->player->weaponCount["missileUse"] > 0) {
 				this->allPlayerProjectiles.push_back(new Missile(playerProjectileTexture["missile"], 1.0f, 1.0f, this->player->getSprite().getPosition().x, this->player->getSprite().getPosition().y, 1.f + this->player->getSpeed(), 63, 21, 63, 21,20.f));
 				this->player->weaponCount["missileUse"] -= 1;
-				cout << this->player->weaponCount["missileUse"] << endl;
 			}
 			break;
 		case 2:
@@ -484,12 +483,20 @@ void Game::updateInput()
 				this->playerLaser->setActive(true);
 				this->player->weaponCount["laserUse"] -= 1;
 			}
+			else {
+				this->playerLaser->setActive(false);
+				this->playerShield->setActive(false);
+			}
 			break;
 
 		case 3:
 			if (this->player->weaponCount["shieldUse"] > 0) {
 				this->playerShield->setActive(true);
 				this->player->weaponCount["shieldUse"] -= 1;
+			}
+			else {
+				this->playerLaser->setActive(false);
+				this->playerShield->setActive(false);
 			}
 			break;
 		}
@@ -527,7 +534,6 @@ void Game::updateBoss()
 		Boss_1* boss1 = dynamic_cast<Boss_1*>(boss);
 
 		if (boss1) { // Si le cast est réussi, boss est un Boss_1
-			cout << boss1->getHealth()<<endl;
 				boss1->updateSelf(window);
 				if (boss1->deltaAttackTime.asSeconds() > 1 && boss1->isShooting) {
 					
@@ -646,7 +652,6 @@ void Game::updateEnemy() {
 		// Collision joueur <-> ennemi
 		if (enemies->getBounds().intersects(this->player->getBounds()) && !this->playerShield->active &&  typeid(*enemies) != typeid (Boss_1)) {
 			this->player->loseHp(enemies->getDamage());
-			cout << this->player->getHp()<<endl;
 			enemies->markForRemoval();
 		}
 		else if (enemies->getBounds().intersects(this->player->getBounds()) && this->playerShield->active && typeid(*enemies) != typeid (Boss_1)) {
@@ -716,7 +721,7 @@ void Game::updateProjectile()
 	for (auto projectiles : allPlayerProjectiles) {
 		if (typeid (*projectiles) == typeid (Projectile)) {
 			projectiles->updateSelf();
-			if (projectiles->getBounds().left + projectiles->getBounds().width > window->getSize().x) {
+			if (projectiles->getBounds().left > window->getSize().x) {
 				projectiles->markForRemoval();
 			}
 			else if (projectiles->getBounds().left + projectiles->getBounds().width < 0.f) {
@@ -724,6 +729,14 @@ void Game::updateProjectile()
 			}
 		}
 		else if (typeid(*projectiles) == typeid(Missile)) {
+
+			if (projectiles->getBounds().left > window->getSize().x) {
+				projectiles->markForRemoval();
+			}
+			else if (projectiles->getBounds().left + projectiles->getBounds().width < 0.f) {
+				projectiles->markForRemoval();
+			}
+
 			// Trouver l'ennemi le plus proche
 			BigEnemy* closestEnemy = nullptr;
 			float closestDistance = numeric_limits<float>::max();
@@ -795,15 +808,42 @@ void Game::updatePlayer()
 	this->player->update(window);
 	String Score(to_string(this->score));
 	ScoreText.setString("Score:" + Score);
-	if (this->player->getHp() <= 0) {
 
-	}
+		bool GAME_OVER = false;
+		Font Pol;
+		if (!Pol.loadFromFile("asset/textAsset/Daydream.ttf")) {
+			cout << "IMPOSSIBLE DE CHARGER LE GAME OVER";
+		}
+		lose.setFont(Pol);
+		if (this->player->getHp() <= 0) {
+			window->clear(Color::White);
+			lose.setString("GAME OVER");
+			lose.setCharacterSize(100);
+			lose.setPosition(450.f, window->getPosition().y / 2);
+			lose.setFillColor(Color::Red);
+			lose.setStyle(Text::Bold);
+			GAME_OVER = true;
+			window->draw(lose);
+			window->display();
+		}
+		
+		if (GAME_OVER == true) {
+			this_thread::sleep_for(std::chrono::seconds(5));
+
+			game_on = false;
+			window->close();
+		}
+
 }
+
+
 
 void Game::updateBG()
 {
 	this->levelBG->updateScrolling(window);
 }
+
+
 
 
 //fonction qui utilise toute les mise a jour

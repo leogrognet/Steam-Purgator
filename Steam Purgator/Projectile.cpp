@@ -270,7 +270,7 @@ Shield::Shield(Texture* texture, float size_x, float size_y, float pos_x, float 
 {
     this->active = false;
     this->sprite.setTexture(*texture);
-    this->sprite.setPosition(pos_x, pos_y);
+    this->sprite.setPosition(10, 10);
     this->sprite.setScale(size_x, size_y);
     this->texture = texture;
     this->max_ammo = 100;
@@ -284,7 +284,7 @@ void Shield::setActive(bool setter)
 
 void Shield::followPlayer(Sprite player)
 {
-    this->sprite.setPosition(player.getPosition().x + player.getGlobalBounds().width, player.getPosition().y + player.getGlobalBounds().height / 2);
+    this->sprite.setPosition(player.getPosition().x-10 + player.getGlobalBounds().width, player.getPosition().y + 5);
 
 }
 

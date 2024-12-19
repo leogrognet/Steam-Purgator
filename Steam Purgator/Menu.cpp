@@ -15,7 +15,7 @@ Menu::Menu(float width, float height, const vector<string>& options)
         text.setString(options[i]);
         text.setCharacterSize(20);
         text.setFillColor(i == 0 ? Color::Red : Color::White);
-        text.setPosition(width / 2 - text.getLocalBounds().width / 2, height / 5 + i * 170);
+        text.setPosition(width/2  - text.getLocalBounds().width - 40 / 2, height / 5 + i * 180);
         menuItems.push_back(text);
     }
 

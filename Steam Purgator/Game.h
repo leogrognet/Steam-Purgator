@@ -6,6 +6,7 @@
 #include "Enemy.h"
 #include "Ammo.h"
 #include "setBackGround.h"
+#include <thread>
 
 
 
@@ -18,6 +19,7 @@ using namespace sf;
 class Game {
 private :
 	RenderWindow* window;
+	Vector2u screenSize;
 
 	map<String, Texture*> playerProjectileTexture;
 	map<String, Texture*> enemyProjectileTexture;
@@ -48,6 +50,8 @@ private :
 	int levelDuration; 
 	int enemySpawnInterval;
 
+	bool Pause;
+
 	bool enemy1, enemy2, enemy3;
 
 	bool isBossKilled;
@@ -73,6 +77,8 @@ private :
 
 	Text ScoreText;
 	Font font;
+	Text lose;
+	Text GameOverText;
 
 
 
@@ -86,13 +92,15 @@ public:
 	virtual ~Game();
 
 	bool run();
-	void updateInput();
+	
 	void startLevel(int level);
 
 	void deleteObjects();
 	void spawnEnemy();
 	void spawnBoss();
+	int  GameOver();
 
+	void updateInput();
 	void updateBoss();
 	void updateAmmo();
 	void updateLevel();
