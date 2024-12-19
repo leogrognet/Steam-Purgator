@@ -49,7 +49,7 @@ int main() {
     int volume2 = 50;
     GameState previousState = GameState::MainMenu;
     std::map<std::string, sf::Keyboard::Key> customKeys;
-
+    bool pause = false;
     while (window.isOpen()) {
 
         Event event;
@@ -267,9 +267,10 @@ int main() {
         case GameState::Joue:
             window.clear(Color::White);
             music.pause();
-            //if (game.run()) {
-            //}
-            break;
+            if (!pause) {
+                game.run();
+            }
+    break;
         case GameState::Edit:
             window.clear(Color::Blue);
             music.pause();
