@@ -16,7 +16,7 @@ public:
 	Sprite backSprite;
 	Sprite cloud1;
 	Sprite cloud2;
-	Sprite BG1, BG2;
+	Sprite BG1, BG2, BG3;
 	
 
 
