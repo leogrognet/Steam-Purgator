@@ -517,7 +517,7 @@ void edit::render() {
 
     page->display();
 }
-void edit::edition() {
+bool edit::edition() {
 
 
     this->edit::page = new RenderWindow(VideoMode(1920, 1080), "Editeur de niveau");
@@ -778,6 +778,7 @@ void edit::edition() {
             {
                 Bt5.setFillColor(Color::Red);
                 page->close();
+                return false;
 
 
             }
@@ -819,7 +820,6 @@ void edit::edition() {
 
 
 
-        cout << EnnemieG.size() << endl;
         page->draw(Lmap);
         page->draw(Bt1);
         page->draw(Bt2);

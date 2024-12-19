@@ -171,5 +171,5 @@ void Settings::redefineKeys(Settings& settings, RenderWindow& window, const Font
         }
     }
 }
-*/
+
 //2e page avec debug + fenetre + keybind

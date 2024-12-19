@@ -40,7 +40,7 @@ public:
 	Time spawnClickTime;
 	int clickCount[4] = { 0,0,0,0 };
 	int Nbj;
-	void edition();
+	bool edition();
 	void spawnEnemyEditG();
 	void spawnEnemyEditA();
 	void spawnEnemyEditD();

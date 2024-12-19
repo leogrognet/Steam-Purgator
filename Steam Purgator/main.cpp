@@ -31,11 +31,11 @@ int main() {
 
     GameState gameState = GameState::MainMenu;
 
-    Font font; if (!font.loadFromFile("C:/Users/tburton/Desktop/asset/Daydream.ttf")) { return -1; }
-    Music music; if (!music.openFromFile("C:/Users/tburton/Desktop/asset/musique_menu.wav")) { return -2; }
-    Music music2; if (!music2.openFromFile("C:/Users/tburton/Desktop/asset/musique_ingame.wav")) { return -2; }
-    Texture texture; if (!texture.loadFromFile("C:/Users/tburton/Desktop/asset/bc_menu2.png")) { return -3; }
-    Texture texture2; if (!texture2.loadFromFile("C:/Users/tburton/Desktop/asset/bc_menu.png")) { return -3; }
+    Font font; if (!font.loadFromFile("asset/textAsset/Daydream.ttf")) { return -1; }
+    Music music; if (!music.openFromFile("asset/soundsAsset/musique menu.wav")) { return -2; }
+    Music music2; if (!music2.openFromFile("asset/soundsAsset/musique in game.wav")) { return -2; }
+    Texture texture; if (!texture.loadFromFile("asset/SpriteAsset/bc menu.png")) { return -3; }
+    Texture texture2; if (!texture2.loadFromFile("asset/SpriteAsset/bc menu.png")) { return -3; }
 
     Sprite sprite; sprite.setTexture(texture);
     Sprite sprite2; sprite2.setTexture(texture2);
@@ -94,9 +94,14 @@ int main() {
                         else if (selectedIndex == 2) {
                             music.stop();
                             music2.play();
-                            edit editt;
-                            editt.edition();
                             gameState = GameState::Edit;
+                            edit editt;
+                            if (!editt.edition()) {
+                                gameState = GameState::MainMenu;
+                            }
+                            music2.stop();
+                            music.play();
+                            
                         }
                         else if (selectedIndex == 3) {
                             gameState = GameState::Quitte;
@@ -287,17 +292,14 @@ int main() {
         case GameState::Joue:
             window.clear(Color::White);
             music.pause();
-            if (isHoldingEscape) {
-                window.draw(Quitter);
-            }
-            window.close();
-            if (game.run()) {
+            while (!pause) {
+                Game game;
+                game.run();
             }
             break;
         case GameState::Edit:
-            window.clear(Color::Blue);
+            window.clear(Color::White);
             music.pause();
-
             break;
         case GameState::Pause:
             window.draw(sprite2);
