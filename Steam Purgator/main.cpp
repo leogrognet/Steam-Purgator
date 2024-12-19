@@ -31,7 +31,7 @@ int main() {
 
     GameState gameState = GameState::MainMenu;
 
-    Font font; if (!font.loadFromFile("asset/textAsset/Daydream.ttf")) { return -1; }
+    Font font; if (!font.loadFromFile("asset/textAsset/Daydream.ttf")) { return -1;  }
     Music music; if (!music.openFromFile("asset/soundsAsset/musique menu.wav")) { return -2; }
     Music music2; if (!music2.openFromFile("asset/soundsAsset/musique in game.wav")) { return -2; }
     Texture texture; if (!texture.loadFromFile("asset/SpriteAsset/bc menu.png")) { return -3; }
