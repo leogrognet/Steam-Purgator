@@ -1,5 +1,6 @@
 #include "Menu.h"
 #include "Game.h"
+#include "Editeur.h"
 
 using namespace std;
 using namespace sf;
@@ -186,6 +187,12 @@ int main() {
                             music.stop();
                             music2.play();
                             gameState = GameState::Joue;
+                            Game game;
+                            if (!game.run()) {
+                                gameState = GameState::MainMenu;
+                                music2.stop();
+                                music.play();
+                            }
                         }
                         else if (selectedIndex == 1) {
                             gameState = GameState::OptionsMenu;
@@ -194,6 +201,9 @@ int main() {
                             music.stop();
                             music2.play();
                             gameState = GameState::Edit;
+                            window.close();
+                            edit editt;
+                            editt.edition();
                         }
                         else if (selectedIndex == 3) {
                             gameState = GameState::Quitte;
@@ -353,9 +363,8 @@ int main() {
                         }
                     }
                     break;
-                    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    //FIN DE TOUT LES CAS DU MENU
-                    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                case GameState::Joue:
+                    break;
 
                 default:
                     break;
@@ -464,21 +473,16 @@ int main() {
         case GameState::Joue:
             window.clear(Color::White);
             music.pause();
-            if (isHoldingEscape) {
-                window.draw(Quitter);
-            }
-            if (game.run()) {
-            }
             break;
 
         case GameState::Edit:
             window.clear(Color::Blue);
             music.pause();
-            if (isHoldingEscape) {
-                window.draw(Quitter);
-            }
+            window.close();
             break;
-        default:
+        case GameState::Pause:
+            window.draw(sprite2);
+            pauseMenu.draw(window);
             break;
         }
 
