@@ -31,18 +31,18 @@ int main() {
 
     GameState gameState = GameState::MainMenu;
 
-    Font font; if (!font.loadFromFile("asset/textAsset/Daydream.ttf")) { return -1; }
-    Music music; if (!music.openFromFile("asset/soundsAsset/musique menu.wav")) { return -2; }
-    Music music2; if (!music2.openFromFile("asset/soundsAsset/Musique in game.wav")) { return -2; }
-    Texture texture; if (!texture.loadFromFile("asset/SpriteAsset/bc menu.png")) { return -3; }
-    Texture texture2; if (!texture2.loadFromFile("asset/SpriteAsset/bc menu.png")) { return -3; }
+    Font font; if (!font.loadFromFile("C:/Users/tburton/Desktop/asset/Daydream.ttf")) { return -1; }
+    Music music; if (!music.openFromFile("C:/Users/tburton/Desktop/asset/musique_menu.wav")) { return -2; }
+    Music music2; if (!music2.openFromFile("C:/Users/tburton/Desktop/asset/musique_ingame.wav")) { return -2; }
+    Texture texture; if (!texture.loadFromFile("C:/Users/tburton/Desktop/asset/bc_menu2.png")) { return -3; }
+    Texture texture2; if (!texture2.loadFromFile("C:/Users/tburton/Desktop/asset/bc_menu.png")) { return -3; }
 
     Sprite sprite; sprite.setTexture(texture);
     Sprite sprite2; sprite2.setTexture(texture2);
 
     sprite2.setPosition(500, 100);
 
-    Text Titre; Titre.setFont(font); Titre.setString("STEAM\nPURGATOR"); Titre.setCharacterSize(25); Titre.setFillColor(Color::White); Titre.setOutlineColor(Color::Black); Titre.setPosition(840, 16);
+    Text Titre; Titre.setFont(font); Titre.setString("STEAM\nPURGATOR"); Titre.setCharacterSize(25); Titre.setFillColor(Color::White); Titre.setOutlineColor(Color::Black); Titre.setPosition(869, 16);
 
     bool isHoldingEscape = false;
 
@@ -50,6 +50,11 @@ int main() {
     music2.setLoop(true);
 
     music.play();
+
+    int volume2 = 50;
+    GameState previousState = GameState::MainMenu;
+    std::map<std::string, sf::Keyboard::Key> customKeys;
+    bool pause = false;
 
     while (window.isOpen()) {
 
@@ -78,9 +83,10 @@ int main() {
                             Game game;
                             if (!game.run()) {
                                 gameState = GameState::MainMenu;
-                                music2.stop();
-                                music.play();
                             }
+                            
+                            music2.stop();
+                            music.play();
                         }
                         else if (selectedIndex == 1) {
                             gameState = GameState::OptionsMenu;
@@ -88,10 +94,9 @@ int main() {
                         else if (selectedIndex == 2) {
                             music.stop();
                             music2.play();
-                            gameState = GameState::Edit;
-                            window.close();
                             edit editt;
                             editt.edition();
+                            gameState = GameState::Edit;
                         }
                         else if (selectedIndex == 3) {
                             gameState = GameState::Quitte;
@@ -214,9 +219,6 @@ int main() {
                         bool pause = true;
                     }
                     break;
-                    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    //FIN DE TOUT LES CAS DU MENU
-                    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 case GameState::Edit:
                     if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
@@ -293,18 +295,18 @@ int main() {
             }
             break;
         case GameState::Edit:
+            window.clear(Color::Blue);
             music.pause();
-            if (isHoldingEscape) {
-                window.draw(Quitter);
-            }
+
             break;
         case GameState::Pause:
             window.draw(sprite2);
             pauseMenu.draw(window);
             break;
+        default:
+            break;
         }
         window.display();
     }
-
     return 0;
 }
